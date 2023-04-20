@@ -1,4 +1,4 @@
-![Tumble](Assets/Header.png)
+![Tumble](assets/Header.png)
 
 An app to find any KronoX schedule.
 
