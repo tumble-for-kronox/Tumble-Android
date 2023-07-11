@@ -1,4 +1,4 @@
-package tumble.app.tumble.datasource
+package tumble.app.tumble.datasource.network
 
 import android.net.Uri
 import tumble.app.tumble.core.NetworkSettings

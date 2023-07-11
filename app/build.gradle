@@ -92,7 +92,9 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
-    implementation 'io.realm.kotlin:library-base:1.7.0'
+    implementation 'io.realm.kotlin:library-base:1.10.0'
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
 }

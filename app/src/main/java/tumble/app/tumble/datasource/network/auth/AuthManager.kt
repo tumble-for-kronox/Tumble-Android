@@ -1,9 +1,9 @@
-package tumble.app.tumble.datasource.auth
+package tumble.app.tumble.datasource.network.auth
 
 import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.Retrofit
-import tumble.app.tumble.datasource.ApiService
+import tumble.app.tumble.datasource.network.ApiService
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import javax.inject.Inject
 import javax.inject.Singleton

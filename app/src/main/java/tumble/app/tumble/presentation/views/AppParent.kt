@@ -4,11 +4,15 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import tumble.app.tumble.presentation.viewmodels.CombinedData
+import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.views.navigation.BottomNavGraph
 import tumble.app.tumble.presentation.views.navigation.TabBar
 import java.util.Locale
@@ -20,6 +24,8 @@ fun AppParent() {
     val navController = rememberNavController()
     val navBackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackEntry?.destination
+    val viewModel: ParentViewModel = viewModel()
+
     Scaffold(
         bottomBar = {
             TabBar(
