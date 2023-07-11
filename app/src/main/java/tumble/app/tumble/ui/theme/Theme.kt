@@ -5,26 +5,28 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = Primary,
+    secondary = SecondaryDark,
+    background = BackgroundDark,
+    onBackground = OnBackgroundDark,
+    onPrimary = OnPrimary,
+    surface = SurfaceDark,
+    onSurface = OnSurfaceDark,
+    primaryVariant = Primary
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+    primary = Primary,
+    secondary = SecondaryLight,
+    background = BackgroundLight,
+    onBackground = OnBackgroundLight,
+    onPrimary = OnPrimary,
+    surface = SurfaceLight,
+    onSurface = OnSurfaceLight,
+    primaryVariant = Primary
 )
 
 @Composable
@@ -34,6 +36,8 @@ fun TumbleTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable
     } else {
         LightColorPalette
     }
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Primary)
 
     MaterialTheme(
         colors = colors,

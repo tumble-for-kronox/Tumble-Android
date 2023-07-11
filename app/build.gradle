@@ -76,7 +76,12 @@ dependencies {
     //HiltViewModel
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
-    implementation("androidx.compose.material:material-icons-extended:$compose_version")
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.31.5-beta"
+
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+    implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
+    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
 
     // Retrofit
     implementation 'com.google.code.gson:gson:2.8.9'
@@ -88,6 +93,8 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
 
     implementation 'io.realm.kotlin:library-base:1.7.0'
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1'
 }
 
 kapt {
