@@ -29,7 +29,6 @@ class ParentViewModel @Inject constructor(
     val combinedData: StateFlow<CombinedData> = _combinedData
 
     init {
-        Log.e("ParentViewModel", "Initializing ParentViewModel")
         observeDataStoreChanges()
     }
 

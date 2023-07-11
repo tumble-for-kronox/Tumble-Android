@@ -14,7 +14,6 @@ class AuthManager @Inject constructor(private val retrofit: Retrofit): ApiServic
     override suspend fun <T : NetworkResponse> get(
         url: String,
         token: String?,
-        headers: Map<String, String>
     ): Response<T> {
         TODO("Not yet implemented")
     }
@@ -22,7 +21,6 @@ class AuthManager @Inject constructor(private val retrofit: Retrofit): ApiServic
     override suspend fun <T : NetworkResponse> put(
         url: String,
         token: String?,
-        headers: Map<String, String>,
         body: RequestBody
     ): Response<T> {
         TODO("Not yet implemented")
