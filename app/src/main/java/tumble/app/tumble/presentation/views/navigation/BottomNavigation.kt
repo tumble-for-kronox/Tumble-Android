@@ -17,9 +17,9 @@ import androidx.compose.material3.NavigationBarItem
 
 enum class BottomNavItem(val route: String, val icon: ImageVector, val title: String) {
     HOME(Routes.home, Icons.Rounded.Home, "Home"),
-    BOOKMARKS(Routes.bookmarks, Icons.Rounded.Bookmark, "Analytics"),
+    BOOKMARKS(Routes.bookmarks, Icons.Rounded.Bookmark, "Bookmarks"),
     SEARCH(Routes.search, Icons.Rounded.Search, "Search"),
-    ACCOUNT(Routes.home, Icons.Rounded.Person, "Account"),
+    ACCOUNT(Routes.account, Icons.Rounded.Person, "Account"),
 }
 
 @Composable

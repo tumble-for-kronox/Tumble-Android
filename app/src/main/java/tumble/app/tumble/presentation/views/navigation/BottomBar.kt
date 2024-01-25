@@ -50,6 +50,7 @@ private fun navigateTo(navController: NavHostController, item: BottomNavItem) {
             navController.navigate(route) {
                 popUpTo(currentGraph.startDestinationId)
                 launchSingleTop = true
+                restoreState = true
             }
         }
     }
