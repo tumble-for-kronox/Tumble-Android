@@ -13,6 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val kronoxManager: KronoxManager): ViewModel() {
+    val status = MutableStateFlow(Status.AVAILABLE)
+    val newsStatus = MutableStateFlow(NewsStatus.LOADING)
     val newsItems = MutableStateFlow<NewsItems?>(null);
 
     suspend fun getNews() {
@@ -20,4 +22,12 @@ class HomeViewModel @Inject constructor(private val kronoxManager: KronoxManager
 
         val bla = response.body();
     }
+}
+
+enum class Status {
+    LOADING, AVAILABLE, NO_BOOKMARKS, NOT_AVAILABLE
+}
+
+enum class NewsStatus {
+    LOADING, LOADED, FAILED
 }

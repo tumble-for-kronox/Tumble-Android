@@ -5,4 +5,10 @@
     <string name="other_news">Other News</string>
     <string name="news_button">News from us %1$d</string>
     <string name="no_other_news">No other news</string>
+    <string name="next_class">Next Class</string>
+    <string name="unknown">Unknown</string>
+    <string name="no_teachers_listed">No teachers listed</string>
+    <string name="no_upcoming_class">No upcoming class</string>
+    <string name="todays_events">Todays events</string>
+    <string name="no_events_for_today">No events for today</string>
 </resources>
