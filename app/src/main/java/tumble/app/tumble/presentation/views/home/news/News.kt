@@ -1,6 +1,5 @@
 package tumble.app.tumble.presentation.views.home.news
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

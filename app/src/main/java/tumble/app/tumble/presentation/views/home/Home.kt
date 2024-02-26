@@ -10,7 +10,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,17 +20,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import tumble.app.tumble.presentation.viewmodels.HomeViewModel
 import tumble.app.tumble.presentation.viewmodels.NewsStatus
 import tumble.app.tumble.presentation.viewmodels.Status
+import tumble.app.tumble.presentation.views.home.news.News
 
 @Composable
 fun Home(viewModel: HomeViewModel = hiltViewModel()) {
     val newsItems by viewModel.newsItems.collectAsState()
     val viewModelStatus by viewModel.status.collectAsState()
     val newsSectionStatus by viewModel.newsStatus.collectAsState();
-    val showSheet by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        viewModel.getNews();
-    }
+    val showSheet = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { /* ... Top bar content ... */ },
@@ -43,14 +39,15 @@ fun Home(viewModel: HomeViewModel = hiltViewModel()) {
                     .background(MaterialTheme.colors.background)
                     .padding(it)
             ) {
-                if (newsSectionStatus == NewsStatus.LOADED) {
-                    Spacer(modifier = Modifier)
-                }
                 Spacer(modifier = Modifier.height(10.dp))
 
                 when (viewModelStatus) {
                     Status.AVAILABLE -> {
-                        // HomeAvailable Composable
+                        when (newsSectionStatus) {
+                            NewsStatus.LOADING -> Text(text = "LOADING")
+                            NewsStatus.LOADED -> Text(text = "LOADED")
+                            NewsStatus.FAILED -> Text(text = "FAILED")
+                        }
                     }
                     Status.LOADING -> {
                         // CustomProgressIndicator Composable
@@ -67,7 +64,7 @@ fun Home(viewModel: HomeViewModel = hiltViewModel()) {
         }
     )
 
-    if (showSheet) {
+    if (showSheet.value) {
         // NewsSheet Composable
     }
 }
