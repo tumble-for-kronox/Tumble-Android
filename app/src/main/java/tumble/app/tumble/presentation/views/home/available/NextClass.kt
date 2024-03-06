@@ -1,7 +1,6 @@
 package tumble.app.tumble.presentation.views.home.available
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,9 +13,9 @@ import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.components.buttons.CompactEventButtonLabel
-import tumble.app.tumble.presentation.extensions.borderRadius
-import tumble.app.tumble.presentation.extensions.formatDate
-import tumble.app.tumble.presentation.extensions.toColor
+import tumble.app.tumble.extensions.presentation.borderRadius
+import tumble.app.tumble.extensions.presentation.formatDate
+import tumble.app.tumble.extensions.presentation.toColor
 
 @Composable
 fun NextClass(nextClass: Event?) {

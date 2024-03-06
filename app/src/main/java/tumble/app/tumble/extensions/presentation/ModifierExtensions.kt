@@ -1,4 +1,4 @@
-package tumble.app.tumble.presentation.extensions
+package tumble.app.tumble.extensions.presentation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
@@ -11,9 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.animation.core.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.composed
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 fun Modifier.borderRadius(size: Dp) = clip(RoundedCornerShape(size))

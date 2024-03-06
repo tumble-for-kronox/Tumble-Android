@@ -2,13 +2,11 @@ package tumble.app.tumble.presentation.components.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -17,9 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.realm.Event
-import tumble.app.tumble.presentation.extensions.borderRadius
-import tumble.app.tumble.presentation.extensions.convertToHoursAndMinutesISOString
-import tumble.app.tumble.presentation.extensions.toColor
+import tumble.app.tumble.extensions.presentation.borderRadius
+import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
+import tumble.app.tumble.extensions.presentation.toColor
 import java.util.Locale
 
 @Composable

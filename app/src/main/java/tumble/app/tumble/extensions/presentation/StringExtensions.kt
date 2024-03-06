@@ -1,8 +1,13 @@
-package tumble.app.tumble.presentation.extensions
+package tumble.app.tumble.extensions.presentation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.ui.graphics.Color
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 fun String.formatDate(): String? {
     val isoDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault()) // Adjust this format if your ISO string is in a different format
@@ -37,3 +42,11 @@ fun String.toColor(): Color {
     return Color(r, g, b)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun String.toLocalDateTime(): LocalDateTime? {
+    return try {
+        LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
+    } catch (e: DateTimeParseException) {
+        null
+    }
+}

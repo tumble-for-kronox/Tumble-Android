@@ -1,7 +1,6 @@
 package tumble.app.tumble.presentation.views.home.available.eventsCarousel
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.runtime.*
@@ -15,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.components.buttons.VerboseEventButtonLabel
-import tumble.app.tumble.presentation.extensions.wiggle
+import tumble.app.tumble.extensions.presentation.wiggle
 import tumble.app.tumble.presentation.models.WeekEventCardModel
 
 @Composable

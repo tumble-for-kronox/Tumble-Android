@@ -1,14 +1,17 @@
 package tumble.app.tumble.presentation.navigation.navgraphs
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.navigation.NavGraphBuilder
 import tumble.app.tumble.presentation.navigation.Routes
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navDeepLink
-import tumble.app.tumble.presentation.views.home.Home
+import tumble.app.tumble.presentation.views.home.HomeScreen
 
 @Composable
 fun HomeNavGraph(
@@ -21,9 +24,10 @@ fun HomeNavGraph(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.home(navController: NavHostController) {
     composable(Routes.home) {
-        Home()
+        HomeScreen()
     }
 }
 

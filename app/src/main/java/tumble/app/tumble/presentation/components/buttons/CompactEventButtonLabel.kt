@@ -8,7 +8,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
-import androidx.compose.material.icons.filled.PriorityHigh
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.realm.Event
-import tumble.app.tumble.presentation.extensions.convertToHoursAndMinutesISOString
+import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
 import java.util.Locale
 
 @Composable
