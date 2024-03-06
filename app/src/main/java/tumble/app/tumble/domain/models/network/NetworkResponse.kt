@@ -15,7 +15,7 @@ sealed class NetworkResponse {
     data class Message(val message: String)
 
     @JsonClass(generateAdapter = true)
-    class Empty
+    object Empty
 
     @JsonClass(generateAdapter = true)
     data class Schedule(

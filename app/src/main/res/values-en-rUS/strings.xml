@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Tumble</string>
     <string name="recent_news">Recent News</string>
     <string name="search_news">Search News</string>
     <string name="other_news">Other News</string>
@@ -11,6 +11,4 @@
     <string name="no_upcoming_class">No upcoming class</string>
     <string name="todays_events">Todays events</string>
     <string name="no_events_for_today">No events for today</string>
-    <string name="home">Home</string>
-    <string name="error_something_wrong">Something went wrong</string>
 </resources>

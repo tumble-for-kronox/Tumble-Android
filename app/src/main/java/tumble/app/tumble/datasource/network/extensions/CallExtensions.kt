@@ -1,0 +1,27 @@
+package tumble.app.tumble.datasource.network.extensions
+
+import retrofit2.Call
+import retrofit2.awaitResponse
+import tumble.app.tumble.datasource.network.ApiResponse
+
+
+suspend fun <T> Call<T>.callToApiResponse(): ApiResponse<T> {
+    return try {
+        val response = this.awaitResponse()
+        if (response.isSuccessful) {
+            val responseBody = response.body()
+            if (responseBody != null) {
+                ApiResponse.Success(responseBody)
+            } else {
+                // If the body is null and empty responses are not allowed, treat it as an error
+                ApiResponse.Error("Empty response body", response.code())
+            }
+        } else {
+            // If the response is not successful, return Error with the error message
+            ApiResponse.Error(response.errorBody()?.string() ?: "Unknown error", response.code())
+        }
+    } catch (e: Exception) {
+        // In case of exception, return Error with the exception message
+        ApiResponse.Error(e.message ?: "Unknown error", null)
+    }
+}
