@@ -18,6 +18,10 @@ import tumble.app.tumble.domain.models.network.NewsItems
 interface KronoxApiService {
     suspend fun getNews(): ApiResponse<NewsItems>
 
+    suspend fun getProgramme(endpoint: Endpoint.SearchProgramme): ApiResponse<NetworkResponse.Search>
+
+    suspend fun getSchedule(endpoint: Endpoint.Schedule): ApiResponse<NetworkResponse.Schedule>
+
 //    @Headers(
 //        "Content-Type: application/json; charset=utf-8",
 //        "Accept: application/json; charset=utf-8"

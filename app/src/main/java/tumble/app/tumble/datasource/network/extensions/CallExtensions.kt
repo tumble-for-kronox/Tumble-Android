@@ -1,5 +1,6 @@
 package tumble.app.tumble.datasource.network.extensions
 
+import android.util.Log
 import retrofit2.Call
 import retrofit2.awaitResponse
 import tumble.app.tumble.datasource.network.ApiResponse

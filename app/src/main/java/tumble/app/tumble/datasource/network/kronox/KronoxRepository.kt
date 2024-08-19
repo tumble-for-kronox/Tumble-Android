@@ -1,11 +1,15 @@
 package tumble.app.tumble.datasource.network.kronox
 
+import android.util.Log
 import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Retrofit
 import tumble.app.tumble.datasource.network.ApiResponse
 import tumble.app.tumble.datasource.network.ApiServiceKronox
+import tumble.app.tumble.datasource.network.Endpoint
 import tumble.app.tumble.datasource.network.extensions.callToApiResponse
+import tumble.app.tumble.datasource.network.url
+import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.network.NewsItems
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,6 +23,16 @@ class KronoxRepository @Inject constructor(private val retrofit: Retrofit): Kron
     override suspend fun getNews(): ApiResponse<NewsItems> {
         return kronoxApiService.getNews().callToApiResponse()
     }
+
+     override suspend fun getProgramme(endpoint: Endpoint.SearchProgramme): ApiResponse<NetworkResponse.Search>{
+        return kronoxApiService.getProgramme(endpoint.url()).callToApiResponse()
+    }
+    override suspend fun getSchedule(endpoint: Endpoint.Schedule): ApiResponse<NetworkResponse.Schedule>{
+        return kronoxApiService.getSchedule(endpoint.url()).callToApiResponse()
+    }
+
+
+
 
 //    override suspend fun <T : NetworkResponse> get(
 //        url: String,
