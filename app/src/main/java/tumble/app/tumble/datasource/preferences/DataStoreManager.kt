@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import tumble.app.tumble.domain.enums.ViewType
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
@@ -34,6 +35,7 @@ class DataStoreManager @Inject constructor(
         val AUTO_SIGNUP = booleanPreferencesKey("auto_signup")
         val APPEARANCE = stringPreferencesKey("appearance")
         val VIEW_TYPE = stringPreferencesKey("view_type")
+
     }
 
     private val _authSchoolId = MutableStateFlow(-1)
@@ -42,11 +44,15 @@ class DataStoreManager @Inject constructor(
     private val _userOnBoarded = MutableStateFlow(false)
     val userOnBoarded: StateFlow<Boolean> = _userOnBoarded
 
+    private val _viewType = MutableStateFlow(ViewType.LIST)
+    val viewType: StateFlow<ViewType> = _viewType
+
     init {
         context.dataStore.data
             .map { preferences ->
                 _authSchoolId.value = preferences[PreferencesKeys.AUTH_SCHOOL_ID] ?: -1
                 _userOnBoarded.value = preferences[PreferencesKeys.USER_ON_BOARDED] ?: false
+                _viewType.value = ViewType.valueOf(preferences[PreferencesKeys.VIEW_TYPE] ?: "CALENDAR")
             }
             .launchIn(scope)
     }
