@@ -13,12 +13,16 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import tumble.app.tumble.BuildConfig
+import tumble.app.tumble.datasource.SchoolManager
 import tumble.app.tumble.datasource.network.auth.AuthManager
 import tumble.app.tumble.datasource.network.kronox.KronoxRepository
 import tumble.app.tumble.datasource.preferences.DataStoreManager
 import tumble.app.tumble.datasource.realm.RealmManager
+import tumble.app.tumble.presentation.viewmodels.EventDetailsSheetViewModel
+import tumble.app.tumble.presentation.viewmodels.SearchPreviewViewModel
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import javax.inject.Provider
 import javax.inject.Singleton
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -51,6 +55,16 @@ object PreferenceModule {
     @Singleton
     fun providePreferenceService(@ApplicationContext context: Context): DataStoreManager {
         return DataStoreManager(context)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object SchoolManager{
+    @Provides
+    @Singleton
+    fun provideSchoolManager(@ApplicationContext context: Context): SchoolManager{
+        return SchoolManager(context)
     }
 }
 
