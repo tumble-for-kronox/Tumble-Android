@@ -13,4 +13,9 @@
     <string name="no_events_for_today">No events for today</string>
     <string name="home">Home</string>
     <string name="error_something_wrong">Something went wrong</string>
+    <string name="error_empty_schedule">Schedule seems to be empty</string>
+    <string name="choose_university">Choose a university to begin your search</string>
+    <string name="search_results">%1$d results</string>
+    <string name="search">Search</string>
+    <string name="search_field_placeholder">Search Schedules</string>
 </resources>
