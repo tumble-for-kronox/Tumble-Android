@@ -8,7 +8,7 @@ import org.mongodb.kbson.ObjectId
 open class Day(
 ) : RealmObject {
     @PrimaryKey
-    var _id: ObjectId? = null
+    var _id: ObjectId? = ObjectId()
     var name: String? = null
     var date: String? = null
     var isoString: String? = null
