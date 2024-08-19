@@ -99,7 +99,7 @@ class RealmManager {
 
     suspend fun deleteSchedule(schedule: Schedule) {
         realm.write {
-            delete(schedule)
+            findLatest(schedule)?.let { delete(it) }
         }
     }
 
