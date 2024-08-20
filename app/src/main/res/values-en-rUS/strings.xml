@@ -18,4 +18,11 @@
     <string name="search_results">%1$d results</string>
     <string name="search">Search</string>
     <string name="search_field_placeholder">Search Schedules</string>
+    <string name="bookmark">Bookmarks</string>
+    <string name="no_bookmarks">No bookmarks yet</string>
+    <string name="bookmarks_hidden">All your bookmakrs are hidden</string>
+    <string name="schedules_contain_no_events">Your visible schedules do not contain any events</string>
+    <string name="list">List</string>
+    <string name="calendar">Calendar</string>
+    <string name="week">Week</string>
 </resources>
