@@ -2,16 +2,16 @@ package tumble.app.tumble.presentation.components.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,35 +27,48 @@ fun CompactEventButtonLabel(event: Event, color: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else color.copy(alpha = 0.2f)),
+            .background(
+                if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else color.copy(alpha = 0.2f),
+                RoundedCornerShape(15.dp)
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        event.from.convertToHoursAndMinutesISOString()?.let { time ->
-            Row(
+        event.from.convertToHoursAndMinutesISOString()?.let { timeStart ->
+            event.to.convertToHoursAndMinutesISOString()?.let { timeEnd ->
+            Column(
                 modifier = Modifier
                     .width(65.dp)
-                    .padding(horizontal = 8.dp)
+                    .padding(horizontal = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(7.dp)
-                        .clip(CircleShape)
-                        .background(if (event.isSpecial) Color.Red else color)
-                )
-                Spacer(modifier = Modifier.width(8.dp))
+//                Box(
+//                    modifier = Modifier
+//                        .size(7.dp)
+//                        .clip(CircleShape)
+//                        .background(if (event.isSpecial) Color.Red else color)
+//                )
                 Text(
-                    text = time,
+                    text = timeStart,
+                    color = MaterialTheme.colors.onSurface,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Icon(imageVector = Icons.Default.ArrowDownward, contentDescription = null)
+                //Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = timeEnd,
                     color = MaterialTheme.colors.onSurface,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }
             Divider(
-                color = MaterialTheme.colors.onSurface,
+                color = MaterialTheme.colors.background,
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(1.dp)
             )
+        }
         }
         Column(
             modifier = Modifier.padding(8.dp),
