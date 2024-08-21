@@ -14,7 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import tumble.app.tumble.domain.enums.ViewType
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
-import tumble.app.tumble.presentation.views.bookmarks.Calendar.BookmarkCalendarViewNew
+import tumble.app.tumble.presentation.views.bookmarks.Calendar.BookmarkCalendarView
 import tumble.app.tumble.presentation.views.bookmarks.List.BookmarkListView
 import tumble.app.tumble.presentation.views.bookmarks.Week.BookmarkWeekView
 
@@ -51,7 +51,7 @@ fun BookmarkViewController(
                     )
                 }
                 ViewType.CALENDAR.ordinal -> {
-                    BookmarkCalendarViewNew()
+                    BookmarkCalendarView()
                 }
             }
         }

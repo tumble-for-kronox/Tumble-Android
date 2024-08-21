@@ -1,7 +1,6 @@
 package tumble.app.tumble.presentation.views.bookmarks.List
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,14 +20,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import kotlinx.coroutines.launch
-import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.realm.Day
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.models.sorted
-import tumble.app.tumble.observables.AppController
-import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -43,8 +38,6 @@ fun BookmarkListView(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
-    //Log.e("eeee", "In list View")
-
     Scaffold(
         floatingActionButton = { ToTopButton { coroutineScope.launch { listState.animateScrollToItem(0) } } },
         floatingActionButtonPosition = FabPosition.End,
@@ -56,13 +49,11 @@ fun BookmarkListView(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            //Log.e("eeee", "In list View Col ")
             item {
                 Spacer(modifier = Modifier.height(60.dp))
             }
             items(days.size) { day ->
-
-                DayItem(day, onEventSelection = onEventSelection)
+                DayItem(days[day], onEventSelection = onEventSelection)
             }
             item{
                 Spacer(modifier = Modifier.height(30.dp))
@@ -73,13 +64,11 @@ fun BookmarkListView(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun DayItem(dayin: Int, onEventSelection: (Event) -> Unit,
-            viewModel: BookmarksViewModel = hiltViewModel()){
-    //Log.e("eeee","ReComp")
+fun DayItem(
+    day: Day, onEventSelection: (Event) -> Unit){
     Column(
         modifier = Modifier.padding(vertical = 15.dp)
     ) {
-        val day = viewModel.bookmarkData.days.get(dayin)
         DayHeader(day)
         EventList(events = day.events?.toList()?: listOf(), onEventSelection )
     }

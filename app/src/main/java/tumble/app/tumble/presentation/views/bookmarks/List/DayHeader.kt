@@ -27,13 +27,13 @@ fun DayHeader(day: Day){
             .padding(bottom = 7.5.dp),
         verticalAlignment = Alignment.CenterVertically
     ){
-        Text(text = day.name?:"",
+        Text(text = day.name?: "",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold)
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Text(text = day.date?:"",
+        Text(text = day.date?: "",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold)
         
