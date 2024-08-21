@@ -4,8 +4,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.*
@@ -14,16 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
-import io.realm.kotlin.ext.query
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.GenericPageStatus
-import tumble.app.tumble.presentation.viewmodels.HomeStatus
-import tumble.app.tumble.presentation.viewmodels.HomeViewModel
+import tumble.app.tumble.domain.enums.HomeStatus
 import tumble.app.tumble.presentation.viewmodels.HomeViewModelNew
-import tumble.app.tumble.presentation.viewmodels.NewsStatus
 import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
