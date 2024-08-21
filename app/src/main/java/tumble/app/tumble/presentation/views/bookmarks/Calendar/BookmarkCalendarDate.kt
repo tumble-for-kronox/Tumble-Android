@@ -1,13 +1,10 @@
 package tumble.app.tumble.presentation.views.bookmarks.Calendar
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.presentation.noRippleClickable
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 import java.time.LocalDate
@@ -37,7 +33,7 @@ fun CalendarDate (
     onClick: (LocalDate) -> Unit
 ) {
      Box(contentAlignment = Alignment.Center,) {
-        But(
+        Background(
             localDate = localDate,
             onClick = onClick,
             getColor =  getColor
@@ -54,7 +50,7 @@ fun CalendarDate (
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun But(
+fun Background(
     localDate: LocalDate,
     onClick: (LocalDate) -> Unit,
     getColor: @Composable (LocalDate) -> Color,

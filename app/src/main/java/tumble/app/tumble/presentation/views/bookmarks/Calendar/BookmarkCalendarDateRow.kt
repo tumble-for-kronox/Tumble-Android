@@ -1,7 +1,6 @@
 package tumble.app.tumble.presentation.views.bookmarks.Calendar
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,8 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.Date
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -32,21 +29,20 @@ fun dateRow(
             .fillMaxWidth()
             .padding(vertical = 5.dp)
     ) {
-            repeat(7) {
-                Column (
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CalendarDate(
-                        inMonth = inMonth,
-                        localDate = localLocalDate,
-                        getColor = getColor,
-                        onClick = onClick
-                    )
-                    EventIndicator(localDate = localLocalDate)
-                }
-                localLocalDate = localLocalDate.plusDays(1)
-
+        repeat(7) {
+            Column (
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CalendarDate(
+                    inMonth = inMonth,
+                    localDate = localLocalDate,
+                    getColor = getColor,
+                    onClick = onClick
+                )
+                EventIndicator(localDate = localLocalDate)
             }
+            localLocalDate = localLocalDate.plusDays(1)
+        }
     }
     return localLocalDate
 }

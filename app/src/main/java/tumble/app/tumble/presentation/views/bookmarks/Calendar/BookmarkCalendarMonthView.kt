@@ -35,7 +35,3 @@ fun BookmarkCalendarMonthView(
         }
     }
 }
-
-enum class DaysOfWeek(){
-    Mon,Tur,Wed,Thu,Fri,Sat,Sun
-}
