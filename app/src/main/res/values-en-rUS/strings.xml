@@ -25,4 +25,6 @@
     <string name="list">List</string>
     <string name="calendar">Calendar</string>
     <string name="week">Week</string>
+    <string name="no_events_for_this_day">No events this day</string>
+    <string name="no_events_for_week">No events for this week..</string>
 </resources>
