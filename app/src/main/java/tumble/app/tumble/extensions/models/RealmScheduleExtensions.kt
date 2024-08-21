@@ -1,7 +1,10 @@
 package tumble.app.tumble.extensions.models
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
+import io.realm.kotlin.ext.copyFromRealm
+import io.realm.kotlin.ext.toRealmList
 import tumble.app.tumble.domain.models.realm.Day
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
@@ -57,13 +60,12 @@ fun List<Schedule>.findNextUpcomingEvent(): Event? {
 }
 
 fun List<Schedule>.flattenAndMerge(): List<Day> {
-    var days: List<Day> = listOf()
-    this.forEach { days += it.days?.toList() ?: listOf() }
-
+    val days: MutableList<Day> = mutableListOf()
+    this.forEach { days += it.days?.toList() ?: emptyList() }
     val dayDictionary: MutableMap<String, Day> = mutableMapOf()
 
     for (day in days){
-        val existingDay  = dayDictionary.get(day.isoString)
+        val existingDay = dayDictionary.get(day.isoString)
         if (existingDay != null){
             day.events?.let { existingDay.events?.addAll(it) }
             day.isoString?.let { dayDictionary.put(it, existingDay) }
@@ -73,7 +75,7 @@ fun List<Schedule>.flattenAndMerge(): List<Day> {
             newDay.date = day.date
             newDay.isoString = day.isoString
             newDay.weekNumber = day.weekNumber
-            newDay.events = day.events
+            newDay.events = day.events?.copyFromRealm()?.toRealmList()
             day.isoString?.let { dayDictionary.put(it, newDay) }
         }
     }
