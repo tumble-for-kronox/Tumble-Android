@@ -2,6 +2,7 @@ package tumble.app.tumble.presentation.viewmodels
 
 import android.icu.util.Calendar
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +26,12 @@ import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.extensions.models.assignCourseRandomColors
 import tumble.app.tumble.extensions.models.toRealmSchedule
 import tumble.app.tumble.utils.isoDateFormatter
+import tumble.app.tumble.utils.isoDateFormatterDate
 import tumble.app.tumble.utils.toIsoString
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @HiltViewModel
 class SearchPreviewViewModel @Inject constructor(
@@ -52,6 +58,7 @@ class SearchPreviewViewModel @Inject constructor(
             status = SchedulePreviewStatus.LOADING
             isSaved = isScheduleSaved
         }
+
         viewModelScope.launch {
             try {
                 val parsedSchedule: NetworkResponse.Schedule
@@ -146,54 +153,28 @@ class SearchPreviewViewModel @Inject constructor(
 }
 
 // fake data
+@RequiresApi(Build.VERSION_CODES.O)
 fun testData(programmeId: String): NetworkResponse.Schedule{
     val currentDate = Calendar.getInstance()
-
-    val course = NetworkResponse.Course(
-        id = "0",
-        swedishName = "testSwedishName",
-        englishName = "testEnglishName"
-    )
-
-    val location = NetworkResponse.Location(
-        id = "testId",
-        name = "testName" ,
-        building = "testBuilding",
-        floor = "testFloor",
-        maxSeats = 30
-    )
-
-    val teacher = NetworkResponse.Teacher(
-        id = "testId",
-        firstName = "TestFirstName",
-        lastName = "TestLastName"
-    )
-
-    val from = "2024-08-19T10:15:00.000Z"
-    val to = "2024-08-19T12:15:00.000Z"
-
-    val event  = NetworkResponse.Event(
-        id = "testId",
-        title = "TestTittle",
-        course = course,
-        from = isoDateFormatter.parse(from).toIsoString(),
-        to = isoDateFormatter.parse(to).toIsoString(),
-        locations = listOf(location),
-        teachers = listOf(teacher),
-        isSpecial = false,
-        lastModified = "never"
-    )
+//    val targetFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val days: MutableList<NetworkResponse.Day> = mutableListOf()
     for (i in 0 .. 10){
+
+        val event1 = eventGen(i, currentDate, hourStartTime = 9)
+        val event2 = eventGen(i, currentDate, hourStartTime = 13)
+
+        val events = listOf(event1, event2)
+
+
         val day = NetworkResponse.Day(
             name = "testName$i",
-            date = "testDate$i",
-            isoString = currentDate.time.toIsoString(),
+            date = isoDateFormatterDate.format(currentDate.time),
+            isoString = isoDateFormatterDate.format(currentDate.time),
             weekNumber = currentDate.get(Calendar.WEEK_OF_YEAR),
-            events = listOf(event),
+            events = events,
         )
-        currentDate.add(Calendar.DAY_OF_MONTH, 7)
         days.add(day)
+        currentDate.add(Calendar.WEEK_OF_MONTH, 1)
     }
 
     val schedule = NetworkResponse.Schedule(
@@ -202,4 +183,54 @@ fun testData(programmeId: String): NetworkResponse.Schedule{
         days = days.toList())
 
     return schedule
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun eventGen(offset: Int, calendar: Calendar, hourStartTime: Int): NetworkResponse.Event{
+
+    calendar.set(Calendar.HOUR_OF_DAY, hourStartTime)
+    calendar.set(Calendar.MINUTE, 0)
+
+//    calendar.time
+
+//    val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+    val course = NetworkResponse.Course(
+        id = "0",
+        swedishName = "testSwedishName $offset, $hourStartTime",
+        englishName = "testEnglishName $offset, $hourStartTime"
+    )
+
+    val location = NetworkResponse.Location(
+        id = "testId",
+        name = "testName $offset, $hourStartTime" ,
+        building = "testBuilding $offset, $hourStartTime",
+        floor = "testFloor $offset, $hourStartTime",
+        maxSeats = 30
+    )
+
+    val teacher = NetworkResponse.Teacher(
+        id = "testId $offset, $hourStartTime",
+        firstName = "TestFirstName $offset, $hourStartTime",
+        lastName = "TestLastName $offset, $hourStartTime"
+    )
+
+
+    val from = calendar.time
+    calendar.add(Calendar.HOUR, 1)
+    val to = calendar.time
+
+    val event  = NetworkResponse.Event(
+        id = "testId $offset, $hourStartTime",
+        title = "TestTittle $offset, $hourStartTime",
+        course = course,
+        from = from.toIsoString(),
+        to = to.toIsoString(),
+        locations = listOf(location),
+        teachers = listOf(teacher),
+        isSpecial = false,
+        lastModified = "never"
+    )
+
+    return event
 }
