@@ -1,7 +1,6 @@
 package tumble.app.tumble.presentation.views.bookmarks
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,18 +11,14 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
@@ -34,6 +29,7 @@ import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.presentation.navigation.UriBuilder
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 import tumble.app.tumble.presentation.viewmodels.ParentViewModel
+import tumble.app.tumble.presentation.views.bookmarks.EventDetails.EventDetailsSheet
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
 
@@ -48,7 +44,7 @@ fun Bookmarks(
 
     val onEventSelection = { event: Event ->
         AppController.shared.eventSheet = EventDetailsSheetModel(event = event)
-        navController.navigate( UriBuilder.buildBookmarksDetailsUri(event.eventId).toUri() )
+//        navController.navigate( UriBuilder.buildBookmarksDetailsUri(event.eventId).toUri() )
     }
 
     val bookmarksStatus = viewModel.status
@@ -84,5 +80,8 @@ fun Bookmarks(
             }
             Spacer(Modifier.weight(1f))
         }
+    }
+    AppController.shared.eventSheet?.let {
+        EventDetailsSheet(event = it.event)
     }
 }
