@@ -14,6 +14,12 @@ val isoDateFormatter: SimpleDateFormat by lazy {
     formatter
 }
 
+val isoDateFormatterDate: SimpleDateFormat by lazy {
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    formatter.timeZone = TimeZone.getDefault()
+    formatter
+}
+
 val month_date: SimpleDateFormat by lazy {
     val formatter = SimpleDateFormat("MMMM", Locale.getDefault())
     formatter
