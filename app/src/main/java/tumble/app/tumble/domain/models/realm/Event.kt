@@ -5,6 +5,7 @@ import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 import tumble.app.tumble.utils.isoDateFormatter
+import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
 import java.util.Calendar
 
 open class Event(
@@ -24,7 +25,7 @@ open class Event(
     val dateComponents: Calendar?
         get() {
 //            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-            val date = isoDateFormatter.parse(from)
+            val date = isoDateFormatterNoTimeZone.parse(from)
             return if (date != null) {
                 Calendar.getInstance().apply {
                     time = date

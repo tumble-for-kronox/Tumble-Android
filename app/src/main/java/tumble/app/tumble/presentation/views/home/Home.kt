@@ -16,8 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
-import tumble.app.tumble.domain.enums.GenericPageStatus
 import tumble.app.tumble.domain.enums.HomeStatus
+import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.presentation.viewmodels.HomeViewModelNew
 import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
@@ -61,7 +61,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
         ) {
-            if (newsStatus == GenericPageStatus.LOADED) {
+            if (newsStatus == PageState.LOADED) {
                 News(news = news?.take(4), showOverlay = showSheet)
             }
             Spacer(Modifier.weight(1f))
