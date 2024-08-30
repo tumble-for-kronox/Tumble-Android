@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.presentation.toLocalDateTime
 import tumble.app.tumble.utils.isoDateFormatter
-import tumble.app.tumble.utils.isoDateFormatterDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -16,10 +15,10 @@ fun NetworkResponse.Day.isValidDay(): Boolean{
 //    this.isoString.toLocalDateTime()
 
     val startOfToday = LocalDate.now()
-    val dayDate = LocalDate.parse(this.isoString, DateTimeFormatter.ISO_DATE)
+    val dayDate = LocalDate.parse(this.isoString.substring(0,10))
     return startOfToday <= dayDate
 }
 
 fun List<NetworkResponse.Day>.ordered(): List<NetworkResponse.Day> {
-    return this.filterNotNull().sortedBy {  isoDateFormatterDate.parse(it.isoString) }
+    return this.filterNotNull().sortedBy {  isoDateFormatter.parse(it.isoString) }
 }

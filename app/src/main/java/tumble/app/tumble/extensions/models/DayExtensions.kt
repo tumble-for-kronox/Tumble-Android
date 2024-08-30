@@ -5,14 +5,13 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import tumble.app.tumble.domain.models.realm.Day
 import tumble.app.tumble.utils.isoDateFormatter
-import tumble.app.tumble.utils.isoDateFormatterDate
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 fun List<Day>.ordered(): List<Day> {
-    return this.sortedBy { it.isoString?.let { it1 -> isoDateFormatterDate.parse(it1) } }
+    return this.sortedBy { it.isoString?.let { it1 -> isoDateFormatter.parse(it1) } }
 }
 
 fun List<Day>.filterEmptyDays(): List<Day> {
@@ -37,6 +36,6 @@ fun List<Day>.groupByWeek(): Map<Int, List<Day>>{
 @RequiresApi(Build.VERSION_CODES.O)
 fun Day.isValidDay(): Boolean {
     val startOfToday = LocalDate.now()
-    val dayDate = LocalDate.parse(this.isoString, DateTimeFormatter.ISO_DATE)
+    val dayDate = LocalDate.parse(this.isoString?.substring(0,10))
     return startOfToday <= dayDate
 }
