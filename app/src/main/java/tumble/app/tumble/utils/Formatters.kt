@@ -9,7 +9,13 @@ fun Date.toIsoString(): String {
 }
 
 val isoDateFormatter: SimpleDateFormat by lazy {
-    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
+    formatter.timeZone = TimeZone.getDefault()
+    formatter
+}
+
+val isoDateFormatterNoTimeZone: SimpleDateFormat by lazy {
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
     formatter.timeZone = TimeZone.getDefault()
     formatter
 }
