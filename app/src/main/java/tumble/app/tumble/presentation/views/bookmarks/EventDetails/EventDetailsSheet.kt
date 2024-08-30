@@ -35,12 +35,12 @@ fun EventDetailsSheet(
                     .background(MaterialTheme.colors.background)
             ){
                 EventDetailsCard(
-                    openColorPicker = { openColorPicker()},
+                    openColorPicker = { openColorPicker() },
                     event = event,
                     color = event.course?.color?.toColor() ?: Color.Gray
                 )
                 EventDetailsBody(event)
-                Spacer(modifier = Modifier.weight(1f))
+                Spacer(modifier = Modifier.height(60.dp))
             }
             Row {
                 Spacer(modifier = Modifier.weight(1f))
@@ -50,6 +50,7 @@ fun EventDetailsSheet(
             }
             //ColorPicker()
         }
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 

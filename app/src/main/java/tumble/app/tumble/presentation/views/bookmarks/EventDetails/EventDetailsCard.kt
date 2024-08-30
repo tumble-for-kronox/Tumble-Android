@@ -68,7 +68,7 @@ fun EventDetailsCard(
                                     state = viewModel.isNotificationSetForEvent,
                                     title = notificationEventTitle(viewModel),
                                     image = "bell.badge",
-                                    onTap = { notificationEventAction(viewModel) }
+                                    onTap = { notificationEventAction(viewModel, event) }
                                 )
                             }
                             NotificationPill(
@@ -104,10 +104,10 @@ fun notificationCourseTitle(viewModel: EventDetailsSheetViewModel): String{
     }
 }
 
-fun notificationEventAction(viewModel: EventDetailsSheetViewModel){
+fun notificationEventAction(viewModel: EventDetailsSheetViewModel, event: Event){
     when(viewModel.isNotificationSetForEvent) {
         NotificationState.SET -> viewModel.cancelNotificationForEvent()
-        NotificationState.NOT_SET -> viewModel.scheduleNotificationForEvent()
+        NotificationState.NOT_SET -> viewModel.scheduleNotificationForEvent(event = event)
         else -> {}
     }
 }
