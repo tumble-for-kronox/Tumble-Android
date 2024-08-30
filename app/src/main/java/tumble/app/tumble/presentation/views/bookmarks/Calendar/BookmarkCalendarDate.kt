@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import tumble.app.tumble.extensions.presentation.noRippleClickable
+import tumble.app.tumble.extensions.presentation.toColor
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 import java.time.LocalDate
 
@@ -84,7 +85,7 @@ fun EventIndicator(
                     modifier = Modifier
                         .padding(horizontal = 2.dp)
                         .size(6.dp)
-                        .background(color = MaterialTheme.colors.primary, CircleShape)
+                        .background(color = it.course?.color?.toColor()?: MaterialTheme.colors.primary, CircleShape)
                 )
             }
         }
