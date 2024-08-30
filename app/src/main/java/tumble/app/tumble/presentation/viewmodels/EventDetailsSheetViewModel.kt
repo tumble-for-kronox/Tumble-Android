@@ -8,10 +8,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.internal.toHexString
-import tumble.app.tumble.datasource.preferences.DataStoreManager
-import tumble.app.tumble.datasource.realm.RealmManager
+import tumble.app.tumble.data.notifications.NotificationManager
+import tumble.app.tumble.data.repository.preferences.DataStoreManager
+import tumble.app.tumble.data.repository.realm.RealmManager
+import tumble.app.tumble.domain.models.notifications.NotificationType
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.presentation.toColor
 import tumble.app.tumble.observables.AppController
@@ -22,9 +25,11 @@ enum class NotificationState{
     SET, LOADING, NOT_SET
 }
 
+@HiltViewModel
 class EventDetailsSheetViewModel@Inject constructor(
     private val preferenceService: DataStoreManager,
     private val realmManager: RealmManager,
+    private val notificationManager: NotificationManager
 ): ViewModel() {
     var event = AppController.shared.eventSheet!!.event
     var color = event.course?.color?.toColor() ?: Color.Gray
@@ -49,30 +54,28 @@ class EventDetailsSheetViewModel@Inject constructor(
     }
 
     fun cancelNotificationForEvent(){
+        notificationManager.cancelNotification(event.eventId)
         isNotificationSetForEvent = NotificationState.NOT_SET
     }
 
     fun cancelNotificationForCourse(){
         isNotificationSetForCourse = NotificationState.NOT_SET
         isNotificationSetForEvent = NotificationState.NOT_SET
-        event.course?.courseId?.let { courseId ->
-            viewModelScope.launch {
-            }
+        event.course?.courseId?.let {
+            notificationManager.cancelNotificationsWithCategory(it)
         }
     }
 
-    fun scheduleNotificationForEvent(){
+    fun scheduleNotificationForEvent(event: Event){
         isNotificationSetForEvent = NotificationState.LOADING
-        // offset
-        val notification = event.dateComponents?.let {
+        val notification = notificationManager.createNotificationFromEvent(event)
+        notification?.let {
+            notificationManager.scheduleNotification(
+                notification = it,
+                type = NotificationType.EVENT,
+                userOffset = notificationOffset
+            )
         }
-    }
-
-    suspend fun updateCourseColor(){
-        if(oldColor == color) return
-        val colorHex = color.toArgb().toHexString() ?:return
-        val courseId = event.course?.courseId ?: return
-        realmManager.updateCourseColors(courseId, colorHex)
     }
 
     fun scheduleNotificationForCourse(){
@@ -98,15 +101,39 @@ class EventDetailsSheetViewModel@Inject constructor(
         }
     }
 
-    private suspend fun userAllowedNotifications(): Boolean{
-        return false
+    private fun applyNotificationForScheduleEventsInCourse(events: List<Event>): Boolean{
+        for(event in events){
+            scheduleNotificationForEvent(event)
+        }
+        return true
     }
 
-    private suspend fun applyNotificationForScheduleEventsInCourse(events: List<Event>): Boolean{
-        return false
+    suspend fun updateCourseColor(){
+        if(oldColor == color) return
+        val colorHex = color.toArgb().toHexString() ?:return
+        val courseId = event.course?.courseId ?: return
+        realmManager.updateCourseColors(courseId, colorHex)
     }
 
-    private fun checkNotificationIsSetForCourse(){}
+    private fun userAllowedNotifications(): Boolean{
+        return notificationManager.areNotificationsAllowed()
+    }
 
-    private fun checkNotificationIsSetForEvent(){}
+    private fun checkNotificationIsSetForCourse(){
+        isNotificationSetForCourse = event.course?.courseId?.let {
+            if (notificationManager.isNotificationScheduledUsingCategory(it)){
+                NotificationState.SET
+            }else{
+                NotificationState.NOT_SET
+            }
+        }?: NotificationState.NOT_SET
+    }
+
+    private fun checkNotificationIsSetForEvent(){
+        if (notificationManager.isNotificationScheduled(eventId = event.eventId)){
+            isNotificationSetForEvent = NotificationState.SET
+        }else{
+            isNotificationSetForEvent = NotificationState.NOT_SET
+        }
+    }
 }
