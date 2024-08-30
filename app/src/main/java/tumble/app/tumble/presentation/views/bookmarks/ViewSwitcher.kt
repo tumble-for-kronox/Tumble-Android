@@ -20,13 +20,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
-import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.ViewType
+import tumble.app.tumble.domain.enums.viewTypeToStringResource
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -67,18 +66,5 @@ fun ViewSwitcher(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun viewTypeToStringResource(viewType: ViewType): String {
-    return when(viewType){
-        ViewType.LIST -> {
-            stringResource(id = R.string.list)
-        }
-        ViewType.CALENDAR -> {
-            stringResource(id = R.string.calendar)}
-        ViewType.WEEK -> {
-            stringResource(id = R.string.week)}
     }
 }
