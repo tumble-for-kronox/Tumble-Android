@@ -41,6 +41,7 @@ class HomeViewModel @Inject constructor(private val kronoxRepository: KronoxRepo
                     newsItems.value = null
                     newsError.value = null
                 }
+                else -> {}
             }
         }
     }

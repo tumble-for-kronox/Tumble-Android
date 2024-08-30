@@ -16,8 +16,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import tumble.app.tumble.datasource.preferences.DataStoreManager
-import tumble.app.tumble.datasource.realm.RealmManager
+import tumble.app.tumble.data.repository.preferences.DataStoreManager
+import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.domain.enums.BookmarksStatus
 import tumble.app.tumble.domain.enums.ViewType
 import tumble.app.tumble.domain.models.realm.Day

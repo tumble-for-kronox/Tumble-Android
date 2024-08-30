@@ -1,6 +1,7 @@
 package tumble.app.tumble.presentation.viewmodels
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -14,11 +15,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
+import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.datasource.network.ApiResponse
 import tumble.app.tumble.datasource.network.kronox.KronoxRepository
-import tumble.app.tumble.datasource.realm.RealmManager
-import tumble.app.tumble.domain.enums.GenericPageStatus
 import tumble.app.tumble.domain.enums.HomeStatus
+import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.network.NewsItems
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
@@ -38,7 +39,7 @@ class HomeViewModelNew @Inject constructor(
     private val networkController: NetworkController
 ) : ViewModel() {
 
-    var newsSectionStatus by mutableStateOf(GenericPageStatus.LOADING)
+    var newsSectionStatus by mutableStateOf(PageState.LOADING)
     var news: NewsItems? by mutableStateOf(null)
     var swipedCards = mutableIntStateOf(0)
     var status by mutableStateOf<HomeStatus>(HomeStatus.LOADING)
@@ -88,17 +89,19 @@ class HomeViewModelNew @Inject constructor(
         viewModelScope.launch {
             when (val result = kronoxRepository.getNews()) {
                 is ApiResponse.Success -> {
-                    `newsSectionStatus` = GenericPageStatus.LOADED
+                    newsSectionStatus = PageState.LOADED
                     news = result.data
                 }
 
                 is ApiResponse.Error -> {
-                    newsSectionStatus = GenericPageStatus.ERROR
+                    newsSectionStatus = PageState.ERROR
                     news = null
                 }
                 is ApiResponse.Loading -> {
-                    newsSectionStatus = GenericPageStatus.LOADING
+                    newsSectionStatus = PageState.LOADING
                     news = null
+                }
+                else -> {
                 }
             }
         }

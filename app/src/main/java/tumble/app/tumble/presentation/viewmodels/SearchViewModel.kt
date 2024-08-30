@@ -5,22 +5,22 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import tumble.app.tumble.data.api.Endpoint
+import tumble.app.tumble.data.api.url
+import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.datasource.SchoolManager
 import tumble.app.tumble.datasource.network.ApiResponse
-import tumble.app.tumble.datasource.network.Endpoint
 import tumble.app.tumble.datasource.network.kronox.KronoxRepository
-import tumble.app.tumble.datasource.preferences.DataStoreManager
 import tumble.app.tumble.domain.enums.SearchStatus
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.presentation.School
-import tumble.app.tumble.domain.models.presentation.SearchPreviewModel
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,35 +48,27 @@ class SearchViewModel @Inject constructor(
         currentSearchJob?.cancel()
         currentSearchJob = viewModelScope.launch {
 
-            // inserting fake data
-            if (query.value == "test"){
-                val data = fakedata()
-                programmeSearchResults = data
-                status = SearchStatus.LOADED
-                return@launch
-            }
-
-
             try{
                 val endpoint = Endpoint.SearchProgramme(query.value, selectedSchoolId.toString())
                 val searchResult: ApiResponse<NetworkResponse.Search> = kronoxManager.getProgramme(endpoint)
-                if  (status != SearchStatus.LOADING){
-                    return@launch
-                }
                 parseSearchResults(searchResult)
             } catch (e: Exception){
+                status = SearchStatus.INITIAL
                 if (e is CancellationException){
+                    Log.e("error", errorMessageSearch.toString())
                     return@launch
                 }
             }
         }
     }
+
      fun resetSearchResults(){
         programmeSearchResults = listOf()
         currentSearchJob?.cancel()
         status = SearchStatus.INITIAL
     }
-    private fun parseSearchResults(result: ApiResponse<NetworkResponse.Search> ){
+
+    private fun parseSearchResults(result: ApiResponse<NetworkResponse.Search>){
         when(result){
             is ApiResponse.Success -> {
                 programmeSearchResults = result.data.items
@@ -86,24 +78,12 @@ class SearchViewModel @Inject constructor(
                 status = SearchStatus.INITIAL
             }
             is ApiResponse.Loading -> {}
+            else -> {}
         }
     }
+
     override fun onCleared() {
         super.onCleared()
         currentSearchJob?.cancel()
     }
-}
-
-// fake data
-fun fakedata(): List<NetworkResponse.Programme> {
-    val data: MutableList<NetworkResponse.Programme> = mutableListOf()
-    for (i in 0..3) {
-        val program = NetworkResponse.Programme(
-            id = i.toString(),
-            title = "testTitle$i",
-            subtitle = "testSubtitle$i"
-        )
-        data.add(program)
-    }
-    return data.toList()
 }
