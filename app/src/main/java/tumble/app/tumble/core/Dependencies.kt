@@ -1,6 +1,7 @@
 package tumble.app.tumble.core
 
 import android.content.Context
+import android.util.Log
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -14,27 +15,34 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import tumble.app.tumble.BuildConfig
 import tumble.app.tumble.datasource.SchoolManager
-import tumble.app.tumble.datasource.network.auth.AuthManager
-import tumble.app.tumble.datasource.network.kronox.KronoxRepository
-import tumble.app.tumble.datasource.preferences.DataStoreManager
-import tumble.app.tumble.datasource.realm.RealmManager
-import tumble.app.tumble.presentation.viewmodels.EventDetailsSheetViewModel
-import tumble.app.tumble.presentation.viewmodels.SearchPreviewViewModel
-import java.security.SecureRandom
-import java.security.cert.X509Certificate
-import javax.inject.Provider
+import tumble.app.tumble.data.api.HeadersInterceptor
+import tumble.app.tumble.data.api.auth.AuthApiService
+import tumble.app.tumble.data.api.auth.AuthManager
+import tumble.app.tumble.data.notifications.NotificationManager
+import tumble.app.tumble.data.repository.preferences.DataStoreManager
+import tumble.app.tumble.data.repository.realm.RealmManager
+import tumble.app.tumble.data.repository.securestorage.SecureStorageManager
+import tumble.app.tumble.datasource.network.kronox.KronoxApiService
 import javax.inject.Singleton
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManager
-import javax.net.ssl.X509TrustManager
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object KronoxModule {
     @Provides
     @Singleton
-    fun provideKronoxManager(retrofit: Retrofit): KronoxRepository {
-        return KronoxRepository(retrofit)
+    fun provideKronoxApiService(retrofit: Retrofit): KronoxApiService {
+        return retrofit.create(KronoxApiService::class.java)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object NotificationModule {
+    @Provides
+    @Singleton
+    fun provideNotificationManager(): NotificationManager {
+        return NotificationManager()
     }
 }
 
@@ -43,8 +51,28 @@ object KronoxModule {
 object AuthModule {
     @Provides
     @Singleton
-    fun provideAuthManager(retrofit: Retrofit): AuthManager {
-        return AuthManager(retrofit)
+    fun provideAuthApiService(retrofit: Retrofit): AuthApiService {
+        return retrofit.create(AuthApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthManager(
+        authApiService: AuthApiService,
+        secureStorageManager: SecureStorageManager,
+        dataStoreManager: DataStoreManager
+    ): AuthManager {
+        return AuthManager(authApiService, secureStorageManager, dataStoreManager)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object SecureStorageModel{
+    @Provides
+    @Singleton
+    fun provideSecureStorageManager(@ApplicationContext context: Context): SecureStorageManager{
+        return SecureStorageManager(context)
     }
 }
 
@@ -63,7 +91,7 @@ object PreferenceModule {
 object SchoolManager{
     @Provides
     @Singleton
-    fun provideSchoolManager(@ApplicationContext context: Context): SchoolManager{
+    fun provideSchoolManager(@ApplicationContext context: Context): SchoolManager {
         return SchoolManager(context)
     }
 }
@@ -93,11 +121,12 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(): Retrofit {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
         val baseUrl = "${NetworkSettings.shared.scheme}://${NetworkSettings.shared.tumbleUrl}:${NetworkSettings.shared.port}"
+        val okHttpClient = provideOkHttpClient()
         return Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(baseUrl)
