@@ -68,7 +68,7 @@ class DataStoreManager @Inject constructor(
                 _viewType.value = ViewType.valueOf(preferences[PreferencesKeys.VIEW_TYPE] ?: ViewType.WEEK.name)
                 _autoSignup.value = preferences[PreferencesKeys.AUTO_SIGNUP] ?: false
                 _appearance.value = AppearanceType.valueOf(preferences[PreferencesKeys.APPEARANCE] ?: AppearanceType.AUTOMATIC.name)
-                _notificationOffset.value = NotificationOffset.valueOf((preferences[PreferencesKeys.NOTIFICATION_OFFSET]?: NotificationOffset.Thirty.name).toString())
+                _notificationOffset.value = NotificationOffset.allCases.first {it.value == (preferences[PreferencesKeys.NOTIFICATION_OFFSET]?: NotificationOffset.Thirty.value) }
             }
             .launchIn(scope)
     }
@@ -87,9 +87,9 @@ class DataStoreManager @Inject constructor(
         _userOnBoarded.value = userOnBoarded
     }
 
-    suspend fun setNotificationOffset(offset: Int) {
+    suspend fun setNotificationOffset(offset: NotificationOffset) {
         context.dataStore.edit { preferences ->
-            preferences[PreferencesKeys.NOTIFICATION_OFFSET] = offset
+            preferences[PreferencesKeys.NOTIFICATION_OFFSET] = offset.value
         }
     }
 

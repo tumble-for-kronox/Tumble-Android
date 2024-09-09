@@ -52,7 +52,7 @@ fun NotificationOffsetSettings(
                             val previousOffset = currentOffset
                             viewModel.rescheduleNotifications(
                                 previousOffset.value.value,
-                                type.value
+                                type
                             )
                         }
                     )

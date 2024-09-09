@@ -96,7 +96,7 @@ class SettingsViewModel @Inject constructor(
         //TODO
     }
 
-    fun rescheduleNotifications(previousOffset: Int, newOffset: Int){
+    fun rescheduleNotifications(previousOffset: Int, newOffset: NotificationOffset){
         viewModelScope.launch {
             dataStoreManager.setNotificationOffset(newOffset)
         }
