@@ -1,7 +1,11 @@
 package tumble.app.tumble.extensions.models
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
+import io.realm.kotlin.ext.copyFromRealm
+import io.realm.kotlin.ext.toRealmList
+import tumble.app.tumble.domain.models.realm.Day
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.extensions.presentation.toLocalDateTime
@@ -9,8 +13,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun List<Schedule>.filterEventsMatchingToday(): List<Event> {
@@ -57,3 +59,39 @@ fun List<Schedule>.findNextUpcomingEvent(): Event? {
     return nextUpcomingEvent
 }
 
+fun List<Schedule>.flattenAndMerge(): List<Day> {
+    val days: MutableList<Day> = mutableListOf()
+    this.forEach { days += it.days?.toList() ?: emptyList() }
+    val dayDictionary: MutableMap<String, Day> = mutableMapOf()
+
+    for (day in days){
+        val existingDay = dayDictionary.get(day.isoString)
+        if (existingDay != null){
+            day.events?.let { existingDay.events?.addAll(it) }
+            day.isoString?.let { dayDictionary.put(it, existingDay) }
+        }else{
+            val newDay = Day()
+            newDay.name = day.name
+            newDay.date = day.date
+            newDay.isoString = day.isoString
+            newDay.weekNumber = day.weekNumber
+            newDay.events = day.events?.copyFromRealm()?.toRealmList()
+            day.isoString?.let { dayDictionary.put(it, newDay) }
+        }
+    }
+    return dayDictionary.values.toList()
+}
+
+fun Schedule.isMissingEvents(): Boolean{
+    if (this.days == null){
+        return true
+    }
+    for (day in this.days!!){
+        for (event in day.events!!){
+            if (event.title.isNotEmpty()){
+                return false
+            }
+        }
+   }
+    return true
+}

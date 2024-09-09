@@ -1,5 +1,6 @@
 package tumble.app.tumble.extensions.presentation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,6 +10,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.*
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
@@ -55,4 +58,15 @@ fun Modifier.wiggle(): Modifier = composed {
             rotationZ = animatedRotation
             translationX = animatedOffset.dp.toPx()
         }
+}
+
+@SuppressLint("ModifierFactoryUnreferencedReceiver")
+inline fun Modifier.noRippleClickable(
+    crossinline onClick: () -> Unit
+): Modifier = composed {
+    clickable(
+        indication = null,
+        interactionSource = remember { MutableInteractionSource() }) {
+        onClick()
+    }
 }

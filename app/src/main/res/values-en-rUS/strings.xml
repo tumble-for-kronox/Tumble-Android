@@ -11,4 +11,20 @@
     <string name="no_upcoming_class">No upcoming class</string>
     <string name="todays_events">Todays events</string>
     <string name="no_events_for_today">No events for today</string>
+    <string name="home">Home</string>
+    <string name="error_something_wrong">Something went wrong</string>
+    <string name="error_empty_schedule">Schedule seems to be empty</string>
+    <string name="choose_university">Choose a university to begin your search</string>
+    <string name="search_results">%1$d results</string>
+    <string name="search">Search</string>
+    <string name="search_field_placeholder">Search Schedules</string>
+    <string name="bookmark">Bookmarks</string>
+    <string name="no_bookmarks">No bookmarks yet</string>
+    <string name="bookmarks_hidden">All your bookmakrs are hidden</string>
+    <string name="schedules_contain_no_events">Your visible schedules do not contain any events</string>
+    <string name="list">List</string>
+    <string name="calendar">Calendar</string>
+    <string name="week">Week</string>
+    <string name="no_events_for_this_day">No events this day</string>
+    <string name="no_events_for_week">No events for this week..</string>
 </resources>

@@ -5,23 +5,30 @@ import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.ui.graphics.Color
+import tumble.app.tumble.utils.isoDateFormatter
+import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 fun String.formatDate(): String? {
-    val isoDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.getDefault()) // Adjust this format if your ISO string is in a different format
+    //val isoDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.XXX'Z'", Locale.getDefault()) // Adjust this format if your ISO string is in a different format
     val targetFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-    val date = isoDateFormatter.parse(this)
+
+    val date = isoDateFormatterNoTimeZone.parse(this)
     return date?.let { targetFormatter.format(it) }
 }
 
 fun String.convertToHoursAndMinutesISOString(): String? {
-    val isoDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()) // This format includes the timezone
-
-    val date = isoDateFormatter.parse(this) ?: return null
-
+    val isoDateFormatterTimeZone = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()) // This format includes the timezone
+    val isoDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
+    //val date = isoDateFormatter.parse(this) ?: return null
+    val date = if (this.length > 21){
+         isoDateFormatterTimeZone.parse(this)?: return null
+    }else{
+         isoDateFormatter.parse(this)?: return null
+    }
     val calendar = Calendar.getInstance().apply {
         time = date
     }
@@ -48,5 +55,18 @@ fun String.toLocalDateTime(): LocalDateTime? {
         LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
     } catch (e: DateTimeParseException) {
         null
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+fun String.isValidRegistrationDate(): Boolean {
+    return try {
+        // Parse the date from the string
+        val date = LocalDateTime.parse(this)
+        // Compare it with the current date and time
+        date.isAfter(LocalDateTime.now())
+    } catch (e: Exception) {
+        // Handle any exceptions that may occur during parsing
+        false
     }
 }

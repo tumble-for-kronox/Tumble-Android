@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import tumble.app.tumble.datasource.network.ApiResponse
 import tumble.app.tumble.datasource.network.kronox.KronoxRepository
+import tumble.app.tumble.domain.enums.HomeStatus
 import tumble.app.tumble.domain.models.network.NewsItems
 import javax.inject.Inject
 
@@ -40,13 +41,10 @@ class HomeViewModel @Inject constructor(private val kronoxRepository: KronoxRepo
                     newsItems.value = null
                     newsError.value = null
                 }
+                else -> {}
             }
         }
     }
-}
-
-enum class HomeStatus {
-    LOADING, AVAILABLE, NO_BOOKMARKS, NOT_AVAILABLE, ERROR
 }
 
 enum class NewsStatus {

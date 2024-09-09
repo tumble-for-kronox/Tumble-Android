@@ -1,5 +1,7 @@
 package tumble.app.tumble.presentation.navigation.navgraphs
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
@@ -7,8 +9,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import tumble.app.tumble.presentation.navigation.Routes
+import tumble.app.tumble.presentation.views.Settings.AppearanceSettings.AppearanceSettings
+import tumble.app.tumble.presentation.views.Settings.Bookmarks.BookmarksSettings
+import tumble.app.tumble.presentation.views.Settings.Notifications.NotificationOffsetSettings
+import tumble.app.tumble.presentation.views.Settings.SettingsScreen
 import tumble.app.tumble.presentation.views.account.Account
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Events.EventBookings
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceBookings
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AccountNavGraph(
     navController: NavHostController,
@@ -30,7 +39,7 @@ fun AccountNavGraph(
 
 private fun NavGraphBuilder.account(navController: NavHostController) {
     composable(Routes.account) {
-        Account()
+        Account(navController = navController)
     }
 }
 
@@ -43,15 +52,13 @@ private fun NavGraphBuilder.accountLogin(navController: NavHostController) {
 
 private fun NavGraphBuilder.accountSettings(navController: NavHostController) {
     composable(Routes.accountSettings) {
-        Text("Showing account/settings")
-        // TODO: Show account settings
+        SettingsScreen(navController = navController)
     }
 }
 
 private fun NavGraphBuilder.accountSettingsAppearance(navController: NavHostController) {
     composable(Routes.accountSettingsAppearance) {
-        Text("Showing account/settings/appearance")
-        // TODO: Show account settings appearance
+        AppearanceSettings( navController = navController)
     }
 }
 
@@ -64,49 +71,47 @@ private fun NavGraphBuilder.accountSettingsLanguage(navController: NavHostContro
 
 private fun NavGraphBuilder.accountSettingsNotifications(navController: NavHostController) {
     composable(Routes.accountSettingsNotifications) {
-        Text("Showing account/settings/notifications")
-        // TODO: Show account settings notifications
+        NotificationOffsetSettings(navController =  navController)
     }
 }
 
 private fun NavGraphBuilder.accountSettingsBookmarks(navController: NavHostController) {
     composable(Routes.accountSettingsBookmarks) {
-        Text("Showing account/settings/bookmarks")
-        // TODO: Show account settings bookmarks
+        BookmarksSettings(navController = navController)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.accountResources(navController: NavHostController) {
     composable(Routes.accountResources) {
-        Text("Showing account/resources")
-        // TODO: Show account resources
+        //ResourceBookings(navController = navController)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.accountResourceDetails(navController: NavHostController) {
     composable(
         Routes.accountResourceDetails,
     ) { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")
-        Text("Showing account/resources?resourceId=$id")
-        // TODO: Show account resource details
+        ResourceBookings(navController = navController)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.accountEvents(navController: NavHostController) {
     composable(Routes.accountEvents) {
-        Text("Showing account/events")
-        // TODO: Show account events
+        //EventBookings(navController =  navController)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.accountEventDetails(navController: NavHostController) {
     composable(
         Routes.accountEventDetails,
     ) { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")
-        Text("Showing account/events?eventId=$id")
-        // TODO: Show account event details
+        EventBookings(navController =  navController)
     }
 }
 

@@ -7,7 +7,7 @@ import org.mongodb.kbson.ObjectId
 open class Teacher(
 ) : RealmObject {
     @PrimaryKey
-    var _id: ObjectId? = null
+    var _id: ObjectId? = ObjectId()
     var teacherId: String? = null
     var firstName: String? = null
     var lastName: String? = null

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
+import tumble.app.tumble.domain.models.presentation.SearchPreviewModel
 import tumble.app.tumble.presentation.views.navigation.BottomNavItem
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ class AppController @Inject constructor() : ViewModel() {
         val shared: AppController by lazy { AppController() }
     }
 
+    var searchPreview by mutableStateOf<SearchPreviewModel?>(null)
     var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
     var selectedAppTab by mutableStateOf(BottomNavItem.HOME)
     private val _isUpdatingBookmarks = MutableStateFlow(false)
