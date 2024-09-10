@@ -80,7 +80,7 @@ fun SettingsScreen(
                     SettingsListGroup {
                         SettingsNavigationButton(
                             title = "appearance",
-                            current = appearance.value.name, //stringResource(id = getAppearanceResource(appearance)),
+                            current = appearance.value.name,
                             leadingIcon = Icons.Default.DarkMode,
                             leadingIconBackgroundColor = MaterialTheme.colors.primary,
                             destination = { navController.navigate(Routes.accountSettingsAppearance) }
