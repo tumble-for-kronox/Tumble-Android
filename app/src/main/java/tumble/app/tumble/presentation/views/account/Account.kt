@@ -23,9 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import tumble.app.tumble.R
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.account.Login.AccountLogin
@@ -46,7 +48,7 @@ fun Account(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "account") },
+                title = { Text(text = stringResource(R.string.account)) },
                 actions = {
                     Row {
                         if(authStatus == AccountViewModel.AuthStatus.AUTHORIZED){
@@ -69,6 +71,7 @@ fun Account(
                 AccountViewModel.AuthStatus.AUTHORIZED -> UserOverview(navController = navController)
                 AccountViewModel.AuthStatus.UNAUTHORIZED -> AccountLogin()
             }
+            UserOverview(navController = navController)
         }
 
         if(isSigningOut){
@@ -88,7 +91,7 @@ fun Account(
                     }
                 },
                 text = {
-                    Text(text = "coonfirm")
+                    Text(text = "confirm")
                 }
             )
         }

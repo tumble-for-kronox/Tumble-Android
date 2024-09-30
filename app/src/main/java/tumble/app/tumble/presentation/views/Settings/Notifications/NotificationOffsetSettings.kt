@@ -6,9 +6,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import tumble.app.tumble.R
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
 import tumble.app.tumble.presentation.views.Settings.BackNav
 import tumble.app.tumble.presentation.views.Settings.Buttons.SettingsRadioButton
@@ -39,7 +41,7 @@ fun NotificationOffsetSettings(
     Scaffold(
         topBar =  {
             BackNav(onClick = { navController.popBackStack() },
-                label = "Settings")
+                label = stringResource(R.string.settings))
         }
     ) { padding ->
         SettingsList (modifier = Modifier.padding(padding)){

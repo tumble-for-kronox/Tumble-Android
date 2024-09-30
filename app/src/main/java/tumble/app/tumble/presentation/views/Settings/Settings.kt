@@ -1,5 +1,7 @@
 package tumble.app.tumble.presentation.views.Settings
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,11 +38,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import tumble.app.tumble.R
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
 import tumble.app.tumble.presentation.views.Settings.Buttons.SettingsExternalButton
@@ -60,13 +65,25 @@ fun SettingsScreen(
 
     val currentLocale = Locale.getDefault().displayLanguage
     val appVersion = "1.0.0" // Replace with actual version retrieval logic
+    val context = LocalContext.current
+
+    val externalNav = {uri:String ->
+        startActivity(
+            context,
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(uri)
+            ),
+            null)
+    }
+
 
     Scaffold (
         topBar = {
             BackNav(
                 onClick = {navController.popBackStack()},
-                label = "Account",
-                title = "Settings"
+                label = stringResource(R.string.account),
+                title = stringResource(R.string.settings)
             )
         },
     ){padding ->
@@ -79,7 +96,7 @@ fun SettingsScreen(
                 SettingsList {
                     SettingsListGroup {
                         SettingsNavigationButton(
-                            title = "appearance",
+                            title = stringResource(R.string.appearance),
                             current = appearance.value.name,
                             leadingIcon = Icons.Default.DarkMode,
                             leadingIconBackgroundColor = MaterialTheme.colors.primary,
@@ -87,16 +104,16 @@ fun SettingsScreen(
                         )
                         Divider()
                 SettingsExternalButton(
-                    title = "language",
+                    title = stringResource(R.string.language),
                     current = currentLocale,
                     leadingIcon = Icons.Default.Language,
                     leadingIconBackgroundColor = Color.Blue,
-                    action = {  }
+                    action = {},
                 )
                     }
                     SettingsListGroup {
                         SettingsNavigationButton(
-                            title = "notification_offset",
+                            title = stringResource(R.string.notification_offset),
                             leadingIcon = Icons.Default.AccessTime,
                             leadingIconBackgroundColor = Color.Red,
                             destination = {
@@ -105,7 +122,7 @@ fun SettingsScreen(
                         )
                         Divider()
                         SettingsNavigationButton(
-                            title = "bookmarks",
+                            title = stringResource(R.string.bookmark),
                             leadingIcon = Icons.Default.Bookmark,
                             leadingIconBackgroundColor = Color.Gray,
                             destination = { navController.navigate(Routes.accountSettingsBookmarks) }
@@ -113,21 +130,23 @@ fun SettingsScreen(
                     }
                     SettingsListGroup {
                 SettingsExternalButton(
-                    title = "stringResource(id = R.string.review_app)",
+                    title = stringResource(id = R.string.review_app),
                     leadingIcon = Icons.Default.Star,
                     leadingIconBackgroundColor = Color.Yellow,
-                    action = { }
+                    action = {
+                        externalNav("market://details?id=")
+                             },
                 )
                         Divider()
                 SettingsExternalButton(
-                    title = "stringResource(id = R.string.share_feedback)",
+                    title = stringResource(id = R.string.share_feedback),
                     leadingIcon = Icons.Default.Email,
                     leadingIconBackgroundColor = Color.Blue,
-                    action = {  }
+                    action = {externalNav("http://www.google.com")},
                 )
                         Divider()
                         SettingsExternalButton(
-                            title = "share_app",
+                            title = stringResource(R.string.share_app),
                             leadingIcon = Icons.Default.Share,
                             leadingIconBackgroundColor = Color.Green,
                             action = { showShareSheet = true }
@@ -135,10 +154,10 @@ fun SettingsScreen(
                     }
                     SettingsListGroup {
                 SettingsExternalButton(
-                    title = "stringResource(id = R.string.github)",
+                    title = stringResource(id = R.string.github),
                     leadingIcon = Icons.Default.Code,
                     leadingIconBackgroundColor = Color.Black,
-                    action = {  }
+                    action = {externalNav("https://github.com/tumble-for-kronox/Tumble-Android")},
                 )
                     }
 

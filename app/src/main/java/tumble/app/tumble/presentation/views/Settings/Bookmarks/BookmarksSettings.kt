@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import io.realm.kotlin.ext.query
@@ -16,6 +17,7 @@ import io.realm.kotlin.query.find
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
 import tumble.app.tumble.presentation.views.Settings.BackNav
@@ -32,7 +34,7 @@ fun BookmarksSettings(
     Scaffold(
         topBar =  {
             BackNav(onClick = { navController.popBackStack() },
-                label = "Settings")
+                label = stringResource(R.string.settings))
         }
     ) { padding ->
         if (schedules.value.isNotEmpty()) {
@@ -50,7 +52,7 @@ fun BookmarksSettings(
                 }
             }
         } else {
-            Info(title = "No bookmarks yet", image = null)
+            Info(title = stringResource(R.string.no_bookmarks), image = null)
         }
     }
 }

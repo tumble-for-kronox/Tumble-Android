@@ -25,12 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.extensions.presentation.noRippleClickable
 
-data class SettingsDetails(
-    val titleKey: String,
-    val name: String,
-    val details: String
-)
-
 @Composable
 fun SettingsExternalButton(
     title: String,
@@ -38,7 +32,7 @@ fun SettingsExternalButton(
     leadingIcon: ImageVector,
     trailingIcon: ImageVector = Icons.Default.ArrowOutward,
     leadingIconBackgroundColor: Color = MaterialTheme.colors.onSurface,
-    action: () -> Unit
+    action: () -> Unit,
 ) {
     Row(
         modifier = Modifier

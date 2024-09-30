@@ -8,10 +8,13 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.Types.AppearanceType
+import tumble.app.tumble.domain.enums.Types.appearanceTypeToStringResource
 import tumble.app.tumble.extensions.presentation.noRippleClickable
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
 import tumble.app.tumble.presentation.views.Settings.BackNav
@@ -30,7 +33,7 @@ fun AppearanceSettings(
     Scaffold(
         topBar =  {
             BackNav(onClick = { navController.popBackStack() },
-                label = "Settings")
+                label = stringResource(R.string.settings))
         }
     ) { padding ->
 
@@ -39,7 +42,7 @@ fun AppearanceSettings(
                 val appearanceTypes = AppearanceType.values()
                 appearanceTypes.forEachIndexed { index, type ->
                     SettingsRadioButton(
-                        title = type.name,
+                        title = appearanceTypeToStringResource(type),
                         isSelected = appearance.value == type,
                         onValueChange = { viewModel.upDateAppearance(type) },
                     )

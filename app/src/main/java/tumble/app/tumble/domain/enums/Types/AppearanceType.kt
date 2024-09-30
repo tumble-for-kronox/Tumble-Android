@@ -10,16 +10,16 @@ enum class AppearanceType {
 }
 
 @Composable
-fun appearenceTypeToStringResource(appearanceType: AppearanceType): String {
+fun appearanceTypeToStringResource(appearanceType: AppearanceType): String {
     return when(appearanceType){
         AppearanceType.AUTOMATIC -> {
-            stringResource(id = R.string.list)
+            stringResource(id = R.string.automatic)
         }
         AppearanceType.LIGHT -> {
-            stringResource(id = R.string.calendar)
+            stringResource(id = R.string.light)
         }
         AppearanceType.DARK -> {
-            stringResource(id = R.string.week)
+            stringResource(id = R.string.dark)
         }
     }
 }

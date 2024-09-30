@@ -23,9 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 
 enum class ResourceType{
     EVENT, RESOURCE
@@ -58,10 +60,9 @@ fun ResourceSectionDivider(
                 color = MaterialTheme.colors.onBackground
             )
             if(destination != null){
-                Log.e("error", "in if")
                 when(resourceType){
-                    ResourceType.EVENT -> ResourceNavigationItem(title = "See all", destination)
-                    ResourceType.RESOURCE -> ResourceNavigationItem(title = "Book more", destination)
+                    ResourceType.EVENT -> ResourceNavigationItem(title = stringResource(R.string.see_all), destination)
+                    ResourceType.RESOURCE -> ResourceNavigationItem(title = stringResource(R.string.book_more), destination)
                     null -> {}
                 }
             }

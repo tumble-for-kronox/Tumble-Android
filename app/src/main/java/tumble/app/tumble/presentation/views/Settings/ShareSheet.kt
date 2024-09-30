@@ -50,6 +50,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import tumble.app.tumble.R
 import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
@@ -82,7 +83,7 @@ fun ShareSheet(context: Context, onDismiss: () -> Unit) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Text(
-            text = "Share the app",
+            text = stringResource(R.string.share_app),
             fontSize = 24.sp,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
@@ -116,7 +117,7 @@ fun ShareSheet(context: Context, onDismiss: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Scan QR Code",
+                text = stringResource(R.string.qr_code),
                 fontSize = 16.sp,
                 modifier = Modifier.padding(top = 8.dp)
             )
