@@ -1,5 +1,7 @@
 package tumble.app.tumble.presentation.navigation
 
+import tumble.app.tumble.core.NetworkSettings.Companion.shared
+
 object Routes {
     const val home = "home"
     const val homeNews = "home/news"
@@ -23,22 +25,22 @@ object Routes {
     const val accountEventDetails = "account/events?eventId={id}"
 
     // Deep links
-    const val HomeUri = "https://app.tumbleforkronox.com/$home"
-    const val HomeNewsUri = "https://app.tumbleforkronox.com/$homeNews"
-    const val HomeNewsDetailsUri = "https://app.tumbleforkronox.com/$homeNewsDetails"
-    const val BookmarksUri = "https://app.tumbleforkronox.com/$bookmarks"
-    const val BookmarksDetailsUri = "https://app.tumbleforkronox.com/$bookmarksDetails"
-    const val SearchUri = "https://app.tumbleforkronox.com/$search"
-    const val SearchDetailsUri = "https://app.tumbleforkronox.com/$searchDetails"
-    const val AccountUri = "https://app.tumbleforkronox.com/$account"
-    const val AccountLoginUri = "https://app.tumbleforkronox.com/$accountLogin"
+    var HomeUri = "https://${shared.tumbleUrl}/$home"
+    var HomeNewsUri = "https://${shared.tumbleUrl}/$homeNews"
+    var HomeNewsDetailsUri = "https://${shared.tumbleUrl}/$homeNewsDetails"
+    var BookmarksUri = "https://${shared.tumbleUrl}/$bookmarks"
+    var BookmarksDetailsUri = "https://${shared.tumbleUrl}/$bookmarksDetails"
+    var SearchUri = "https://${shared.tumbleUrl}/$search"
+    var SearchDetailsUri = "https://${shared.tumbleUrl}/$searchDetails"
+    var AccountUri = "https://${shared.tumbleUrl}/$account"
+    var AccountLoginUri = "https://${shared.tumbleUrl}/$accountLogin"
 
     // Protected deep links
-    const val AccountSettingsUri = "https://app.tumbleforkronox.com/$accountSettings"
-    const val AccountResourcesUri = "https://app.tumbleforkronox.com/$accountResources"
-    const val AccountResourceDetailsUri = "https://app.tumbleforkronox.com/$accountResourceDetails"
-    const val AccountEventsUri = "https://app.tumbleforkronox.com/$accountEvents"
-    const val AccountEventDetailsUri = "https://app.tumbleforkronox.com/$accountEventDetails"
+    var AccountSettingsUri = "https://${shared.tumbleUrl}/$accountSettings"
+    var AccountResourcesUri = "https://${shared.tumbleUrl}/$accountResources"
+    var AccountResourceDetailsUri = "https://${shared.tumbleUrl}/$accountResourceDetails"
+    var AccountEventsUri = "https://${shared.tumbleUrl}/$accountEvents"
+    var AccountEventDetailsUri = "https://${shared.tumbleUrl}/$accountEventDetails"
 }
 
 object UriBuilder {
