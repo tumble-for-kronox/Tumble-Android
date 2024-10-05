@@ -30,3 +30,11 @@ val month_date: SimpleDateFormat by lazy {
     val formatter = SimpleDateFormat("MMMM", Locale.getDefault())
     formatter
 }
+
+fun preprocessDateString(dateString: String): String {
+    return if (dateString.contains(".")) {
+        dateString.substring(0, dateString.indexOf('.') + 4) + dateString.substring(dateString.indexOf('+'))
+    } else {
+        dateString
+    }
+}

@@ -23,22 +23,22 @@ object Routes {
     const val accountEventDetails = "account/events?eventId={id}"
 
     // Deep links
-    const val HomeUri = "https://tumble.hkr.se/$home"
-    const val HomeNewsUri = "https://tumble.hkr.se/$homeNews"
-    const val HomeNewsDetailsUri = "https://tumble.hkr.se/$homeNewsDetails"
-    const val BookmarksUri = "https://tumble.hkr.se/$bookmarks"
-    const val BookmarksDetailsUri = "https://tumble.hkr.se/$bookmarksDetails"
-    const val SearchUri = "https://tumble.hkr.se/$search"
-    const val SearchDetailsUri = "https://tumble.hkr.se/$searchDetails"
-    const val AccountUri = "https://tumble.hkr.se/$account"
-    const val AccountLoginUri = "https://tumble.hkr.se/$accountLogin"
+    const val HomeUri = "https://app.tumbleforkronox.com/$home"
+    const val HomeNewsUri = "https://app.tumbleforkronox.com/$homeNews"
+    const val HomeNewsDetailsUri = "https://app.tumbleforkronox.com/$homeNewsDetails"
+    const val BookmarksUri = "https://app.tumbleforkronox.com/$bookmarks"
+    const val BookmarksDetailsUri = "https://app.tumbleforkronox.com/$bookmarksDetails"
+    const val SearchUri = "https://app.tumbleforkronox.com/$search"
+    const val SearchDetailsUri = "https://app.tumbleforkronox.com/$searchDetails"
+    const val AccountUri = "https://app.tumbleforkronox.com/$account"
+    const val AccountLoginUri = "https://app.tumbleforkronox.com/$accountLogin"
 
     // Protected deep links
-    const val AccountSettingsUri = "https://tumble.hkr.se/$accountSettings"
-    const val AccountResourcesUri = "https://tumble.hkr.se/$accountResources"
-    const val AccountResourceDetailsUri = "https://tumble.hkr.se/$accountResourceDetails"
-    const val AccountEventsUri = "https://tumble.hkr.se/$accountEvents"
-    const val AccountEventDetailsUri = "https://tumble.hkr.se/$accountEventDetails"
+    const val AccountSettingsUri = "https://app.tumbleforkronox.com/$accountSettings"
+    const val AccountResourcesUri = "https://app.tumbleforkronox.com/$accountResources"
+    const val AccountResourceDetailsUri = "https://app.tumbleforkronox.com/$accountResourceDetails"
+    const val AccountEventsUri = "https://app.tumbleforkronox.com/$accountEvents"
+    const val AccountEventDetailsUri = "https://app.tumbleforkronox.com/$accountEventDetails"
 }
 
 object UriBuilder {

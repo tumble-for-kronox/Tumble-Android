@@ -57,7 +57,7 @@ import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 @Composable
 fun ShareSheet(context: Context, onDismiss: () -> Unit) {
     var qrCodeImage by remember { mutableStateOf<Bitmap?>(null) }
-    val websiteLink = "tumble.hkr.se"
+    val websiteLink = "app.tumbleforkronox.com"
     val appStoreLink = "https://apps.apple.com/se/app/tumble-for-kronox/id1617642864?l=en"
 
     LaunchedEffect(Unit) {
