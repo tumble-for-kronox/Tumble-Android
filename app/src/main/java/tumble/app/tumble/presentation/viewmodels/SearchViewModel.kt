@@ -50,6 +50,7 @@ class SearchViewModel @Inject constructor(
 
             try{
                 val endpoint = Endpoint.SearchProgramme(query.value, selectedSchoolId.toString())
+                Log.d("search", endpoint.url())
                 val searchResult: ApiResponse<NetworkResponse.Search> = kronoxManager.getProgramme(endpoint)
                 parseSearchResults(searchResult)
             } catch (e: Exception){
@@ -77,8 +78,12 @@ class SearchViewModel @Inject constructor(
             is ApiResponse.Error -> {
                 status = SearchStatus.INITIAL
             }
-            is ApiResponse.Loading -> {}
-            else -> {}
+            is ApiResponse.Loading -> {
+                status = SearchStatus.LOADING
+            }
+            else -> {
+                status = SearchStatus.LOADING
+            }
         }
     }
 

@@ -45,7 +45,7 @@ fun UsernameField(username: MutableState<String>){
         TextField(value = username.value,
             onValueChange = {username.value = it},
             placeholder = {
-                Text(text = "Usernam/Email address")
+                Text(text = "Username/Email address")
             },
             textStyle = MaterialTheme.typography.body1,
             modifier = Modifier.fillMaxWidth(),

@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
-                    android:host="tumble.hkr.se"
+                    android:host="app.tumbleforkronox.com"
                     android:scheme="https" />
             </intent-filter>
         </activity>
