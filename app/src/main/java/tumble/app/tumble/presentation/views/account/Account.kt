@@ -15,6 +15,8 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,14 +25,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import tumble.app.tumble.R
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.account.Login.AccountLogin
 import tumble.app.tumble.presentation.views.account.User.ProfileSection.UserOverview
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Account(
     viewModel: AccountViewModel = hiltViewModel(),
@@ -45,8 +50,8 @@ fun Account(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(text = "account") },
+            CenterAlignedTopAppBar(
+                title = { Text(text = stringResource(R.string.account)) },
                 actions = {
                     Row {
                         if(authStatus == AccountViewModel.AuthStatus.AUTHORIZED){

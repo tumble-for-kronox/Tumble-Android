@@ -27,4 +27,15 @@
     <string name="week">Week</string>
     <string name="no_events_for_this_day">No events this day</string>
     <string name="no_events_for_week">No events for this week..</string>
+    <string name="account">Account</string>
+    <string name="github">Tumble on GitHub</string>
+    <string name="share_app">Share the app</string>
+    <string name="share_feedback">Share feedback</string>
+    <string name="review_app">Review the app</string>
+    <string name="notification_offset">Notification offset</string>
+    <string name="app_language">App language</string>
+    <string name="appearance">Appearance</string>
+    <string name="appearance_auto">Automatic</string>
+    <string name="appearance_light">Light</string>
+    <string name="appearance_dark">Dark</string>
 </resources>

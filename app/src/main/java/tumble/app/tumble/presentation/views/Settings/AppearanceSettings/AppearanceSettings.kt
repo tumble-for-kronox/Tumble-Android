@@ -8,6 +8,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -39,7 +40,7 @@ fun AppearanceSettings(
                 val appearanceTypes = AppearanceType.values()
                 appearanceTypes.forEachIndexed { index, type ->
                     SettingsRadioButton(
-                        title = type.name,
+                        title = stringResource(type.id),
                         isSelected = appearance.value == type,
                         onValueChange = { viewModel.upDateAppearance(type) },
                     )
