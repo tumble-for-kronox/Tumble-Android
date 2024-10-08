@@ -30,7 +30,6 @@ fun TimeslotCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp, vertical = 10.dp)
-            .background(Color.White)
             .height(70.dp)
             .padding(10.dp)
             .background(MaterialTheme.colors.surface)
