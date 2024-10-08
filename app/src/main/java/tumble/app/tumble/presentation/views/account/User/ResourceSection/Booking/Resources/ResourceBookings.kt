@@ -39,7 +39,7 @@ fun ResourceBookings(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background) // Replace with your theme's background color
+            .background(MaterialTheme.colors.background)
     ) {
         Row {
             Spacer(modifier = Modifier.weight(1f))
@@ -50,7 +50,6 @@ fun ResourceBookings(
     
         Column(
             modifier = Modifier
-                .verticalScroll(scrollState)
                 .fillMaxWidth()
         ) {
             ResourceDatePicker(
@@ -59,7 +58,7 @@ fun ResourceBookings(
                     viewModel.setBookingDate(date)
                 }
             )
-            Divider(color = MaterialTheme.colors.onBackground) // Replace with your theme's divider color
+            Divider(color = MaterialTheme.colors.onBackground)
 
             when (resourceBookingPageState.value) {
                 PageState.LOADING -> {
@@ -110,8 +109,8 @@ fun ResourceBookings(
     }
 
 
-    LaunchedEffect(viewModel.selectedPickerDate) {
-        viewModel.getAllResourceData(selectedPikerDate.value)
+    LaunchedEffect(Unit) {
+        viewModel.getAllResources()
     }
 }
 
