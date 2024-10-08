@@ -157,7 +157,7 @@ fun CopyButton(link: String, context: Context) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = "Copy link", fontSize = 16.sp)
+                Text(text = stringResource(R.string.copy_tumble_link) , fontSize = 16.sp)
                 Text(text = link, fontSize = 12.sp, color = Color.Gray)
             }
             Icon(

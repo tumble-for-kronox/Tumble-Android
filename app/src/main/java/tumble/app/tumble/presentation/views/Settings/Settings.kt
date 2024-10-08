@@ -2,18 +2,17 @@ package tumble.app.tumble.presentation.views.Settings
 
 import android.content.Intent
 import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -36,7 +35,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +44,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import tumble.app.tumble.R
+import tumble.app.tumble.domain.enums.Types.appearanceTypeToStringResource
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
 import tumble.app.tumble.presentation.views.Settings.Buttons.SettingsExternalButton
@@ -97,7 +96,7 @@ fun SettingsScreen(
                     SettingsListGroup {
                         SettingsNavigationButton(
                             title = stringResource(R.string.appearance),
-                            current = appearance.value.name,
+                            current =  appearanceTypeToStringResource(appearance.value),
                             leadingIcon = Icons.Default.DarkMode,
                             leadingIconBackgroundColor = MaterialTheme.colors.primary,
                             destination = { navController.navigate(Routes.accountSettingsAppearance) }
@@ -108,7 +107,9 @@ fun SettingsScreen(
                     current = currentLocale,
                     leadingIcon = Icons.Default.Language,
                     leadingIconBackgroundColor = Color.Blue,
-                    action = {},
+                    action = {
+                        startActivity(context, Intent(Settings.ACTION_LOCALE_SETTINGS), null)
+                    },
                 )
                     }
                     SettingsListGroup {
@@ -133,17 +134,15 @@ fun SettingsScreen(
                     title = stringResource(id = R.string.review_app),
                     leadingIcon = Icons.Default.Star,
                     leadingIconBackgroundColor = Color.Yellow,
-                    action = {
-                        externalNav("market://details?id=")
-                             },
+                    action = { externalNav("market://details?id=com.tumble.kronoxtoapp") },// might work
                 )
-                        Divider()
-                SettingsExternalButton(
-                    title = stringResource(id = R.string.share_feedback),
-                    leadingIcon = Icons.Default.Email,
-                    leadingIconBackgroundColor = Color.Blue,
-                    action = {externalNav("http://www.google.com")},
-                )
+//              Divider()
+//                SettingsExternalButton(
+//                    title = stringResource(id = R.string.share_feedback),
+//                    leadingIcon = Icons.Default.Email,
+//                    leadingIconBackgroundColor = Color.Blue,
+//                    action = { externalNav("http://www.google.com") }, //
+//                )
                         Divider()
                         SettingsExternalButton(
                             title = stringResource(R.string.share_app),
@@ -157,7 +156,7 @@ fun SettingsScreen(
                     title = stringResource(id = R.string.github),
                     leadingIcon = Icons.Default.Code,
                     leadingIconBackgroundColor = Color.Black,
-                    action = {externalNav("https://github.com/tumble-for-kronox/Tumble-Android")},
+                    action = { externalNav("https://github.com/tumble-for-kronox/Tumble-Android") },
                 )
                     }
 
