@@ -33,9 +33,7 @@ enum class BookingButtonState {
 
 @Composable
 fun TimeslotSelection(
-    resourceId: String,
-    bookResource: (String, Date, NetworkResponse.AvailabilityValue) -> Boolean,
-    selectedPickerDate: Date,
+    bookResource: (NetworkResponse.AvailabilityValue) -> Unit,
     availabilityValues: MutableState<List<NetworkResponse.AvailabilityValue>>
 ) {
     val buttonStateMap = remember { mutableMapOf<String, BookingButtonState>() }
@@ -64,7 +62,7 @@ fun TimeslotSelection(
             availabilityValues.value.forEach { availabilityValue ->
                 availabilityValue.locationID?.let { locationId ->
                     TimeslotCard(
-                        onBook = { bookResource(resourceId, selectedPickerDate, availabilityValue) },
+                        onBook = { bookResource(availabilityValue) },
                         locationId = locationId,
                         bookingButtonState = buttonStateMap[locationId] ?: BookingButtonState.AVAILABLE
                     )

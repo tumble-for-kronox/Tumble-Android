@@ -65,15 +65,13 @@ fun ResourceSelection(
             )
             Divider(modifier = Modifier.padding(vertical = 8.dp))
             TimeslotSelection(
-                resourceId = resource.id!!,
-                bookResource = { resourceId, date, availabilityValue ->
+                bookResource = { availabilityValue ->
                     parentViewModel.bookResource(
-                        resourceId = resourceId,
-                        date = date,
+                        resourceId = resource.id!!,
+                        date = selectedPickerDate,
                         availabilityValue = availabilityValue
                         )
                 },
-                selectedPickerDate = selectedPickerDate,
                 availabilityValues = availabilityValues
             )
         } else {
