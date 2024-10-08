@@ -42,4 +42,15 @@
     <string name="qr_code">Scan QR Code</string>
     <string name="see_all">See all</string>
     <string name="book_more">Book more</string>
+    <string name="registered">Registered</string>
+    <string name="no_registered_events">No Registered Events</string>
+    <string name="unregistered">Unregisted</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="no_upcoming_events">No Upcoming Events</string>
+    <string name="no_unregistered_events">No Unregistered Events</string>
+    <string name="available_until">Available unitl</string>
+    <string name="available_at">Available at</string>
+    <string name="register">Register</string>
+    <string name="unregister">Unregister</string>
+    <string name="signup_has_passed">Signup has passed</string>
 </resources>
