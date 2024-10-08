@@ -57,12 +57,10 @@ class ResourceViewModel @Inject constructor(
     private val _allResourcesTypes = MutableStateFlow<List<NetworkResponse.KronoxResourceElement>?>(null)
     val allResourcesTypes: StateFlow<List<NetworkResponse.KronoxResourceElement>?> = _allResourcesTypes
 
-
     //val allResources: List<NetworkResponse.KronoxResourceElement>? = null
 
     private val _resourceSelectionModel = MutableStateFlow<ResourceSelectionModel?>(null)
     var resourceSelectionModel by mutableStateOf<ResourceSelectionModel?>(null)
-
 
     fun setBookingDate(newDate: Date){
         _selectedPickerDate.value = newDate
@@ -118,9 +116,9 @@ class ResourceViewModel @Inject constructor(
     fun getAllResources(){
         viewModelScope.launch {
             try {
-                val endpoint = Endpoint.AllResourcesTest(dataStoreManager.authSchoolId.value.toString())
+                val endpoint = Endpoint.AllResources(dataStoreManager.authSchoolId.value.toString())
                 val refreshToken = authManager.getRefreshToken() ?: return@launch
-                val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>> = kronoxManager.getAllResourcesTest(endpoint, refreshToken, null)
+                val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>> = kronoxManager.getAllResources(endpoint, refreshToken, null)
 
                 when(response){
                     is ApiResponse.Success -> {
@@ -179,20 +177,35 @@ class ResourceViewModel @Inject constructor(
         }
     }
 
-
-
     fun confirmResource(resourceId: String, bookingId: String){
-        //TODO
+        val endpoint = Endpoint.ConfirmResource(dataStoreManager.authSchoolId.value.toString())
+        val resource = NetworkRequest.ConfirmKronoxResource(resourceId, bookingId)
+        val refreshToken = authManager.getRefreshToken() ?: return
+
+        viewModelScope.launch {
+            val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)
+        }
     }
 
-    fun bookResource(resourceId: String, date: Date, availabilityValue: NetworkResponse.AvailabilityValue):Boolean{
-        //TODO
-        return false
+    fun bookResource(resourceId: String, date: Date, availabilityValue: NetworkResponse.AvailabilityValue){
+        val endpoint = Endpoint.BookResource(dataStoreManager.authSchoolId.value.toString())
+        val resource = NetworkRequest.BookKronoxResource(resourceId, isoDateFormatterDate.format(date), availabilityValue)
+        val refreshToken = authManager.getRefreshToken() ?: return
+
+        viewModelScope.launch {
+            val response = kronoxManager.bookResource(endpoint, refreshToken, resource)
+            if (response.isSuccessful){
+                return@launch
+            }
+        }
     }
 
-    fun unbookResource(bookingId: String): Boolean{
-        //TODO
-        return true
-    }
+    fun unBookResource(bookingId: String){
+        val endpoint = Endpoint.UnBookResource(dataStoreManager.authSchoolId.value.toString(), bookingId)
+        val refreshToken = authManager.getRefreshToken() ?: return
 
+        viewModelScope.launch {
+            val response = kronoxManager.unBookResource(endpoint, refreshToken)
+        }
+    }
 }

@@ -10,6 +10,7 @@ import tumble.app.tumble.data.api.url
 import tumble.app.tumble.datasource.network.ApiResponse
 import tumble.app.tumble.datasource.network.ApiServiceKronox
 import tumble.app.tumble.datasource.network.extensions.callToApiResponse
+import tumble.app.tumble.domain.models.network.NetworkRequest
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.network.NetworkResponse.KronoxUserBookingElement
 import tumble.app.tumble.domain.models.network.NewsItems
@@ -46,9 +47,9 @@ class KronoxRepository @Inject constructor(private val retrofit: Retrofit): Kron
         return kronoxApiService.getAllResources(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
     }
 
-    override suspend fun getAllResourcesTest(endpoint: Endpoint.AllResourcesTest, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>{
-        return kronoxApiService.getAllResourcesTest(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
-    }
+//    override suspend fun getAllResourcesTypes(endpoint: Endpoint.AllResourcesTest, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>{
+//        return kronoxApiService.getAllResourcesTypes(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
+//    }
 
     override suspend fun getAllResourceData(endpoint: Endpoint.AllResourceData, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxResourceElement>{
         return kronoxApiService.getAllResourceData(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
@@ -58,7 +59,24 @@ class KronoxRepository @Inject constructor(private val retrofit: Retrofit): Kron
         return kronoxApiService.registerForEvent(endpoint.url(), refreshToken)
     }
 
+    override suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): Response<NetworkResponse.Empty> {
+        return kronoxApiService.bookResource(endpoint.url(), refreshToken, resource)
+    }
 
+    override suspend fun confirmResource(
+        endpoint: Endpoint.ConfirmResource,
+        refreshToken: String?,
+        resource: NetworkRequest.ConfirmKronoxResource
+    ): Response<NetworkResponse.Empty> {
+        return kronoxApiService.confirmResource(endpoint.url(), refreshToken, resource)
+    }
+
+    override suspend fun unBookResource(
+        endpoint: Endpoint.UnBookResource,
+        refreshToken: String?
+    ): Response<NetworkResponse.Empty> {
+        return kronoxApiService.unBookResource(endpoint.url(), refreshToken)
+    }
 
 //    override suspend fun <T: NetworkResponse> get(
 //        endpoint: Endpoint,

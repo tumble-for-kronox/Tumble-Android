@@ -3,12 +3,14 @@ package tumble.app.tumble.datasource.network
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Url
+import tumble.app.tumble.domain.models.network.NetworkRequest
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.network.NetworkResponse.KronoxUserBookingElement
 import tumble.app.tumble.domain.models.network.NewsItems
@@ -34,6 +36,26 @@ interface ApiServiceKronox {
     fun registerForEvent(@Url endpoint: String,
                          @Header("X-auth-token") refreshToken: String?): Response<NetworkResponse.Empty>
 
+    @PUT()
+    fun bookResource(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?,
+        @Body resource: NetworkRequest.BookKronoxResource
+    ): Response<NetworkResponse.Empty>
+
+    @PUT()
+    fun confirmResource(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?,
+        @Body resource: NetworkRequest.ConfirmKronoxResource
+    ): Response<NetworkResponse.Empty>
+
+    @PUT()
+    fun unBookResource(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?,
+    ): Response<NetworkResponse.Empty>
+
     @GET()
     fun getKronoxCompleteUserEvent(
         @Url endpoint: String,
@@ -56,7 +78,7 @@ interface ApiServiceKronox {
     ): Call<List<NetworkResponse.KronoxResourceElement>>
 
     @GET()
-    fun getAllResourcesTest(
+    fun getAllResourcesTypes(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Header("X-session-token") sessionDetails: String?,
