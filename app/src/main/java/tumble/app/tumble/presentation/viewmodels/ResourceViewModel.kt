@@ -1,6 +1,7 @@
 package tumble.app.tumble.presentation.viewmodels
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -17,8 +19,13 @@ import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.datasource.network.ApiResponse
 import tumble.app.tumble.datasource.network.kronox.KronoxRepository
 import tumble.app.tumble.domain.enums.PageState
+import tumble.app.tumble.domain.models.network.NetworkRequest
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.presentation.ResourceSelectionModel
+import tumble.app.tumble.presentation.viewmodels.AccountViewModel.AuthStatus
+import tumble.app.tumble.utils.isoDateFormatterDate
+import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
+import tumble.app.tumble.utils.toIsoString
 import java.util.Date
 import javax.inject.Inject
 
@@ -44,9 +51,12 @@ class ResourceViewModel @Inject constructor(
     private val _eventBookingPageState = MutableStateFlow<PageState>(PageState.LOADING)
     val eventBookingPageState: StateFlow<PageState> = _eventBookingPageState
 
-
     private val _allResources = MutableStateFlow<List<NetworkResponse.KronoxResourceElement>?>(null)
     val allResources: StateFlow<List<NetworkResponse.KronoxResourceElement>?> = _allResources
+
+    private val _allResourcesTypes = MutableStateFlow<List<NetworkResponse.KronoxResourceElement>?>(null)
+    val allResourcesTypes: StateFlow<List<NetworkResponse.KronoxResourceElement>?> = _allResourcesTypes
+
 
     //val allResources: List<NetworkResponse.KronoxResourceElement>? = null
 
@@ -56,6 +66,7 @@ class ResourceViewModel @Inject constructor(
 
     fun setBookingDate(newDate: Date){
         _selectedPickerDate.value = newDate
+        viewModelScope.launch { getAllResourcesData(isoDateFormatterDate.format(newDate)) }
     }
 
     fun getUserEventsForPage(){
@@ -82,35 +93,92 @@ class ResourceViewModel @Inject constructor(
     }
 
     fun registerForEvent(eventId: String){
-        //TODO
+
+        viewModelScope.launch() {
+            try {
+                val refreshToken = authManager.getRefreshToken() ?: return@launch
+                val schoolID = dataStoreManager.authSchoolId.value.toString()
+                val endpoint = Endpoint.RegisterEvent(eventId = eventId, schoolId = schoolID)
+                val userRequest = kronoxManager.registerForEvent(endpoint, refreshToken)
+                if(userRequest.isSuccessful){
+                    Log.e("AAAAAAA", "Registered")
+                }else{
+                    Log.e("AAAAAAA", "NOT  Registered")
+
+                }
+            } catch (e: Exception) {
+            }
+        }
     }
 
     fun unregisterForEvent(eventId: String){
         //TODO
     }
 
-    fun getAllResourceData(date: Date){
-        _resourceBookingPageState.value = PageState.LOADING
+    fun getAllResources(){
         viewModelScope.launch {
             try {
-                val endpoint = Endpoint.AllResources(dataStoreManager.authSchoolId.toString(), date = date)
+                val endpoint = Endpoint.AllResourcesTest(dataStoreManager.authSchoolId.value.toString())
                 val refreshToken = authManager.getRefreshToken() ?: return@launch
+                val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>> = kronoxManager.getAllResourcesTest(endpoint, refreshToken, null)
 
-                val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>> = kronoxManager.getAllResources(endpoint, refreshToken, sessionDetails = null)
                 when(response){
                     is ApiResponse.Success -> {
-                        _allResources.value = response.data
-                        _resourceBookingPageState.value = PageState.LOADED
+                        _allResourcesTypes.value = response.data
+                        getAllResourcesData(date = isoDateFormatterDate.format(Date()))
                     }
-                    else -> {
+                    is ApiResponse.Error -> {
                         _resourceBookingPageState.value = PageState.ERROR
                     }
+                    else -> {}
                 }
             }catch (e:Exception){
                 _resourceBookingPageState.value = PageState.ERROR
             }
-            }
         }
+    }
+
+    fun getAllResourcesData(date: String){
+        viewModelScope.launch {
+            _resourceBookingPageState.value = PageState.LOADING
+
+            val resources: MutableList<NetworkResponse.KronoxResourceElement> = mutableListOf()
+
+            _allResourcesTypes.value?.forEach {
+                it.id?.let { id ->
+                    try {
+                        val endpoint = Endpoint.AllResourceData(
+                            dataStoreManager.authSchoolId.value.toString(),
+                            resourceId = id,
+                            date = date
+                        )
+                        val refreshToken = authManager.getRefreshToken() ?: return@launch
+                        val response: ApiResponse<NetworkResponse.KronoxResourceElement> =
+                            kronoxManager.getAllResourceData(endpoint, refreshToken, null)
+
+                        when (response) {
+                            is ApiResponse.Success -> {
+                                resources.add(response.data)
+                            }
+
+                            is ApiResponse.Error -> {
+                                _resourceBookingPageState.value = PageState.ERROR
+                                return@launch
+                            }
+
+                            else -> {}
+                        }
+                    } catch (e: Exception) {
+                        _resourceBookingPageState.value = PageState.ERROR
+                        return@launch
+                    }
+                }
+            }
+            _allResources.value = resources.toList()
+            _resourceBookingPageState.value = PageState.LOADED
+        }
+    }
+
 
 
     fun confirmResource(resourceId: String, bookingId: String){
