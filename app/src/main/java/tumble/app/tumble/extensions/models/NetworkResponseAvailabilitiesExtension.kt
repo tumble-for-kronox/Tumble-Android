@@ -20,10 +20,10 @@ fun availabilities.getAvailabilityValues(timelotId: Int): List<NetworkResponse.A
 
     val availabilities = this?: return emptyList()
     val availabilityValueResult = mutableListOf<NetworkResponse.AvailabilityValue>()
-    for ((_, availabilityValues) in availabilities){
+    for ((location, availabilityValues) in availabilities){
         val availabilityValue = availabilityValues[timelotId]
         if(availabilityValue?.availability == NetworkResponse.AvailabilityEnum.AVAILABLE){
-            availabilityValueResult.add(availabilityValue)
+            availabilityValueResult.add(availabilityValue.copy(locationID = location))
         }
     }
     return availabilityValueResult
