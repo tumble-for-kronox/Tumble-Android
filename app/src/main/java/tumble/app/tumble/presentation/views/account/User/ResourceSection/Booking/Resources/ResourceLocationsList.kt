@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,8 +48,7 @@ fun ResourceLocationsList(
 
             allResources.value?.get(resourceIndex)?.let {
 
-                val availableCounts =
-                    it.availabilities?.size?:0
+                val availableCounts = it.availabilities?.let { it1 -> calcAvailability(it1) }?: 0
 
                 ResourceLocationItem(
                     resource = it,
@@ -126,4 +126,8 @@ fun ResourceLocationItem(
             }
         }
     }
+}
+
+fun calcAvailability(availabilities: Map<String, Map<Int, NetworkResponse. AvailabilityValue>>): Int{
+    return availabilities.map {location -> location.value.filter { it.value.availability == NetworkResponse.AvailabilityEnum.AVAILABLE }.size}.sum()
 }
