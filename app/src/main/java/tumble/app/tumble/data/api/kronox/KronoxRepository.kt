@@ -46,6 +46,17 @@ class KronoxRepository @Inject constructor(private val retrofit: Retrofit): Kron
         return kronoxApiService.getAllResources(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
     }
 
+    override suspend fun getAllResourcesTest(endpoint: Endpoint.AllResourcesTest, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>{
+        return kronoxApiService.getAllResourcesTest(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
+    }
+
+    override suspend fun getAllResourceData(endpoint: Endpoint.AllResourceData, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxResourceElement>{
+        return kronoxApiService.getAllResourceData(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
+    }
+
+    override suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?): Response<NetworkResponse.Empty> {
+        return kronoxApiService.registerForEvent(endpoint.url(), refreshToken)
+    }
 
 
 

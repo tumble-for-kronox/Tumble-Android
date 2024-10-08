@@ -21,6 +21,8 @@ sealed class Endpoint {
     data class ConfirmResource(val schoolId: String) : Endpoint()
     data class UnBookResource(val schoolId: String, val bookingId: String) : Endpoint()
     object News : Endpoint()
+    data class AllResourcesTest(val schoolId: String) : Endpoint()
+    data class AllResourceData(val schoolId: String, val resourceId: String, val date: String) : Endpoint()
 }
 
 fun Endpoint.url(): String {
@@ -52,6 +54,16 @@ fun Endpoint.url(): String {
             components.path("/api/resources/all")
                 .appendQueryParameter("schoolId", schoolId)
                 .appendQueryParameter("date", date.toIsoString())
+        }
+        is Endpoint.AllResourceData -> {
+            components.path("/api/resources/$resourceId")
+                .appendQueryParameter("schoolId", schoolId)
+                .appendQueryParameter("date", date)
+
+        }
+        is Endpoint.AllResourcesTest -> {
+            components.path("/api/resources")
+                .appendQueryParameter("schoolId", schoolId)
         }
         is Endpoint.UserBookings -> {
             components.path("/api/resources/userbookings")

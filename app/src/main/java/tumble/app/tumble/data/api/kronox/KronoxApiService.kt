@@ -28,6 +28,13 @@ interface KronoxApiService {
 
     suspend fun getAllResources(endpoint: Endpoint.AllResources, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>
 
+    suspend fun getAllResourcesTest(endpoint: Endpoint.AllResourcesTest, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>
+
+    suspend fun getAllResourceData(endpoint: Endpoint.AllResourceData, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxResourceElement>
+
+
+    suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?): Response<NetworkResponse.Empty>
+
 //    @Headers(
 //        "Content-Type: application/json; charset=utf-8",
 //        "Accept: application/json; charset=utf-8"

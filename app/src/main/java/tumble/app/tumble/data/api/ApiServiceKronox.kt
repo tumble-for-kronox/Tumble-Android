@@ -6,6 +6,8 @@ import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Url
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.network.NetworkResponse.KronoxUserBookingElement
@@ -28,6 +30,10 @@ interface ApiServiceKronox {
 
     fun put(toString: String, token: String?, body: RequestBody): Response<NetworkResponse>
 
+    @PUT()
+    fun registerForEvent(@Url endpoint: String,
+                         @Header("X-auth-token") refreshToken: String?): Response<NetworkResponse.Empty>
+
     @GET()
     fun getKronoxCompleteUserEvent(
         @Url endpoint: String,
@@ -42,12 +48,26 @@ interface ApiServiceKronox {
         @Header("X-session-token") sessionDetails: String?
     ): Call<List<KronoxUserBookingElement>>
 
-    @GET
+    @GET()
     fun getAllResources(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Header("X-session-token") sessionDetails: String?
     ): Call<List<NetworkResponse.KronoxResourceElement>>
+
+    @GET()
+    fun getAllResourcesTest(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?,
+        @Header("X-session-token") sessionDetails: String?,
+    ): Call<List<NetworkResponse.KronoxResourceElement>>
+
+    @GET()
+    fun getAllResourceData(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?,
+        @Header("X-session-token") sessionDetails: String?,
+    ): Call<NetworkResponse.KronoxResourceElement>
 
     @GET()
     suspend fun <T> get(
