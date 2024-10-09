@@ -2,9 +2,9 @@ package tumble.app.tumble.presentation.views.Settings.AppearanceSettings
 
 
 import androidx.compose.material.Divider
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import tumble.app.tumble.domain.enums.Types.AppearanceType
