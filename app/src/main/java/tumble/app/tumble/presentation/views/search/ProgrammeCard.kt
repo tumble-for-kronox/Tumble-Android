@@ -3,6 +3,7 @@ package tumble.app.tumble.presentation.views.search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,22 +34,20 @@ fun ProgrammeCard(
     universityImage: Int?,
     onOpenProgramme: (String) -> Unit
 ){
-    Surface (
-        modifier = Modifier
+    Box(
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 0.dp)
             .fillMaxWidth()
-            .clickable { onOpenProgramme(programme.id) }
-            .padding(5.dp),
-        shape = RoundedCornerShape(8.dp),
-        color = MaterialTheme.colors.surface,
     ) {
-        Row (
+        Surface (
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ){
+                .clickable { onOpenProgramme(programme.id) }
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(8.dp),
+            color = MaterialTheme.colors.surface,
+        ) {
             Column (
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
+                modifier = Modifier.padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
             ) {
                 Text(
                     text = programme.title,
@@ -56,7 +55,8 @@ fun ProgrammeCard(
                     fontWeight = FontWeight.SemiBold,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colors.onSurface
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Row (verticalAlignment = Alignment.CenterVertically) {
                     universityImage?.let { image ->
@@ -68,18 +68,17 @@ fun ProgrammeCard(
                                 .size(22.dp)
                                 .clip(RoundedCornerShape(2.5.dp))
                         )
+                        Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = programme.subtitle.trim(),
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         fontSize = 15.sp,
                         color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                     )
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
         }
     }
 }

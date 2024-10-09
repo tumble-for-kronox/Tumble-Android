@@ -70,125 +70,93 @@ fun SettingsScreen(
     val currentLocale = Locale.getDefault().displayLanguage
     val appVersion = "1.0.0" // Replace with actual version retrieval logic
 
-    Scaffold (
-        topBar = {
-            BackNav(
-                onClick = {navController.popBackStack()},
-                label = "Account",
-                title = "Settings"
-            )
-        },
-    ){padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-                    .padding(padding)
-            ) {
-                SettingsList {
-                    SettingsListGroup {
-                        SettingsNavigationButton(
-                            title = stringResource(R.string.appearance),
-                            current = stringResource(appearance.value.id),
-                            leadingIcon = Icons.Default.DarkMode,
-                            leadingIconBackgroundColor = MaterialTheme.colors.primary,
-                            destination = { navController.navigate(Routes.accountSettingsAppearance) }
-                        )
-                        Divider()
-                SettingsExternalButton(
-                    title = stringResource(R.string.app_language),
-                    current = currentLocale,
-                    leadingIcon = Icons.Default.Language,
-                    leadingIconBackgroundColor = Color.Blue,
-                    action = {  }
-                )
-                    }
-                    SettingsListGroup {
-                        SettingsNavigationButton(
-                            title = stringResource(R.string.notification_offset),
-                            leadingIcon = Icons.Default.AccessTime,
-                            leadingIconBackgroundColor = Color.Red,
-                            destination = {
-                                navController.navigate(Routes.accountSettingsNotifications)
-                            }
-                        )
-                        Divider()
-                        SettingsNavigationButton(
-                            title = stringResource(R.string.bookmark),
-                            leadingIcon = Icons.Default.Bookmark,
-                            leadingIconBackgroundColor = Color.Gray,
-                            destination = { navController.navigate(Routes.accountSettingsBookmarks) }
-                        )
-                    }
-                    SettingsListGroup {
-                SettingsExternalButton(
-                    title = stringResource(R.string.review_app),
-                    leadingIcon = Icons.Default.Star,
-                    leadingIconBackgroundColor = Color.Yellow,
-                    action = { }
-                )
-                        Divider()
-                SettingsExternalButton(
-                    title = stringResource(R.string.share_feedback),
-                    leadingIcon = Icons.Default.Email,
-                    leadingIconBackgroundColor = Color.Blue,
-                    action = {  }
-                )
-                        Divider()
-                        SettingsExternalButton(
-                            title = stringResource(R.string.share_app),
-                            leadingIcon = Icons.Default.Share,
-                            leadingIconBackgroundColor = Color.Green,
-                            action = { showShareSheet = true }
-                        )
-                    }
-                    SettingsListGroup {
-                SettingsExternalButton(
-                    title = stringResource(R.string.github),
-                    leadingIcon = Icons.Default.Code,
-                    leadingIconBackgroundColor = Color.Black,
-                    action = {  }
-                )
-                    }
 
-                    if (appVersion != null) {
-                        Text(
-                            text = "Tumble, Android v.$appVersion",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = MaterialTheme.colors.onBackground.copy(alpha = 0.7f),
-                            modifier = Modifier.padding(35.dp)
-                        )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
+        SettingsList {
+            SettingsListGroup {
+                SettingsNavigationButton(
+                    title = stringResource(R.string.appearance),
+                    current = stringResource(appearance.value.id),
+                    leadingIcon = Icons.Default.DarkMode,
+                    leadingIconBackgroundColor = MaterialTheme.colors.primary,
+                    destination = { navController.navigate(Routes.accountSettingsAppearance) }
+                )
+                Divider()
+        SettingsExternalButton(
+            title = stringResource(R.string.app_language),
+            current = currentLocale,
+            leadingIcon = Icons.Default.Language,
+            leadingIconBackgroundColor = Color.Blue,
+            action = {  }
+        )
+            }
+            SettingsListGroup {
+                SettingsNavigationButton(
+                    title = stringResource(R.string.notification_offset),
+                    leadingIcon = Icons.Default.AccessTime,
+                    leadingIconBackgroundColor = Color.Red,
+                    destination = {
+                        navController.navigate(Routes.accountSettingsNotifications)
                     }
-                }
+                )
+                Divider()
+                SettingsNavigationButton(
+                    title = stringResource(R.string.bookmark),
+                    leadingIcon = Icons.Default.Bookmark,
+                    leadingIconBackgroundColor = Color.Gray,
+                    destination = { navController.navigate(Routes.accountSettingsBookmarks) }
+                )
+            }
+            SettingsListGroup {
+        SettingsExternalButton(
+            title = stringResource(R.string.review_app),
+            leadingIcon = Icons.Default.Star,
+            leadingIconBackgroundColor = Color.Yellow,
+            action = { }
+        )
+                Divider()
+        SettingsExternalButton(
+            title = stringResource(R.string.share_feedback),
+            leadingIcon = Icons.Default.Email,
+            leadingIconBackgroundColor = Color.Blue,
+            action = {  }
+        )
+                Divider()
+                SettingsExternalButton(
+                    title = stringResource(R.string.share_app),
+                    leadingIcon = Icons.Default.Share,
+                    leadingIconBackgroundColor = Color.Green,
+                    action = { showShareSheet = true }
+                )
+            }
+            SettingsListGroup {
+        SettingsExternalButton(
+            title = stringResource(R.string.github),
+            leadingIcon = Icons.Default.Code,
+            leadingIconBackgroundColor = Color.Black,
+            action = {  }
+        )
+            }
+
+            if (appVersion != null) {
+                Text(
+                    text = "Tumble, Android v.$appVersion",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colors.onBackground.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(35.dp)
+                )
             }
         }
+    }
 
     if (showShareSheet) {
         ShareSheet(context = LocalContext.current) {
             showShareSheet = false
         }
     }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BackNav(
-    onClick: () -> Unit,
-    label: String = "",
-    title: String = ""
-){
-    CenterAlignedTopAppBar(
-        navigationIcon =
-        {
-            BackButton(onClick, label)
-        },
-        title = { Text(
-            text = title,
-            fontSize = 20.sp
-        )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colors.background)
-    )
 }

@@ -42,61 +42,40 @@ fun Account(
     navController: NavHostController
 ) {
 
-    var isSigningOut by remember {
-        mutableStateOf(false)
-    }
+    var isSigningOut by viewModel.isSigningOut
 
     val authStatus by viewModel.authStatus.collectAsState()
 
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(R.string.account)) },
-                actions = {
-                    Row {
-                        if(authStatus == AccountViewModel.AuthStatus.AUTHORIZED){
-                            SignOutButton{ isSigningOut = true}
-                        }
-                        SettingsButton {
-                            navController.navigate(Routes.accountSettings)
-                        }
-                    }
-                }
-            )
+    Box (modifier = Modifier
+        .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+        when(authStatus){
+            AccountViewModel.AuthStatus.AUTHORIZED -> UserOverview(navController = navController)
+            AccountViewModel.AuthStatus.UNAUTHORIZED -> AccountLogin()
         }
-    ) { padding ->
-        Box (modifier = Modifier
-            .fillMaxSize()
-            .padding(padding),
-            contentAlignment = Alignment.Center
-        ){
-            when(authStatus){
-                AccountViewModel.AuthStatus.AUTHORIZED -> UserOverview(navController = navController)
-                AccountViewModel.AuthStatus.UNAUTHORIZED -> AccountLogin()
-            }
-        }
+    }
 
-        if(isSigningOut){
-            AlertDialog(
-                onDismissRequest = { isSigningOut = false },
-                confirmButton = { 
-                    TextButton(onClick = {
-                        viewModel.logOut()
-                        isSigningOut = false
-                    }) {
-                        Text(text = "yes")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { isSigningOut = false }) {
-                        Text(text = "cancel")
-                    }
-                },
-                text = {
-                    Text(text = "coonfirm")
+    if(isSigningOut){
+        AlertDialog(
+            onDismissRequest = { viewModel.closeLogOutConfirm() },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.logOut()
+                    viewModel.closeLogOutConfirm()
+                }) {
+                    Text(text = "yes")
                 }
-            )
-        }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.closeLogOutConfirm() }) {
+                    Text(text = "cancel")
+                }
+            },
+            text = {
+                Text(text = "coonfirm")
+            }
+        )
     }
 }
 
