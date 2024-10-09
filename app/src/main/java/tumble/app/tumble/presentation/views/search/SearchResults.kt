@@ -47,10 +47,12 @@ fun SearchResults(
         }
         LazyColumn (modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)){
+            .background(MaterialTheme.colors.background),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ){
             items(numberOfSearchResults){ programme ->
                 ProgrammeCard(
-                    programme = searchResults.get(programme),
+                    programme = searchResults[programme],
                     universityImage = universityImage,
                     onOpenProgramme = onOpenProgramme)
             }

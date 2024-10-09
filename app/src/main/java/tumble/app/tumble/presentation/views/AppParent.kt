@@ -3,10 +3,13 @@ package tumble.app.tumble.presentation.views
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,8 +26,10 @@ import tumble.app.tumble.presentation.navigation.navgraphs.SearchNavGraph
 import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.views.navigation.BottomBar
 import tumble.app.tumble.presentation.views.navigation.BottomNavItem
+import tumble.app.tumble.presentation.views.navigation.TopBar
 import tumble.app.tumble.ui.theme.TumbleTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Preview(showBackground = true, name = "AppParent preview")
@@ -32,7 +37,7 @@ import tumble.app.tumble.ui.theme.TumbleTheme
 fun AppParent() {
     val viewModel: ParentViewModel = viewModel()
 
-    val apperance  = viewModel.appearance.collectAsState()
+    val apperance = viewModel.appearance.collectAsState()
 
     val accountNavController = rememberNavController()
     val bookmarksNavController = rememberNavController()
@@ -40,6 +45,12 @@ fun AppParent() {
     val searchNavController = rememberNavController()
 
     val currentNavGraph = remember { mutableStateOf(BottomNavItem.BOOKMARKS) }
+    val currentNavController = when (currentNavGraph.value) {
+        BottomNavItem.HOME -> homeNavController
+        BottomNavItem.BOOKMARKS -> bookmarksNavController
+        BottomNavItem.SEARCH -> searchNavController
+        BottomNavItem.ACCOUNT -> accountNavController
+    }
 
     val combinedData by viewModel.combinedData.collectAsState()
 
@@ -49,6 +60,9 @@ fun AppParent() {
             color = MaterialTheme.colors.background
         ) {
             Scaffold(
+                topBar = {
+                    TopBar(currentNavController)
+                },
                 bottomBar = {
                     BottomBar(
                         homeNavController,
@@ -58,12 +72,16 @@ fun AppParent() {
                         currentNavGraph,
                     )
                 }
-            ) {
-                when (currentNavGraph.value) {
-                    BottomNavItem.HOME -> HomeNavGraph(homeNavController)
-                    BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController)
-                    BottomNavItem.SEARCH -> SearchNavGraph(searchNavController)
-                    BottomNavItem.ACCOUNT -> AccountNavGraph(accountNavController)
+            ) { innerPadding ->
+                Box(
+                    modifier = Modifier.padding(innerPadding).fillMaxSize()
+                ) {
+                    when (currentNavGraph.value) {
+                        BottomNavItem.HOME -> HomeNavGraph(homeNavController)
+                        BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController)
+                        BottomNavItem.SEARCH -> SearchNavGraph(searchNavController)
+                        BottomNavItem.ACCOUNT -> AccountNavGraph(accountNavController)
+                    }
                 }
             }
         }

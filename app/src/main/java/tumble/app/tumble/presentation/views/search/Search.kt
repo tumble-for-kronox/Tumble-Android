@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -66,47 +67,38 @@ fun Search(
         }
     }
 
-    Scaffold (
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(id = R.string.search)) },
-                modifier = Modifier.background(MaterialTheme.colors.background)
-            )
-        },
-        bottomBar = {
-            SearchField(
-                search = { search() },
-                clearSearch = { viewModel.resetSearchResults() },
-                title = stringResource(id = R.string.search_field_placeholder),
-                searchBarText = viewModel.searchBarText,
-                searching = viewModel.searching,
-                disabled = viewModel.selectedSchool
-            )
-        }
-    ) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            when(viewModel.status){
-                SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)}
-                SearchStatus.LOADING -> { CustomProgressIndicator() }
-                SearchStatus.LOADED -> {
-                    SearchResults(
-                        searchText = viewModel.searchBarText.value,
-                        numberOfSearchResults = viewModel.programmeSearchResults.count(),
-                        searchResults = viewModel.programmeSearchResults,
-                        onOpenProgramme = { it -> openProgramme(it) },
-                        universityImage = viewModel.universityImage
-                    )
-                }
-                SearchStatus.ERROR -> { Info(title = stringResource(id = R.string.error_something_wrong), image = null) }
-                SearchStatus.EMPTY -> { Info(title = stringResource(id = R.string.error_empty_schedule), image = null) }
+    Column(modifier = Modifier
+        .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+
+        when(viewModel.status){
+            SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)}
+            SearchStatus.LOADING -> { CustomProgressIndicator() }
+            SearchStatus.LOADED -> {
+                SearchResults(
+                    searchText = viewModel.searchBarText.value,
+                    numberOfSearchResults = viewModel.programmeSearchResults.count(),
+                    searchResults = viewModel.programmeSearchResults,
+                    onOpenProgramme = { it -> openProgramme(it) },
+                    universityImage = viewModel.universityImage
+                )
             }
+            SearchStatus.ERROR -> { Info(title = stringResource(id = R.string.error_something_wrong), image = null) }
+            SearchStatus.EMPTY -> { Info(title = stringResource(id = R.string.error_empty_schedule), image = null) }
         }
-        LaunchedEffect(key1 = viewModel.selectedSchool) {
-            viewModel.schoolNotSelected.value = viewModel.selectedSchool.value == null
-        }
+
+        SearchField(
+            search = { search() },
+            clearSearch = { viewModel.resetSearchResults() },
+            title = stringResource(id = R.string.search_field_placeholder),
+            searchBarText = viewModel.searchBarText,
+            searching = viewModel.searching,
+            selectedSchool = viewModel.selectedSchool
+        )
+    }
+
+    LaunchedEffect(key1 = viewModel.selectedSchool) {
+        viewModel.schoolNotSelected.value = viewModel.selectedSchool.value == null
     }
 }

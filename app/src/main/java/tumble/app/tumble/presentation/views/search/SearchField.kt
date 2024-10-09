@@ -40,7 +40,7 @@ fun SearchField(
     title: String,
     searchBarText: MutableState<String>,
     searching: MutableState<Boolean>,
-    disabled: MutableState<School?>
+    selectedSchool: MutableState<School?>
 ){
     var searchBarText by remember {
         mutableStateOf(searchBarText)
@@ -48,11 +48,10 @@ fun SearchField(
     var searching by remember {
         mutableStateOf(searching)
     }
-    var disaled by remember {
-        mutableStateOf(disabled)
-    }
+    var enabled = selectedSchool.value != null
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+
     fun searchAction(){
         search?.invoke()
         val activity = context as? Activity
@@ -70,8 +69,7 @@ fun SearchField(
     Row (
         modifier = Modifier
         .padding(8.dp)
-        .fillMaxWidth()
-        .padding(bottom = 70.dp),
+        .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -79,7 +77,7 @@ fun SearchField(
             onQueryChange = { searchBarText.value = it},
             onSearch = { searchAction() },
             active = false,
-            enabled = disaled.value != null,
+            enabled = enabled,
             placeholder = {Text(text = title, color = Color.Black)},
             onActiveChange = {},
             trailingIcon = { if (searching.value) {
@@ -90,8 +88,8 @@ fun SearchField(
                 }
                            },
             modifier = Modifier
-                .onFocusChanged { searching.value = if (it.isFocused) true else disaled.value != null}
-                .blur(if (disaled.value == null) 2.5.dp else 0.dp)
+                .onFocusChanged { searching.value = if (it.isFocused) true else enabled}
+                .blur(if (!enabled) 2.5.dp else 0.dp)
         ) {}
     }
 }

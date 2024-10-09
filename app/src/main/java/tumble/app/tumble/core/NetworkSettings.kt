@@ -15,7 +15,7 @@ class NetworkSettings private constructor(val port: Int, val scheme: String, val
             )
 
             val development = NetworkSettings(
-                port = 80, scheme = "https", tumbleUrl = "localhost"
+                port = 5098, scheme = "http", tumbleUrl = "10.0.2.2"
             )
         }
     }
