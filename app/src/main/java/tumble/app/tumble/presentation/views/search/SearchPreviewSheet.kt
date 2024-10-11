@@ -3,15 +3,20 @@ package tumble.app.tumble.presentation.views.search
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,6 +41,7 @@ fun SearchPreviewSheet(
     fun bookmark(){
         viewModel.bookmark(searchPreviewModel.scheduleId, searchPreviewModel.schoolId)
     }
+
     Box (
         modifier = Modifier
             .fillMaxSize()
@@ -56,15 +62,25 @@ fun SearchPreviewSheet(
             }
         }
     }
-    Row {
-        if (viewModel.status == SchedulePreviewStatus.LOADED) {
+
+    Row (
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colors.background)
+            .padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.Top,
+    ) {
+        if (viewModel.status == SchedulePreviewStatus.LOADED)
             BookmarkButton(bookmark = { bookmark() }, buttonState = viewModel.buttonState)
-        }
-        Spacer(modifier = Modifier.weight(1f))
+        else
+            Box {}
+
         CloseCoverButton(
             onClick = { navController.popBackStack() },
         )
     }
+
     LaunchedEffect(Unit) {
         viewModel.getSchedule(searchPreviewModel.scheduleId, searchPreviewModel.schoolId)
     }

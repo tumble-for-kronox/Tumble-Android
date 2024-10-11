@@ -12,13 +12,13 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import tumble.app.tumble.presentation.components.Modifiers.clickableWithoutRipple
+import tumble.app.tumble.extensions.presentation.noRippleClickable
 
 
 @Composable
 fun BackButton(onClick: () -> Unit, label: String) {
     Row(
-        modifier = Modifier.clickableWithoutRipple { onClick() }
+        modifier = Modifier.noRippleClickable { onClick() }
     ) {
         Icon(
             imageVector = Icons.Default.ArrowBackIosNew,

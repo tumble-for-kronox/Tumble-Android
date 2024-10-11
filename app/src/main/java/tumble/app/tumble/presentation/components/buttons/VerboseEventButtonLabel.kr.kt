@@ -2,12 +2,15 @@ package tumble.app.tumble.presentation.components.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,14 +28,13 @@ fun VerboseEventButtonLabel(event: Event) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .borderRadius(15.dp)
             .background(MaterialTheme.colors.surface)
             .background(if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else MaterialTheme.colors.surface)
-            .borderRadius(15.dp)
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .height(160.dp)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
@@ -41,13 +43,13 @@ fun VerboseEventButtonLabel(event: Event) {
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
                 Text(
-                    text = event.course?.englishName ?: "",
+                    text = event.title,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colors.onSurface
                 )
                 Text(
-                    text = event.title,
+                    text = event.course?.englishName ?: "",
                     maxLines = 1,
                     fontSize = 15.sp,
                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
@@ -102,10 +104,14 @@ fun VerboseEventButtonLabel(event: Event) {
                 // Time
                 event.from.convertToHoursAndMinutesISOString()?.let { timeFrom ->
                     event.to.convertToHoursAndMinutesISOString()?.let { timeTo ->
-                        Row {
+                        Row (
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
                             Box(
                                 modifier = Modifier
-                                    .size(7.dp)
+                                    .size(8.dp)
+                                    .clip(CircleShape)
                                     .background(if (event.isSpecial) Color.Red else event.course?.color?.toColor() ?: Color.White)
                             )
                             Text(
