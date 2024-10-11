@@ -38,4 +38,5 @@
     <string name="appearance_auto">Automatic</string>
     <string name="appearance_light">Light</string>
     <string name="appearance_dark">Dark</string>
+    <string name="accountSettings">Settings</string>
 </resources>

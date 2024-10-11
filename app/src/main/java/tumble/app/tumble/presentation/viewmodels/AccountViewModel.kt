@@ -1,5 +1,8 @@
 package tumble.app.tumble.presentation.viewmodels
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -61,6 +64,8 @@ class AccountViewModel @Inject constructor(
     private val _attemptingLogin = MutableStateFlow<Boolean>(false)
     val attemptingLogin: StateFlow<Boolean> = _attemptingLogin
 
+    var isSigningOut = mutableStateOf(false)
+
     init {
         viewModelScope.launch {
             autoLogin()
@@ -70,6 +75,14 @@ class AccountViewModel @Inject constructor(
                 _combinedData.value = combinedData
             }
         }
+    }
+
+    fun openLogOutConfirm() {
+        isSigningOut.value = true
+    }
+
+    fun closeLogOutConfirm() {
+        isSigningOut.value = false
     }
 
     fun logOut() {

@@ -53,33 +53,22 @@ fun Bookmarks(
     val bookmarksStatus = viewModel.status
     val viewType = viewModel.defaultViewType.collectAsState()
 
-    Scaffold (
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(id = R.string.bookmark)) },
-                modifier = Modifier.background(MaterialTheme.colors.background)
-            )
-        },
-        backgroundColor = Color.Transparent
-    ){padding ->
-        Column (
-            modifier = Modifier
-                .padding(padding)
-                .padding(horizontal = 15.dp, vertical = 10.dp)
-                .fillMaxSize()
-        ) {
-            Column (modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start) {
-                when(bookmarksStatus){
-                    BookmarksStatus.LOADING -> CustomProgressIndicator()
-                    BookmarksStatus.LOADED -> { BookmarkViewController(viewType = viewType, onEventSelection = onEventSelection) }
-                    BookmarksStatus.UNINITIALIZED -> Info(title = stringResource(id = R.string.no_bookmarks), image = null)
-                    BookmarksStatus.HIDDEN_ALL -> Info(title = stringResource(id = R.string.bookmarks_hidden), image = null)
-                    BookmarksStatus.ERROR -> Info(title = stringResource(id = R.string.error_something_wrong), image = null)
-                    BookmarksStatus.EMPTY -> Info(title = stringResource(id = R.string.schedules_contain_no_events), image = null)
-                }
+    Column (
+        modifier = Modifier
+            .padding(horizontal = 15.dp, vertical = 10.dp)
+            .fillMaxSize()
+    ) {
+        Column (modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start) {
+            when(bookmarksStatus){
+                BookmarksStatus.LOADING -> CustomProgressIndicator()
+                BookmarksStatus.LOADED -> { BookmarkViewController(viewType = viewType, onEventSelection = onEventSelection) }
+                BookmarksStatus.UNINITIALIZED -> Info(title = stringResource(id = R.string.no_bookmarks), image = null)
+                BookmarksStatus.HIDDEN_ALL -> Info(title = stringResource(id = R.string.bookmarks_hidden), image = null)
+                BookmarksStatus.ERROR -> Info(title = stringResource(id = R.string.error_something_wrong), image = null)
+                BookmarksStatus.EMPTY -> Info(title = stringResource(id = R.string.schedules_contain_no_events), image = null)
             }
-            Spacer(Modifier.weight(1f))
         }
+        Spacer(Modifier.weight(1f))
     }
     AppController.shared.eventSheet?.let {
         EventDetailsSheet(event = it.event)
