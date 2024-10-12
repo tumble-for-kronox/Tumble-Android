@@ -54,10 +54,7 @@ fun TopBarTitle(currentNavController: NavHostController) {
         Routes.accountSettingsAppearance -> Text(stringResource(R.string.appearance))
         Routes.accountSettingsLanguage -> Text(stringResource(R.string.app_language))
         Routes.accountSettingsNotifications -> Text(stringResource(R.string.notification_offset))
-<<<<<<< HEAD
         Routes.searchDetails -> Text(stringResource(R.string.search))
-=======
->>>>>>> main
 
         else -> Text(stringResource(R.string.app_name))
     }
