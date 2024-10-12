@@ -42,17 +42,10 @@ fun ProgrammeCard(
     ) {
         Surface (
             modifier = Modifier
-<<<<<<< HEAD
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             color = MaterialTheme.colors.surface,
             onClick = { onOpenProgramme(programme.id) }
-=======
-                .clickable { onOpenProgramme(programme.id) }
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(8.dp),
-            color = MaterialTheme.colors.surface,
->>>>>>> main
         ) {
             Column (
                 modifier = Modifier.padding(16.dp),
