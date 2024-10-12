@@ -76,6 +76,17 @@ fun Search(
             SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)}
             SearchStatus.LOADING -> { CustomProgressIndicator() }
             SearchStatus.LOADED -> {
+<<<<<<< HEAD
+                Box(modifier = Modifier.weight(1f)) {
+                    SearchResults(
+                        searchText = viewModel.searchBarText.value,
+                        numberOfSearchResults = viewModel.programmeSearchResults.count(),
+                        searchResults = viewModel.programmeSearchResults,
+                        onOpenProgramme = { it -> openProgramme(it) },
+                        universityImage = viewModel.universityImage
+                    )
+                }
+=======
                 SearchResults(
                     searchText = viewModel.searchBarText.value,
                     numberOfSearchResults = viewModel.programmeSearchResults.count(),
@@ -83,11 +94,25 @@ fun Search(
                     onOpenProgramme = { it -> openProgramme(it) },
                     universityImage = viewModel.universityImage
                 )
+>>>>>>> main
             }
             SearchStatus.ERROR -> { Info(title = stringResource(id = R.string.error_something_wrong), image = null) }
             SearchStatus.EMPTY -> { Info(title = stringResource(id = R.string.error_empty_schedule), image = null) }
         }
 
+<<<<<<< HEAD
+        Box() {
+            SearchField(
+                search = { search() },
+                clearSearch = { viewModel.resetSearchResults() },
+                title = stringResource(id = R.string.search_field_placeholder),
+                searchBarText = viewModel.searchBarText,
+                searching = viewModel.searching,
+                selectedSchool = viewModel.selectedSchool
+            )
+        }
+
+=======
         SearchField(
             search = { search() },
             clearSearch = { viewModel.resetSearchResults() },
@@ -96,6 +121,7 @@ fun Search(
             searching = viewModel.searching,
             selectedSchool = viewModel.selectedSchool
         )
+>>>>>>> main
     }
 
     LaunchedEffect(key1 = viewModel.selectedSchool) {

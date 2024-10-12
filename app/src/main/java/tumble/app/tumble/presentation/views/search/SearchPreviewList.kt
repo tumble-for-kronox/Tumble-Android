@@ -24,7 +24,7 @@ fun SearchPreviewList(
     viewModel: SearchPreviewViewModel
 ){
     LazyColumn(
-        contentPadding = PaddingValues(horizontal = 15.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.padding(top = 2.5.dp)
     ) {
