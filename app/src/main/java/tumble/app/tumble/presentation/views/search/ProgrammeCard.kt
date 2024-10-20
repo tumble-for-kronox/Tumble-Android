@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material3.Text
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.domain.models.network.NetworkResponse
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ProgrammeCard(
     programme: NetworkResponse.Programme,
@@ -40,10 +42,10 @@ fun ProgrammeCard(
     ) {
         Surface (
             modifier = Modifier
-                .clickable { onOpenProgramme(programme.id) }
                 .fillMaxWidth(),
             shape = RoundedCornerShape(8.dp),
             color = MaterialTheme.colors.surface,
+            onClick = { onOpenProgramme(programme.id) }
         ) {
             Column (
                 modifier = Modifier.padding(16.dp),

@@ -76,13 +76,15 @@ fun Search(
             SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)}
             SearchStatus.LOADING -> { CustomProgressIndicator() }
             SearchStatus.LOADED -> {
-                SearchResults(
-                    searchText = viewModel.searchBarText.value,
-                    numberOfSearchResults = viewModel.programmeSearchResults.count(),
-                    searchResults = viewModel.programmeSearchResults,
-                    onOpenProgramme = { it -> openProgramme(it) },
-                    universityImage = viewModel.universityImage
-                )
+                Box(modifier = Modifier.weight(1f)) {
+                    SearchResults(
+                        searchText = viewModel.searchBarText.value,
+                        numberOfSearchResults = viewModel.programmeSearchResults.count(),
+                        searchResults = viewModel.programmeSearchResults,
+                        onOpenProgramme = { it -> openProgramme(it) },
+                        universityImage = viewModel.universityImage
+                    )
+                }
             }
             SearchStatus.ERROR -> { Info(title = stringResource(id = R.string.error_something_wrong), image = null) }
             SearchStatus.EMPTY -> { Info(title = stringResource(id = R.string.error_empty_schedule), image = null) }
