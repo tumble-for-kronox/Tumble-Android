@@ -1,7 +1,5 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -13,29 +11,50 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.presentation.ResourceSelectionModel
+import tumble.app.tumble.presentation.components.buttons.BackButton
 import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
 import tumble.app.tumble.presentation.viewmodels.ResourceViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 import java.util.Calendar
 import java.util.Date
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun ResourceBookings(
     viewModel: ResourceViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
+    val pageTitle = stringResource(R.string.resources)
+    val backTitle = stringResource(R.string.account)
+
     val resourceBookingPageState = viewModel.resourceBookingPageState.collectAsState()
     val selectedPikerDate = viewModel.selectedPickerDate.collectAsState()
     val scrollState = rememberScrollState()
+
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = pageTitle,
+                navigationAction = {
+                    BackButton(backTitle) {
+                        navController.popBackStack()
+                    }
+                }
+            )
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -109,13 +128,11 @@ fun ResourceBookings(
         ResourceSelection()
     }
 
-
     LaunchedEffect(viewModel.selectedPickerDate) {
         viewModel.getAllResourceData(selectedPikerDate.value)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun isWeekend(date: Date): Boolean{
     val calendar = Calendar.getInstance().apply { time = date }
     val day = calendar.get(Calendar.DAY_OF_WEEK)

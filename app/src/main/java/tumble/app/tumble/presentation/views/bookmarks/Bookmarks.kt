@@ -14,6 +14,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,15 +36,17 @@ import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.views.bookmarks.EventDetails.EventDetailsSheet
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Bookmarks(
     viewModel: BookmarksViewModel = hiltViewModel(),
     parentViewModel: ParentViewModel = hiltViewModel(),
     navController: NavController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
+    val pageTitle = stringResource(R.string.bookmark)
 
     val onEventSelection = { event: Event ->
         AppController.shared.eventSheet = EventDetailsSheetModel(event = event)
@@ -52,6 +55,14 @@ fun Bookmarks(
 
     val bookmarksStatus = viewModel.status
     val viewType = viewModel.defaultViewType.collectAsState()
+
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = pageTitle
+            )
+        )
+    }
 
     Column (
         modifier = Modifier

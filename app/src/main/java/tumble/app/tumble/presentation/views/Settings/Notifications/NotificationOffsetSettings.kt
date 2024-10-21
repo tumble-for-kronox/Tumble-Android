@@ -3,15 +3,20 @@ package tumble.app.tumble.presentation.views.Settings.Notifications
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import tumble.app.tumble.R
+import tumble.app.tumble.presentation.components.buttons.BackButton
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
 import tumble.app.tumble.presentation.views.Settings.Buttons.SettingsRadioButton
 import tumble.app.tumble.presentation.views.Settings.List.SettingsList
 import tumble.app.tumble.presentation.views.Settings.List.SettingsListGroup
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 import java.util.UUID
 
 enum class NotificationOffset(val value: Int) {
@@ -31,9 +36,26 @@ enum class NotificationOffset(val value: Int) {
 @Composable
 fun NotificationOffsetSettings(
     viewModel: SettingsViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
+    val pageTitle = stringResource(R.string.notification_offset)
+    val backTitle = stringResource(R.string.accountSettings)
+
     val currentOffset = viewModel.notificationOffset.collectAsState()
+
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = pageTitle,
+                navigationAction = {
+                    BackButton(backTitle) {
+                        navController.popBackStack()
+                    }
+                }
+            )
+        )
+    }
 
     SettingsList {
         SettingsListGroup {

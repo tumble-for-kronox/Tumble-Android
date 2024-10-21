@@ -33,6 +33,7 @@ import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.viewmodels.SearchViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class)
@@ -40,8 +41,10 @@ import tumble.app.tumble.presentation.views.general.Info
 fun Search(
     viewModel: SearchViewModel = hiltViewModel(),
     parentViewModel: ParentViewModel = hiltViewModel(),
-    navController: NavController = rememberNavController()
+    navController: NavController = rememberNavController(),
+    setTopNavState: (AppBarState) -> Unit
 ) {
+    val pageTitle = stringResource(R.string.search)
 
     fun searchBoxNotEmpty(): Boolean{
         return viewModel.searchBarText.value.trim().isNotEmpty()
@@ -65,6 +68,12 @@ fun Search(
             AppController.shared.searchPreview = SearchPreviewModel(scheduleId = programmeId, schoolId = selectedSchoolId.toString())
             navController.navigate(UriBuilder.buildSearchDetailsUri(programmeId).toUri())
         }
+    }
+
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(title = pageTitle)
+        )
     }
 
     Column(modifier = Modifier

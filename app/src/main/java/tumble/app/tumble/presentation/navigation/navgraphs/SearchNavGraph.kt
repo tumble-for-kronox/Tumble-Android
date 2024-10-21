@@ -13,27 +13,28 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.presentation.navigation.Routes
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 import tumble.app.tumble.presentation.views.search.Search
 import tumble.app.tumble.presentation.views.search.SearchPreviewSheet
 
 @Composable
 fun SearchNavGraph(
     navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
     NavHost(navController, Routes.search) {
-        search(navController)
-        searchDetails(navController)
+        search(navController, setTopNavState)
+        searchDetails(navController, setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.search(navController: NavHostController) {
+private fun NavGraphBuilder.search(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.search) {
-        Search(navController = navController)
+        Search(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.searchDetails(navController: NavHostController) {
+private fun NavGraphBuilder.searchDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(
         Routes.searchDetails,
         deepLinks = listOf(
@@ -53,7 +54,7 @@ private fun NavGraphBuilder.searchDetails(navController: NavHostController) {
         }
     ) { backStackEntry ->
 
-        SearchPreviewSheet(searchPreviewModel = AppController.shared.searchPreview!!, navController = navController)
+        SearchPreviewSheet(searchPreviewModel = AppController.shared.searchPreview!!, navController = navController, setTopNavState = setTopNavState)
 
         val id = backStackEntry.arguments?.getString("id")
     }

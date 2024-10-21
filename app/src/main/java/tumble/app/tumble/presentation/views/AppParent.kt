@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,6 +25,7 @@ import tumble.app.tumble.presentation.navigation.navgraphs.BookmarksNavGraph
 import tumble.app.tumble.presentation.navigation.navgraphs.HomeNavGraph
 import tumble.app.tumble.presentation.navigation.navgraphs.SearchNavGraph
 import tumble.app.tumble.presentation.viewmodels.ParentViewModel
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 import tumble.app.tumble.presentation.views.navigation.BottomBar
 import tumble.app.tumble.presentation.views.navigation.BottomNavItem
 import tumble.app.tumble.presentation.views.navigation.TopBar
@@ -59,9 +61,13 @@ fun AppParent() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
+            var appBarState by remember {
+                mutableStateOf(AppBarState())
+            }
+
             Scaffold(
                 topBar = {
-                    TopBar(currentNavController)
+                    TopBar(appBarState)
                 },
                 bottomBar = {
                     BottomBar(
@@ -77,10 +83,10 @@ fun AppParent() {
                     modifier = Modifier.padding(innerPadding).fillMaxSize()
                 ) {
                     when (currentNavGraph.value) {
-                        BottomNavItem.HOME -> HomeNavGraph(homeNavController)
-                        BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController)
-                        BottomNavItem.SEARCH -> SearchNavGraph(searchNavController)
-                        BottomNavItem.ACCOUNT -> AccountNavGraph(accountNavController)
+                        BottomNavItem.HOME -> HomeNavGraph(homeNavController, { appBarState = it })
+                        BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController, { appBarState = it })
+                        BottomNavItem.SEARCH -> SearchNavGraph(searchNavController, { appBarState = it })
+                        BottomNavItem.ACCOUNT -> AccountNavGraph(accountNavController, { appBarState = it })
                     }
                 }
             }

@@ -16,7 +16,7 @@ import tumble.app.tumble.extensions.presentation.noRippleClickable
 
 
 @Composable
-fun BackButton(onClick: () -> Unit, label: String) {
+fun BackButton(label: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier.noRippleClickable { onClick() }
     ) {

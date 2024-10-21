@@ -18,10 +18,11 @@ import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.presentation.toColor
 import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
 @Composable
 fun EventDetailsSheet(
-    event: Event,
+    event: Event
 ){
     Column(modifier = Modifier
         .fillMaxSize()
