@@ -8,6 +8,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.views.Settings.AppearanceSettings.AppearanceSettings
 import tumble.app.tumble.presentation.views.Settings.Bookmarks.BookmarksSettings
@@ -16,6 +17,7 @@ import tumble.app.tumble.presentation.views.Settings.SettingsScreen
 import tumble.app.tumble.presentation.views.account.Account
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Events.EventBookings
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceBookings
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceSelection
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -84,7 +86,7 @@ private fun NavGraphBuilder.accountSettingsBookmarks(navController: NavHostContr
 @RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.accountResources(navController: NavHostController) {
     composable(Routes.accountResources) {
-        //ResourceBookings(navController = navController)
+        ResourceBookings(navController = navController)
     }
 }
 
@@ -92,9 +94,13 @@ private fun NavGraphBuilder.accountResources(navController: NavHostController) {
 private fun NavGraphBuilder.accountResourceDetails(navController: NavHostController) {
     composable(
         Routes.accountResourceDetails,
+        deepLinks = listOf(
+            navDeepLink { uriPattern = Routes.AccountResourceDetailsUri},
+        )
     ) { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")
-        ResourceBookings(navController = navController)
+        ResourceSelection(navController = navController)
+        //ResourceBookings(navController = navController)
     }
 }
 
