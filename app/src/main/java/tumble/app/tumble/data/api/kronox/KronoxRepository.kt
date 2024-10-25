@@ -1,5 +1,6 @@
 package tumble.app.tumble.datasource.network.kronox
 
+import android.util.Log
 import okhttp3.Request
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -40,43 +41,55 @@ class KronoxRepository @Inject constructor(private val retrofit: Retrofit): Kron
     }
 
     override suspend fun getKronoxUserBookings(endpoint: Endpoint.UserBookings, refreshToken: String?, sessionDetails: String?): ApiResponse<List<KronoxUserBookingElement>>{
-        return kronoxApiService.getKronoxUserBookings(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
+        val call = kronoxApiService.getKronoxUserBookings(endpoint.url(), refreshToken, sessionDetails)
+        return call.callToApiResponse()
     }
 
     override suspend fun getAllResources(endpoint: Endpoint.AllResources, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>{
         return kronoxApiService.getAllResources(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
     }
 
-//    override suspend fun getAllResourcesTypes(endpoint: Endpoint.AllResourcesTest, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>{
-//        return kronoxApiService.getAllResourcesTypes(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
-//    }
-
     override suspend fun getAllResourceData(endpoint: Endpoint.AllResourceData, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxResourceElement>{
         return kronoxApiService.getAllResourceData(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
     }
 
-    override suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?): Response<NetworkResponse.Empty> {
-        return kronoxApiService.registerForEvent(endpoint.url(), refreshToken)
+    override suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?):  ApiResponse<Void> {
+        return kronoxApiService.registerForEvent(endpoint.url(), refreshToken).callToApiResponse()
     }
 
-    override suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): Response<NetworkResponse.Empty> {
-        return kronoxApiService.bookResource(endpoint.url(), refreshToken, resource)
+    override suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<Void> {
+        return kronoxApiService.bookResource(endpoint.url(), refreshToken, resource).callToApiResponse()
     }
 
     override suspend fun confirmResource(
         endpoint: Endpoint.ConfirmResource,
         refreshToken: String?,
         resource: NetworkRequest.ConfirmKronoxResource
-    ): Response<NetworkResponse.Empty> {
-        return kronoxApiService.confirmResource(endpoint.url(), refreshToken, resource)
+    ): ApiResponse<Void> {
+        return kronoxApiService.confirmResource(endpoint.url(), refreshToken, resource).callToApiResponse()
     }
 
     override suspend fun unBookResource(
         endpoint: Endpoint.UnBookResource,
         refreshToken: String?
-    ): Response<NetworkResponse.Empty> {
-        return kronoxApiService.unBookResource(endpoint.url(), refreshToken)
+    ): ApiResponse<Void> {
+        return kronoxApiService.unBookResource(endpoint.url(), refreshToken).callToApiResponse()
     }
+
+    override suspend fun unRegisterForEvent(
+        endpoint: Endpoint.UnregisterEvent,
+        refreshToken: String?
+    ): ApiResponse<Void> {
+        return kronoxApiService.unRegisterForEvent(endpoint.url(), refreshToken).callToApiResponse()
+    }
+
+    override suspend fun registerForAllEvents(
+        endpoint: Endpoint.RegisterAllEvents,
+        refreshToken: String?
+    ): ApiResponse<List<NetworkResponse.Registration>> {
+        return kronoxApiService.registerForAllEvents(endpoint.url(), refreshToken).callToApiResponse()
+    }
+
 
 //    override suspend fun <T: NetworkResponse> get(
 //        endpoint: Endpoint,

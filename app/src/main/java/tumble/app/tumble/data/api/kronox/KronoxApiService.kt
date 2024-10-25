@@ -33,13 +33,17 @@ interface KronoxApiService {
 
     suspend fun getAllResourceData(endpoint: Endpoint.AllResourceData, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxResourceElement>
 
-    suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?): Response<NetworkResponse.Empty>
+    suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?):  ApiResponse<Void>
 
-    suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): Response<NetworkResponse.Empty>
+    suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<Void>
 
-    suspend fun confirmResource(endpoint: Endpoint.ConfirmResource, refreshToken: String?, resource: NetworkRequest.ConfirmKronoxResource): Response<NetworkResponse.Empty>
+    suspend fun confirmResource(endpoint: Endpoint.ConfirmResource, refreshToken: String?, resource: NetworkRequest.ConfirmKronoxResource): ApiResponse<Void>
 
-    suspend fun unBookResource(endpoint: Endpoint.UnBookResource, refreshToken: String?): Response<NetworkResponse.Empty>
+    suspend fun unBookResource(endpoint: Endpoint.UnBookResource, refreshToken: String?): ApiResponse<Void>
+
+    suspend fun unRegisterForEvent(endpoint: Endpoint.UnregisterEvent, refreshToken: String?): ApiResponse<Void>
+
+    suspend fun registerForAllEvents(endpoint: Endpoint.RegisterAllEvents, refreshToken: String?): ApiResponse<List<NetworkResponse.Registration>>
 
 //    @Headers(
 //        "Content-Type: application/json; charset=utf-8",

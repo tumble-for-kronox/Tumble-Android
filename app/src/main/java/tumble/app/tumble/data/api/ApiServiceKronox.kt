@@ -34,27 +34,35 @@ interface ApiServiceKronox {
 
     @PUT()
     fun registerForEvent(@Url endpoint: String,
-                         @Header("X-auth-token") refreshToken: String?): Response<NetworkResponse.Empty>
+                         @Header("X-auth-token") refreshToken: String?): Call<Void>
+
+    @PUT()
+    fun registerForAllEvents(@Url endpoint: String,
+                         @Header("X-auth-token") refreshToken: String?): Call<List<NetworkResponse.Registration>>
+
+    @PUT()
+    fun unRegisterForEvent(@Url endpoint: String,
+                           @Header("X-auth-token") refreshToken: String?): Call<Void>
 
     @PUT()
     fun bookResource(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Body resource: NetworkRequest.BookKronoxResource
-    ): Response<NetworkResponse.Empty>
+    ): Call<Void>
 
     @PUT()
     fun confirmResource(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Body resource: NetworkRequest.ConfirmKronoxResource
-    ): Response<NetworkResponse.Empty>
+    ): Call<Void>
 
     @PUT()
     fun unBookResource(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
-    ): Response<NetworkResponse.Empty>
+    ): Call<Void>
 
     @GET()
     fun getKronoxCompleteUserEvent(
@@ -75,13 +83,6 @@ interface ApiServiceKronox {
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Header("X-session-token") sessionDetails: String?
-    ): Call<List<NetworkResponse.KronoxResourceElement>>
-
-    @GET()
-    fun getAllResourcesTypes(
-        @Url endpoint: String,
-        @Header("X-auth-token") refreshToken: String?,
-        @Header("X-session-token") sessionDetails: String?,
     ): Call<List<NetworkResponse.KronoxResourceElement>>
 
     @GET()
