@@ -32,7 +32,7 @@ fun EventDetailsCard(
 ){
     Column(
         modifier = Modifier
-            .padding()
+            .padding(horizontal = 15.dp)
             .background(
                 if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else color.copy(alpha = 0.2f),
                 shape = RoundedCornerShape(15.dp)

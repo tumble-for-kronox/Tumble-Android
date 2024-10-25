@@ -17,6 +17,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -50,13 +51,13 @@ fun DetailsBuilder(
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(17.dp),
-                    alpha = 1f
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
                 )
                 Text(
                     text = title,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colors.onBackground
+                    color = MaterialTheme.colors.onSurface
                 )
             }
             Spacer(modifier = Modifier.height(5.dp))
