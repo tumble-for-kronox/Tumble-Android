@@ -107,15 +107,15 @@ sealed class NetworkResponse {
     @JsonClass(generateAdapter = true)
     data class AvailableKronoxUserEvent(
         @Transient
-        val id: UUID = UUID.randomUUID(),
-        val eventId: String?,
-        val title: String?,
-        val type: String?,
+        val eventId: UUID = UUID.randomUUID(),
+        val id: String?,
+        val title: String,
+        val type: String,
         val eventStart: String,
         val eventEnd: String,
         val lastSignupDate: String,
-        val participatorID: String?,
-        val supportID: String?,
+        val participatorId: String?,
+        val supportId: String?,
         val anonymousCode: String,
         val isRegistered: Boolean,
         val supportAvailable: Boolean,
@@ -149,16 +149,16 @@ sealed class NetworkResponse {
         val name: String?,
         val timeSlots: List<TimeSlot>?,
         val date: String?,
-        val locationIDS: List<String>?,
+        val locationIds: List<String>?,
         val availabilities: Map<String, Map<Int, AvailabilityValue>>?
     ): NetworkResponse()
 
     @JsonClass(generateAdapter = true)
     data class AvailabilityValue(
         val availability: AvailabilityEnum?,
-        val locationID: String?,
+        val locationId: String?,
         val resourceType: String?,
-        val timeSlotID: String?,
+        val timeSlotId: String?,
         val bookedBy: String?
     ): NetworkResponse()
 
@@ -179,13 +179,13 @@ sealed class NetworkResponse {
     @JsonClass(generateAdapter = true)
     data class KronoxUserBookingElement(
         val id: String,
-        val resourceID: String,
+        val resourceId: String,
         val timeSlot: TimeSlot,
-        val locationID: String,
+        val locationId: String,
         val showConfirmButton: Boolean,
-        val showUnBookButton: Boolean,
-        val confirmationOpen: String?,
-        val confirmationClosed: String?
+        val showUnbookButton: Boolean,
+        val confirmationOpen: String,
+        val confirmationClosed: String
     ): NetworkResponse()
 
     @JsonClass(generateAdapter = true)
@@ -207,8 +207,8 @@ sealed class NetworkResponse {
         val eventStart: String?,
         val eventEnd: String?,
         val lastSignupDate: String?,
-        val participatorID: String?,
-        val supportID: String?,
+        val participatorId: String?,
+        val supportId: String?,
         val anonymousCode: String?,
         val isRegistered: Boolean?,
         val supportAvailable: Boolean?,
