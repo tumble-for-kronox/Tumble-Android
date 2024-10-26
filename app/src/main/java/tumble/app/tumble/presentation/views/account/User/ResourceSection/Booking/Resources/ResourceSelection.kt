@@ -1,5 +1,7 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,75 +12,93 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.models.getAvailabilityValues
-import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
+import tumble.app.tumble.extensions.models.getFirstTimeSlotWithAvailability
+import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.presentation.viewmodels.ResourceViewModel
+import tumble.app.tumble.presentation.views.Settings.BackNav
 import tumble.app.tumble.presentation.views.general.Info
-import tumble.app.tumble.utils.isoDateFormatterDate
+import tumble.app.tumble.utils.isoVerboseDateFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ResourceSelection(
     parentViewModel: ResourceViewModel = hiltViewModel(),
+    navController: NavController
 ) {
-    val selectedTimeIndex = remember { mutableStateOf(0) }
-    val resource = parentViewModel.resourceSelectionModel!!.resource
+    val resource = AppController.shared.resourceModel!!.resource
+    val selectedTimeIndex = remember { mutableStateOf(resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)) }
     val availabilityValues = remember {
         mutableStateOf<List<NetworkResponse.AvailabilityValue>>(resource.availabilities.getAvailabilityValues(timelotId = selectedTimeIndex.value))
     }
-    val selectedPickerDate = parentViewModel.resourceSelectionModel!!.date
+    val selectedPickerDate = AppController.shared.resourceModel!!.date
     val timeslots = resource.timeSlots
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-    ) {
-        Row {
-            Text(
-                text = isoDateFormatterDate.format(selectedPickerDate),
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colors.onBackground,
-                modifier = Modifier
-                    .padding(horizontal = 15.dp, vertical = 20.dp)
-                    .fillMaxWidth()
+    Scaffold (
+        topBar = {
+            BackNav(
+                onClick = {navController.popBackStack()},
+                label = stringResource(R.string.resources),
+                title = stringResource(R.string.rooms)
             )
-            Spacer(modifier = Modifier.weight(1f))
-            CloseCoverButton(onClick = {parentViewModel.resourceSelectionModel = null})
-        }
-        if (timeslots != null) {
-            TimeslotDropdown(
-                resource = resource,
-                timeslots = timeslots,
-                selectedIndex = selectedTimeIndex,
-                onIndexChange = { index ->
-                    selectedTimeIndex.value = index
-                    availabilityValues.value = resource.availabilities.getAvailabilityValues(timelotId = index)
-                }
-            )
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
-            TimeslotSelection(
-                bookResource = { availabilityValue ->
-                    parentViewModel.bookResource(
-                        resourceId = resource.id!!,
-                        date = selectedPickerDate,
-                        availabilityValue = availabilityValue
+        },
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+                .padding(padding)
+        ) {
+            Row {
+                Text(
+                    text = isoVerboseDateFormatter.format(selectedPickerDate),
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colors.onBackground,
+                    modifier = Modifier
+                        .padding(horizontal = 15.dp, vertical = 20.dp)
+                        .fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            if (timeslots != null) {
+                TimeslotDropdown(
+                    resource = resource,
+                    timeslots = timeslots,
+                    selectedIndex = selectedTimeIndex,
+                    onIndexChange = { index ->
+                        selectedTimeIndex.value = index
+                        availabilityValues.value =
+                            resource.availabilities.getAvailabilityValues(timelotId = index)
+                    }
+                )
+                Divider(modifier = Modifier.padding(vertical = 8.dp))
+                TimeslotSelection(
+                    bookResource = { availabilityValue ->
+                         parentViewModel.bookResource(
+                            resourceId = resource.id!!,
+                            date = selectedPickerDate,
+                            availabilityValue = availabilityValue
                         )
-                },
-                availabilityValues = availabilityValues
-            )
-        } else {
-            Info(
-                title = "No available timeslots",
-                image = null,
-            )
+                    },
+                    availabilityValues = availabilityValues
+                )
+            } else {
+                Info(
+                    title = "No available timeslots",
+                    image = null,
+                )
+            }
         }
     }
 }

@@ -1,15 +1,18 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
@@ -19,14 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.presentation.viewmodels.ResourceViewModel
-import java.time.LocalDate
 import java.util.Date
 
 @Composable
@@ -35,21 +36,15 @@ fun ResourceLocationsList(
     selectedPickerDate: Date,
     navigateToResourceSelection: (NetworkResponse.KronoxResourceElement, Date) -> Unit
 ) {
-
     val allResources = parentViewModel.allResources.collectAsState()
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 16.dp)
     ) {
-
         items((allResources.value?: emptyList()).size) { resourceIndex ->
-
             allResources.value?.get(resourceIndex)?.let {
-
                 val availableCounts = it.availabilities?.let { it1 -> calcAvailability(it1) }?: 0
-
                 ResourceLocationItem(
                     resource = it,
                     selectedPickerDate = selectedPickerDate,
@@ -62,6 +57,7 @@ fun ResourceLocationsList(
                 )
             }
         }
+        item { Spacer(modifier = Modifier.height(60.dp)) }
     }
 }
 
@@ -72,18 +68,14 @@ fun ResourceLocationItem(
     availableCounts: Int,
     onClick: () -> Unit
 ) {
-    val backgroundColor = if (availableCounts > 0) {
-        Color.White
-    } else {
-        Color.Gray
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .background(backgroundColor)
+            .padding(5.dp)
+            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(16.dp))
             .padding(16.dp)
+
     ) {
         Column(
             modifier = Modifier.weight(1f),
@@ -92,7 +84,7 @@ fun ResourceLocationItem(
             Text(
                 text = resource.name ?: "No name",
                 fontSize = 18.sp,
-                color = Color.Black, // Replace with your theme color
+                color = MaterialTheme.colors.onBackground,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -102,12 +94,12 @@ fun ResourceLocationItem(
                 Icon(
                     imageVector = Icons.Default.Event,
                     contentDescription = null,
-                    tint = Color.Gray.copy(alpha = 0.7f)
+                    tint = MaterialTheme.colors.onSurface
                 )
                 Text(
                     text =  selectedPickerDate.toString(),
                     fontSize = 15.sp,
-                    color = Color.Gray.copy(alpha = 0.7f)
+                    color = MaterialTheme.colors.onSurface
                 )
             }
             Row(
@@ -116,12 +108,12 @@ fun ResourceLocationItem(
                 Icon(
                     imageVector = Icons.Default.AccessTime,
                     contentDescription = null,
-                    tint = Color.Gray.copy(alpha = 0.7f)
+                    tint = MaterialTheme.colors.onSurface
                 )
                 Text(
                     text = "Available timeslots: $availableCounts",
                     fontSize = 15.sp,
-                    color = Color.Gray.copy(alpha = 0.7f)
+                    color = MaterialTheme.colors.onSurface
                 )
             }
         }

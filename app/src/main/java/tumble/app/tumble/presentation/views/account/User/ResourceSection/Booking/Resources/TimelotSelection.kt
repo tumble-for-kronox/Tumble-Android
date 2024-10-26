@@ -9,11 +9,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
@@ -22,8 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.presentation.views.general.Info
-import java.time.LocalDate
-import java.util.Date
 
 enum class BookingButtonState {
     LOADING,
@@ -33,7 +28,7 @@ enum class BookingButtonState {
 
 @Composable
 fun TimeslotSelection(
-    bookResource: (NetworkResponse.AvailabilityValue) -> Unit,
+    bookResource: suspend (NetworkResponse.AvailabilityValue) -> Boolean,
     availabilityValues: MutableState<List<NetworkResponse.AvailabilityValue>>
 ) {
     val buttonStateMap = remember { mutableMapOf<String, BookingButtonState>() }
@@ -60,9 +55,15 @@ fun TimeslotSelection(
                 .padding(16.dp)
         ) {
             availabilityValues.value.forEach { availabilityValue ->
-                availabilityValue.locationID?.let { locationId ->
+                availabilityValue.locationId?.let { locationId ->
                     TimeslotCard(
-                        onBook = { bookResource(availabilityValue) },
+                        onBook = { handleBooking(
+                            locationId = locationId,
+                            availabilityValue = availabilityValue,
+                            bookResource = bookResource,
+                            buttonStateMap = buttonStateMap,
+                            scope = scope
+                        )},
                         locationId = locationId,
                         bookingButtonState = buttonStateMap[locationId] ?: BookingButtonState.AVAILABLE
                     )
@@ -77,7 +78,7 @@ private fun setupButtons(
     buttonStateMap: MutableMap<String, BookingButtonState>
 ) {
     availabilityValues.value.forEach { availabilityValue ->
-        availabilityValue.locationID?.let { locationId ->
+        availabilityValue.locationId?.let { locationId ->
             buttonStateMap[locationId] = BookingButtonState.AVAILABLE
         }
     }
@@ -86,16 +87,14 @@ private fun setupButtons(
 private fun handleBooking(
     locationId: String,
     availabilityValue: NetworkResponse.AvailabilityValue,
-    resourceId: String,
-    selectedPickerDate: LocalDate,
-    bookResource: suspend (String, LocalDate, NetworkResponse.AvailabilityValue) -> Boolean,
+    bookResource: suspend (NetworkResponse.AvailabilityValue) -> Boolean,
     buttonStateMap: MutableMap<String, BookingButtonState>,
     scope: CoroutineScope
 ) {
     buttonStateMap[locationId] = BookingButtonState.LOADING
     scope.launch {
         val result = withContext(Dispatchers.IO) {
-            bookResource(resourceId, selectedPickerDate, availabilityValue)
+            bookResource(availabilityValue)
         }
         buttonStateMap[locationId] = if (result) BookingButtonState.BOOKED else BookingButtonState.AVAILABLE
     }
