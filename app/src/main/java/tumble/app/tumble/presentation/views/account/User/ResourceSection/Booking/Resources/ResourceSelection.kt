@@ -16,10 +16,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.models.getAvailabilityValues
 import tumble.app.tumble.extensions.models.getFirstTimeSlotWithAvailability
@@ -81,7 +83,7 @@ fun ResourceSelection(
             )
         } else {
             Info(
-                title = "No available timeslots",
+                title = stringResource(R.string.no_timeslots),
                 image = null,
             )
         }

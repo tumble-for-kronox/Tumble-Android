@@ -22,9 +22,11 @@ import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
 import tumble.app.tumble.extensions.presentation.formatDate
@@ -44,7 +46,7 @@ fun ResourceDetailsSheet(
             .background(MaterialTheme.colors.background)
     ) {
 
-        SheetHeader(title = "Resource details", onClose = onClose)
+        SheetHeader(title = stringResource(R.string.resource_details), onClose = onClose)
         Box {
             Column(
                 modifier = Modifier
@@ -52,22 +54,22 @@ fun ResourceDetailsSheet(
                     .background(MaterialTheme.colors.background)
             ) {
 
-                DetailsBuilder(title = "Location", image = Icons.Default.LocationOn) {
-                    if (booking.locationId?.isNotEmpty() == true) {
+                DetailsBuilder(title = stringResource(R.string.location), image = Icons.Default.LocationOn) {
+                    if (booking.locationId.isNotEmpty()) {
                         Text(
-                            text = booking.locationId.toString(),
+                            text = booking.locationId,
                             fontSize = 16.sp,
                             color = MaterialTheme.colors.onSurface
                         )
                     } else {
                         Text(
-                            text = "No location listed at this time",
+                            text = stringResource(R.string.no_location),
                             fontSize = 16.sp,
                             color = MaterialTheme.colors.onSurface
                         )
                     }
                 }
-                DetailsBuilder(title = "Timeslot", image = Icons.Default.Timelapse) {
+                DetailsBuilder(title = stringResource(R.string.timeslot), image = Icons.Default.Timelapse) {
                     Text(
                         text = "${
                             booking.timeSlot.from?.convertToHoursAndMinutesISOString().orEmpty()
@@ -77,7 +79,7 @@ fun ResourceDetailsSheet(
                     )
                 }
 
-                DetailsBuilder(title = "Date", image = Icons.Default.CalendarMonth) {
+                DetailsBuilder(title = stringResource(R.string.date), image = Icons.Default.CalendarMonth) {
                     Text(
                         text = booking.timeSlot.from?.formatDate().orEmpty(),
                         fontSize = 16.sp,
@@ -85,7 +87,7 @@ fun ResourceDetailsSheet(
                     )
                 }
 
-                DetailsBuilder(title = "Confirmation", image = Icons.Default.CheckCircleOutline) {
+                DetailsBuilder(title = stringResource(R.string.confirmation), image = Icons.Default.CheckCircleOutline) {
                     val bookingDate = booking.timeSlot.from?.formatDate()
                     val bookingConfirmationStart =
                         booking.confirmationOpen.convertToHoursAndMinutesISOString()
@@ -99,8 +101,7 @@ fun ResourceDetailsSheet(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-
-        if (booking.showUnbookButton == true) {
+        if (booking.showUnbookButton) {
             Button(
                 onClick = { onBookingRemove() },
                 shape = RoundedCornerShape(15.dp),
@@ -110,7 +111,7 @@ fun ResourceDetailsSheet(
             ) {
 
                 Text(
-                    text = "Remove booking",
+                    text = stringResource(R.string.remove_booking),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colors.onPrimary

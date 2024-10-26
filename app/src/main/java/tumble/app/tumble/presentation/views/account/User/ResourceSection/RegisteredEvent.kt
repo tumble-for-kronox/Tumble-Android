@@ -10,8 +10,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
@@ -45,20 +47,20 @@ fun RegisteredEvent(
                                 eventEnd = eventEnd,
                                 type = event.type,
                                 title = event.title,
-                                date = event.eventStart.formatDate()?:"(no date)",
+                                date = event.eventStart.formatDate()?: stringResource(R.string.no_date),
                                 onClick = { onClickEvent(event) }
                             )
                         }
                     }
                 }else{
                     Text(
-                        text = "No registed event yet",
+                        text = stringResource(R.string.no_registered_event_yet),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
             }
             PageState.ERROR -> {
-                Text(text = "Could not contact the server, try again later",
+                Text(text = stringResource(R.string.could_not_contact_server),
                     modifier = Modifier.padding(16.dp))
             }
         }

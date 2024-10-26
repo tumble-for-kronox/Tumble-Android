@@ -12,11 +12,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.presentation.views.general.Info
 
@@ -45,7 +47,7 @@ fun TimeslotSelection(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Info(title = "No available timeslots", image = null)
+            Info(title = stringResource(R.string.no_timeslots), image = null)
         }
     } else {
         Column(

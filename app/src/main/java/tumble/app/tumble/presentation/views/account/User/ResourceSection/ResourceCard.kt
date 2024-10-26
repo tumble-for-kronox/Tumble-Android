@@ -22,9 +22,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 
 @Composable
 fun ResourceCard(
@@ -63,7 +65,7 @@ fun ResourceCard(
 @Composable
 fun TitleView(title: String?){
     Text(
-        text = title?: "No titile",
+        text = title?: stringResource(R.string.no_title),
         fontSize = 17.sp,
         color = MaterialTheme.colors.onSurface,
         maxLines = 1,

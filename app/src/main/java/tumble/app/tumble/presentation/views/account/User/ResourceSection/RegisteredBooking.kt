@@ -15,10 +15,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
@@ -48,12 +50,13 @@ fun RegisteredBooking(
                     bookings.forEach{ resource ->
                         val eventStart = resource.timeSlot.from?.convertToHoursAndMinutesISOString()
                         val eventEnd = resource.timeSlot.to?.convertToHoursAndMinutesISOString()
+                        val noDate = stringResource(R.string.no_date)
                         ResourceCard(
-                            eventStart = eventStart?:"(no date)",
-                            eventEnd = eventEnd?:"(no date)",
-                            title = "Booked resource",
+                            eventStart = eventStart?: noDate,
+                            eventEnd = eventEnd?: noDate,
+                            title = stringResource(R.string.user_booked_resource),
                             location = resource.locationId,
-                            date = resource.timeSlot.from?.formatDate()?:"(no date)",
+                            date = resource.timeSlot.from?.formatDate()?: noDate,
                             onClick = { onClickResource(resource) }
                         )
                         if (resource.showConfirmButton){
@@ -67,7 +70,7 @@ fun RegisteredBooking(
                                     shape = RoundedCornerShape(15.dp),
                                     ) {
                                     Text(
-                                        text = "Confirm",
+                                        text = stringResource(R.string.confirm),
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colors.onPrimary
@@ -78,7 +81,7 @@ fun RegisteredBooking(
                                     colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
                                     shape = RoundedCornerShape(15.dp),) {
                                     Text(
-                                        text = "unBook",
+                                        text = stringResource(R.string.cancel_booking),
                                         fontSize = 16.sp,
                                         fontWeight = FontWeight.SemiBold,
                                         color = MaterialTheme.colors.onPrimary
@@ -88,14 +91,14 @@ fun RegisteredBooking(
                         }
                     }
                 }else{
-                    Text(text = "no booking resource yet",
+                    Text(text = stringResource(R.string.no_booked_resource),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
             }
             PageState.ERROR -> {
                 Text(
-                    text = "Could not contat the server, try again later",
+                    text = stringResource(R.string.could_not_contact_server),
                     modifier = Modifier.padding(16.dp)
                 )
             }

@@ -22,10 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.presentation.viewmodels.ResourceViewModel
 import java.util.Date
@@ -82,7 +84,7 @@ fun ResourceLocationItem(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = resource.name ?: "No name",
+                text = resource.name ?: stringResource(R.string.no_name),
                 fontSize = 18.sp,
                 color = MaterialTheme.colors.onBackground,
                 maxLines = 1,
@@ -111,7 +113,7 @@ fun ResourceLocationItem(
                     tint = MaterialTheme.colors.onSurface
                 )
                 Text(
-                    text = "Available timeslots: $availableCounts",
+                    text = "${stringResource(R.string.available_timeslots)}: $availableCounts",
                     fontSize = 15.sp,
                     color = MaterialTheme.colors.onSurface
                 )

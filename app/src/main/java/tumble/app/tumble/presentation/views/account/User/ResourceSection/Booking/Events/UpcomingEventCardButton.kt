@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
-import tumble.app.tumble.utils.isoDateFormatterDate
+import tumble.app.tumble.extensions.presentation.formatDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -61,13 +61,13 @@ fun UpcomingEventCardButton(
                     contentDescription = null,
                     tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
-                val eventDate = isoDateFormatterDate.format(isoDateFormatterDate.parse(event.eventStart))
+                val eventDate = event.eventStart.formatDate()
                 val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
                 val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
                 val eventDateText = if (eventDate != null && eventStart != null && eventEnd != null) {
                     "$eventDate: $eventStart - $eventEnd"
                 } else {
-                    "stringResource(id = R.string.no_date_at_this_time)"
+                    stringResource(id = R.string.no_date)
                 }
                 Text(
                     text = eventDateText,
@@ -83,9 +83,7 @@ fun UpcomingEventCardButton(
                     tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
                 Text(
-                    text = "${stringResource(id = R.string.available_at)} ${    isoDateFormatterDate.format(
-                        isoDateFormatterDate.parse(event.firstSignupDate)
-                    ) ?: "stringResource(id = R.string.no_date_set)"}",
+                    text = "${stringResource(id = R.string.available_at)} ${event.firstSignupDate.formatDate() ?: stringResource(id = R.string.no_date)}",
                     fontSize = 15.sp,
                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )

@@ -11,11 +11,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.presentation.ResourceSelectionModel
 import tumble.app.tumble.observables.AppController
@@ -79,12 +81,12 @@ fun ResourceBookings(
                 ) {
                     if (isWeekend(selectedPikerDate.value)) {
                         Info(
-                            title = "No rooms available on weekends",
+                            title = stringResource(R.string.no_rooms_on_weekend),
                             image = null//R.drawable.moon_zzz // Replace with your drawable resource
                         )
                     } else {
                         Info(
-                            title = "Could not contact the server, try again later",
+                            title = stringResource(R.string.could_not_contact_server),
                             image = null //R.drawable.arrow_clockwise // Replace with your drawable resource
                         )
                     }

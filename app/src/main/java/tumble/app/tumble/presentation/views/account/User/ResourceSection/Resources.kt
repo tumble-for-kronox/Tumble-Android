@@ -25,10 +25,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
+import tumble.app.tumble.R
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 
@@ -60,10 +62,10 @@ fun Resources(
             .background(color = MaterialTheme.colors.background)
     ) {
         //TODO pull to refresh
-        ResourceSectionDivider(title = "User options"){
+        ResourceSectionDivider(title = stringResource(R.string.user_options)){
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Automatic exam signup"
+                    text = stringResource(R.string.auto_signup)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
@@ -84,14 +86,14 @@ fun Resources(
             if(showingConfirmationDialog){
                 AlertDialog(
                     onDismissRequest = { showingConfirmationDialog = false },
-                    title = { Text(text = "Confirm Action")},
-                    text = { Text(text = "are you sure you want to enable this experimental feature?")},
+                    title = { Text(text = stringResource(R.string.confirm_Action))},
+                    text = { Text(text = stringResource(R.string.experimental_feature_confirmation))},
                     confirmButton = {
                         TextButton(onClick = {
                             parentViewModel.toggleAutoSignup(true)
                             showingConfirmationDialog = false
                         }) {
-                            Text(text = "Yes")
+                            Text(text = stringResource(R.string.yes))
                         }
                     },
                     dismissButton = {
@@ -99,14 +101,14 @@ fun Resources(
                             parentViewModel.toggleAutoSignup(false)
                             showingConfirmationDialog = false
                         }) {
-                            Text(text = "Cancel")
+                            Text(text = stringResource(R.string.cancel))
                         }
                     }
                 )
             }
         }
         ResourceSectionDivider(
-            title = "Your bookings", // string resource
+            title = stringResource(R.string.user_booking),
             resourceType = ResourceType.RESOURCE,
             destination = { navController.navigate(Routes.accountResources) }
         ) {
@@ -119,7 +121,7 @@ fun Resources(
             )
         }
         ResourceSectionDivider(
-            title = "Your event", // string resource
+            title = stringResource(R.string.user_events),
             resourceType = ResourceType.EVENT,
             destination = { navController.navigate(Routes.accountEvents) }
         ) {

@@ -2,7 +2,6 @@ package tumble.app.tumble.presentation.views.account.User.ResourceSection.Bookin
 
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,10 +24,8 @@ import androidx.compose.material.icons.filled.Event
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,9 +34,6 @@ import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
 import tumble.app.tumble.extensions.presentation.formatDate
 import tumble.app.tumble.extensions.presentation.isValidRegistrationDate
-import tumble.app.tumble.extensions.presentation.toColor
-import tumble.app.tumble.extensions.presentation.toLocalDateTime
-import tumble.app.tumble.utils.isoDateFormatterDate
 
 enum class EventType {
     REGISTER,
@@ -84,7 +78,7 @@ fun EventCardButton(
                     if (eventDate != null && eventStart != null && eventEnd != null) {
                         "$eventDate: $eventStart - $eventEnd"
                     } else {
-                        "stringResource(id = R.string.no_date_at_this_time)"
+                        stringResource(id = R.string.no_date)
                     }
                 Text(
                     text = eventDateText,
@@ -101,7 +95,7 @@ fun EventCardButton(
                 )
                 val signupText = if (event.lastSignupDate.isValidRegistrationDate()) {
                     "${stringResource(id = R.string.available_until)} ${(event.lastSignupDate.formatDate()
-                        ) ?: "stringResource(id = R.string.no_date_set)"
+                        ) ?: stringResource(id = R.string.no_date)
                     }"
                 } else {
                     stringResource(id = R.string.signup_has_passed)

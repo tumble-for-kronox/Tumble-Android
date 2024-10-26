@@ -4,9 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
 import tumble.app.tumble.domain.models.network.NetworkResponse.UpcomingKronoxUserEvent
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -78,7 +75,6 @@ fun UnregisteredEventsView(
         }
     }
 }
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
