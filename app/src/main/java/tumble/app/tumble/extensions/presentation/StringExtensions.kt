@@ -5,16 +5,13 @@ import androidx.annotation.RequiresApi
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.ui.graphics.Color
-import tumble.app.tumble.utils.isoDateFormatter
 import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 fun String.formatDate(): String? {
-    //val isoDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.XXX'Z'", Locale.getDefault()) // Adjust this format if your ISO string is in a different format
     val targetFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
 
     val date = isoDateFormatterNoTimeZone.parse(this)
     return date?.let { targetFormatter.format(it) }

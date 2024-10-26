@@ -11,7 +11,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import tumble.app.tumble.data.api.Endpoint
 import tumble.app.tumble.data.api.url
 import tumble.app.tumble.data.repository.preferences.DataStoreManager

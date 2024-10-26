@@ -22,7 +22,7 @@ object Routes {
     const val accountResources = "account/resources"
     const val accountResourceDetails = "account/resources/{id}"
     const val accountEvents = "account/events"
-    const val accountEventDetails = "account/events?eventId={id}"
+    const val accountEventDetails = "account/events/{id}"
 
     // Deep links
     var HomeUri = "https://${shared.tumbleUrl}/$home"

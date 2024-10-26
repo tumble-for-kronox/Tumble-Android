@@ -18,8 +18,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -117,7 +115,6 @@ fun BookmarkWeekView(
                     indicatorScrollState = indicatorScrollState,
                     pagerState = pagerState,
                 )
-                Spacer(modifier = Modifier.height(60.dp))
             }
         }
     }

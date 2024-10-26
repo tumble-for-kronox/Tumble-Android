@@ -76,7 +76,7 @@ private fun NavGraphBuilder.accountSettingsLanguage(navController: NavHostContro
 
 private fun NavGraphBuilder.accountSettingsNotifications(navController: NavHostController) {
     composable(Routes.accountSettingsNotifications) {
-        NotificationOffsetSettings(navController =  navController)
+        NotificationOffsetSettings()
     }
 }
 
@@ -110,7 +110,7 @@ private fun NavGraphBuilder.accountResourceDetails(navController: NavHostControl
 @RequiresApi(Build.VERSION_CODES.O)
 private fun NavGraphBuilder.accountEvents(navController: NavHostController) {
     composable(Routes.accountEvents) {
-        //EventBookings(navController =  navController)
+        EventBookings(navController =  navController)
     }
 }
 
@@ -119,8 +119,8 @@ private fun NavGraphBuilder.accountEventDetails(navController: NavHostController
     composable(
         Routes.accountEventDetails,
     ) { backStackEntry ->
-        val id = backStackEntry.arguments?.getString("id")
-        EventBookings(navController =  navController)
+//        val id = backStackEntry.arguments?.getString("id")
+//        EventBookings(navController =  navController)
     }
 }
 
