@@ -34,9 +34,8 @@ fun RegisteredEventsView(
                     EventCardButton(
                         event = event,
                         eventType = EventType.UNREGISTER,
-                        onTap = { onTapEventAction(event.eventId!!, EventType.UNREGISTER) }
+                        onTap = { onTapEventAction(event.id!!, EventType.UNREGISTER) }
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }else {
@@ -57,14 +56,16 @@ fun UnregisteredEventsView(
 ) {
     Column {
         if (unregisteredEvents.isNotEmpty()) {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 unregisteredEvents.forEach { event ->
                     EventCardButton(
                         event = event,
                         eventType = EventType.REGISTER,
-                        onTap = { onTapEventAction(event.eventId!!, EventType.REGISTER) }
+                        onTap = { onTapEventAction(event.id!!, EventType.REGISTER) }
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }
@@ -86,10 +87,12 @@ fun UpcomingEventsView(
 ) {
     Column {
         if (upcomingEvents.isNotEmpty()) {
-            Column(modifier = Modifier.fillMaxWidth()) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 upcomingEvents.forEach { event ->
                     UpcomingEventCardButton(event = event)
-                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         } else{

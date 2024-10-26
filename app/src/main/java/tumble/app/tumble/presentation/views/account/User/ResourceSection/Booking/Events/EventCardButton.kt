@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -52,16 +53,14 @@ fun EventCardButton(
     eventType: EventType,
     onTap: () -> Unit
 ) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(20.dp))
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.background(MaterialTheme.colors.surface, shape = RoundedCornerShape(20.dp)).padding(16.dp).fillMaxWidth()
         ) {
             // Event Title
             Text(
@@ -78,7 +77,7 @@ fun EventCardButton(
                     contentDescription = null,
                     tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
-                val eventDate = isoDateFormatterDate.format(isoDateFormatterDate.parse(event.eventStart))
+                val eventDate = event.eventStart.formatDate()
                 val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
                 val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
                 val eventDateText =
@@ -101,9 +100,7 @@ fun EventCardButton(
                     tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
                 val signupText = if (event.lastSignupDate.isValidRegistrationDate()) {
-                    "${stringResource(id = R.string.available_until)} ${
-                        isoDateFormatterDate.format(
-                            isoDateFormatterDate.parse(event.lastSignupDate)
+                    "${stringResource(id = R.string.available_until)} ${(event.lastSignupDate.formatDate()
                         ) ?: "stringResource(id = R.string.no_date_set)"
                     }"
                 } else {
@@ -115,33 +112,31 @@ fun EventCardButton(
                     color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
             }
-            if (event.lastSignupDate.isValidRegistrationDate()) {
-                Row(
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth()
+        }
+        if (event.lastSignupDate.isValidRegistrationDate()) {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Button(
+                    onClick = {
+                        event.id?.let { onTap() } },
+                    modifier = Modifier
+                        .padding(10.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    Button(
-                        onClick = {
-                            event.eventId?.let { onTap() } },
-                        modifier = Modifier
-                            .background(
-                                MaterialTheme.colors.primary,
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .padding(10.dp)
-                    ) {
-                        Icon(
-                            painter = rememberVectorPainter(Icons.Default.Event),
-                            contentDescription = null,
-                            tint = MaterialTheme.colors.onPrimary
-                        )
-                        Spacer(modifier = Modifier.width(5.dp))
-                        Text(
-                            text = if (eventType == EventType.UNREGISTER) stringResource(id = R.string.unregister) else stringResource(id = R.string.register),
-                            fontSize = 16.sp,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                    }
+                    Icon(
+                        painter = rememberVectorPainter(Icons.Default.Event),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onPrimary
+                    )
+                    Spacer(modifier = Modifier.width(5.dp))
+                    Text(
+                        text = if (eventType == EventType.UNREGISTER) stringResource(id = R.string.unregister) else stringResource(id = R.string.register),
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colors.onPrimary
+                    )
                 }
             }
         }

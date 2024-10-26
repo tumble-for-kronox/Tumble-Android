@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,6 +30,7 @@ import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
 import tumble.app.tumble.presentation.viewmodels.ResourceViewModel
+import tumble.app.tumble.presentation.views.Settings.BackNav
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.SectionDivider
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
@@ -41,25 +44,23 @@ fun EventBookings(
 ) {
     val completeUserEvent = viewModel.completeUserEvent.collectAsState()
     val eventBookingPageState = viewModel.eventBookingPageState.collectAsState()
-
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-    ) {
-        val scrollState = rememberScrollState()
-
+    val scrollState = rememberScrollState()
+    Scaffold (
+        topBar = {
+            BackNav(
+                onClick = {navController.popBackStack()},
+                label = stringResource(R.string.account),
+                title = stringResource(R.string.events)
+            )
+        },
+    ) { padding ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .verticalScroll(scrollState)
                 .background(MaterialTheme.colors.background)
+                .padding(padding)
         ) {
-            Row {
-                Spacer(modifier = Modifier.weight(1f))
-                CloseCoverButton {
-                    navController.popBackStack()
-                }
-            }
             when (eventBookingPageState.value) {
                 PageState.LOADING -> {
                     CustomProgressIndicator()
