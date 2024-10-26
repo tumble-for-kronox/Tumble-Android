@@ -24,6 +24,8 @@ fun TopBarBackButton(currentNavController: NavHostController) {
     val route = getCurrentRoute(currentNavController);
 
     return when(route) {
+        Routes.accountResources,
+        Routes.accountEvents,
         Routes.accountSettings -> BackButton(
             { currentNavController.popBackStack() },
             stringResource(R.string.account)
@@ -55,6 +57,8 @@ fun TopBarTitle(currentNavController: NavHostController) {
         Routes.accountSettingsLanguage -> Text(stringResource(R.string.app_language))
         Routes.accountSettingsNotifications -> Text(stringResource(R.string.notification_offset))
         Routes.searchDetails -> Text(stringResource(R.string.search))
+        Routes.accountEvents -> Text(stringResource(R.string.events))
+        Routes.accountResources -> Text(stringResource(R.string.resources))
 
         else -> Text(stringResource(R.string.app_name))
     }
