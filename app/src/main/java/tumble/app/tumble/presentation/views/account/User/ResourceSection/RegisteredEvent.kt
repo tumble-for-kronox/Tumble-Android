@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
+import tumble.app.tumble.extensions.presentation.formatDate
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -23,35 +25,30 @@ fun RegisteredEvent(
     state: State<PageState>,
     registeredEvents: List<NetworkResponse.AvailableKronoxUserEvent>?
 ){
-
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         when(state.value){
             PageState.LOADING -> {
                 CustomProgressIndicator()
             }
             PageState.LOADED -> {
-
                 if(!registeredEvents.isNullOrEmpty()){
                     registeredEvents.forEach{ event ->
                         val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
                         val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
-
                         if (eventStart != null && eventEnd != null){
                             ResourceCard(
                                 eventStart = eventStart,
                                 eventEnd = eventEnd,
                                 type = event.type,
                                 title = event.title,
-                                date = event.eventStart?:"(no date)",
+                                date = event.eventStart.formatDate()?:"(no date)",
                                 onClick = { onClickEvent(event) }
-
                             )
                         }
-
                     }
                 }else{
                     Text(
@@ -67,6 +64,4 @@ fun RegisteredEvent(
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
-
-
 }
