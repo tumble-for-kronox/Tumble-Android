@@ -12,22 +12,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.presentation.views.home.HomeScreen
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
 @Composable
 fun HomeNavGraph(
     navController: NavHostController,
+    onComposing: (AppBarState) -> Unit
 ) {
     NavHost(navController, Routes.home) {
-        home(navController)
+        home(navController, onComposing)
         homeNews(navController)
         homeNewsDetails(navController)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.home(navController: NavHostController) {
+private fun NavGraphBuilder.home(navController: NavHostController, onComposing: (AppBarState) -> Unit) {
     composable(Routes.home) {
-        HomeScreen()
+        HomeScreen(onComposing = onComposing)
     }
 }
 

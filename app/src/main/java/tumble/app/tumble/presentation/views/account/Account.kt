@@ -13,28 +13,52 @@ import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import tumble.app.tumble.R
+import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.account.Login.AccountLogin
 import tumble.app.tumble.presentation.views.account.User.ProfileSection.UserOverview
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Account(
     viewModel: AccountViewModel = hiltViewModel(),
-    navController: NavHostController
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
+    val pageTitle = stringResource(R.string.account)
 
-    var isSigningOut by viewModel.isSigningOut
+    val isSigningOut by viewModel.isSigningOut
 
     val authStatus by viewModel.authStatus.collectAsState()
+
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = pageTitle,
+                actions = {
+                    if (authStatus == AccountViewModel.AuthStatus.AUTHORIZED) {
+                        SignOutButton { viewModel.openLogOutConfirm() }
+                    }
+                    SettingsButton {
+                        navController.navigate(Routes.accountSettings)
+                    }
+                }
+            )
+        )
+    }
 
     Box (modifier = Modifier
         .fillMaxSize(),

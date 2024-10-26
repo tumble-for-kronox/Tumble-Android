@@ -41,4 +41,13 @@
     <string name="accountSettings">Settings</string>
     <string name="bookmark_save">Save</string>
     <string name="bookmark_remove">Remove</string>
+    <string name="resources">Resources</string>
+    <string name="events">Events</string>
+    <string name="registered">Registered</string>
+    <string name="unregistered">Unregistered</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="no_registered_events">No registered events available</string>
+    <string name="no_unregistered_events">No unregistered events available</string>
+    <string name="no_upcoming_events">No upcoming events available</string>
+    <string name="server_error">Could not contact the server, try again later</string>
 </resources>

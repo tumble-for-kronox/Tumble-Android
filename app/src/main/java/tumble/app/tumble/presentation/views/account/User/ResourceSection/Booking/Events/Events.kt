@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
 import tumble.app.tumble.domain.models.network.NetworkResponse.UpcomingKronoxUserEvent
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Events(
     registeredEvents: List<AvailableKronoxUserEvent>? = null,
@@ -20,14 +20,13 @@ fun Events(
     upcomingEvents: List<UpcomingKronoxUserEvent>? = null,
     onTapEventAction: ((String, EventType) -> Unit)? = null
 ) {
-    unregisteredEventsView(unregisteredEvents, onTapEventAction)
-    registeredEventsView(registeredEvents, onTapEventAction)
-    upcomingEventsView(upcomingEvents)
+    UnregisteredEventsView(unregisteredEvents, onTapEventAction)
+    RegisteredEventsView(registeredEvents, onTapEventAction)
+    UpcomingEventsView(upcomingEvents)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun registeredEventsView(
+fun RegisteredEventsView(
     registeredEvents: List<NetworkResponse.AvailableKronoxUserEvent>?,
     onTapEventAction: ((String, EventType) -> Unit)?
 ) {
@@ -49,7 +48,7 @@ fun registeredEventsView(
             }
             if (events.isEmpty()) {
                 Text(
-                    text = "stringResource(id = R.string.no_registered_events)",
+                    text = stringResource(id = R.string.no_registered_events),
                     modifier = Modifier
                         .padding(top = 5.dp)
                 )
@@ -58,9 +57,8 @@ fun registeredEventsView(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun unregisteredEventsView(
+fun UnregisteredEventsView(
     unregisteredEvents: List<NetworkResponse.AvailableKronoxUserEvent>?,
     onTapEventAction: ((String, EventType) -> Unit)?
 ) {
@@ -79,7 +77,7 @@ fun unregisteredEventsView(
             }
             if (events.isEmpty()) {
                 Text(
-                    text = "stringResource(id = R.string.no_unregistered_events)",
+                    text = stringResource(id = R.string.no_unregistered_events),
                     modifier = Modifier
                         .padding(top = 5.dp)
                 )
@@ -88,9 +86,8 @@ fun unregisteredEventsView(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun upcomingEventsView(
+fun UpcomingEventsView(
     upcomingEvents: List<NetworkResponse.UpcomingKronoxUserEvent>?
 ) {
     Column {
@@ -103,7 +100,7 @@ fun upcomingEventsView(
             }
             if (events.isEmpty()) {
                 Text(
-                    text = "stringResource(id = R.string.no_upcoming_events)",
+                    text = stringResource(id = R.string.no_upcoming_events),
                     modifier = Modifier
                         .padding(top = 5.dp)
                 )
