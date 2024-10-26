@@ -32,6 +32,8 @@ import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.account.Login.AccountLogin
 import tumble.app.tumble.presentation.views.account.User.ProfileSection.UserOverview
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Sheets.EventDetailsSheet
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Sheets.ResourceDetailsSheet
 
 @Composable
 fun Account(
@@ -44,6 +46,8 @@ fun Account(
     }
 
     val authStatus by viewModel.authStatus.collectAsState()
+    val booking = viewModel.booking.collectAsState()
+    val event = viewModel.event.collectAsState()
 
     Scaffold(
         topBar = {
@@ -71,7 +75,6 @@ fun Account(
                 AccountViewModel.AuthStatus.AUTHORIZED -> UserOverview(navController = navController)
                 AccountViewModel.AuthStatus.UNAUTHORIZED -> AccountLogin()
             }
-            UserOverview(navController = navController)
         }
 
         if(isSigningOut){
@@ -96,6 +99,13 @@ fun Account(
             )
         }
     }
+    booking.value?.let {
+        ResourceDetailsSheet(it, {viewModel.unSetBooking()}, {viewModel.unBookResource(it.id)})
+    }
+    event.value?.let {
+        EventDetailsSheet(it, {viewModel.unSetEvent()})
+    }
+
 }
 
 
