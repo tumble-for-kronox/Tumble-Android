@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +36,6 @@ class ResourceViewModel @Inject constructor(
     val authManager: AuthManager,
     val dataStoreManager: DataStoreManager,
     val kronoxManager: KronoxRepository
-
 ): ViewModel(){
 
     private val _selectedPickerDate = MutableStateFlow<Date>(Date())
@@ -59,13 +59,22 @@ class ResourceViewModel @Inject constructor(
 
     //val allResources: List<NetworkResponse.KronoxResourceElement>? = null
 
-    private val _resourceSelectionModel = MutableStateFlow<ResourceSelectionModel?>(null)
-    var resourceSelectionModel by mutableStateOf<ResourceSelectionModel?>(null)
+//    private val _resourceSelectionModel = MutableStateFlow<ResourceSelectionModel?>(null)
+//    var resourceSelectionModel by mutableStateOf<ResourceSelectionModel?>(null)
+
+
+//    private val _resourceSelectioned = MutableStateFlow<NetworkResponse.KronoxResourceElement?>(null)
+//    var resourceSelectioned = mutableStateOf<NetworkResponse.KronoxResourceElement?>(null)
+
 
     fun setBookingDate(newDate: Date){
         _selectedPickerDate.value = newDate
         viewModelScope.launch { getAllResourcesData(isoDateFormatterDate.format(newDate)) }
     }
+
+//    fun setResourceSelection(resource: NetworkResponse.KronoxResourceElement){
+//        resourceSelectioned.value = resource
+//    }
 
     fun getUserEventsForPage(){
         viewModelScope.launch {
@@ -91,26 +100,49 @@ class ResourceViewModel @Inject constructor(
     }
 
     fun registerForEvent(eventId: String){
-
         viewModelScope.launch() {
-            try {
-                val refreshToken = authManager.getRefreshToken() ?: return@launch
-                val schoolID = dataStoreManager.authSchoolId.value.toString()
-                val endpoint = Endpoint.RegisterEvent(eventId = eventId, schoolId = schoolID)
-                val userRequest = kronoxManager.registerForEvent(endpoint, refreshToken)
-                if(userRequest.isSuccessful){
-                    Log.e("AAAAAAA", "Registered")
-                }else{
-                    Log.e("AAAAAAA", "NOT  Registered")
+            val refreshToken = authManager.getRefreshToken() ?: return@launch
+            val schoolID = dataStoreManager.authSchoolId.value.toString()
+            val endpoint = Endpoint.RegisterEvent(eventId = eventId, schoolId = schoolID)
+            val response = kronoxManager.registerForEvent(endpoint, refreshToken)
 
+            when(response){
+                is ApiResponse.Error -> {
+                    if(response.errorMessage == "Empty response body"){
+                        Log.e("unbooked", "Success")
+                    }else{
+                        Log.e("unbooked", "Error")
+                        Log.e("unbooked", response.errorMessage)
+                    }
                 }
-            } catch (e: Exception) {
+                else -> {
+                    Log.e("unbooked", "lmao")
+                }
             }
         }
     }
 
     fun unregisterForEvent(eventId: String){
-        //TODO
+        viewModelScope.launch {
+
+            val endpoint = Endpoint.UnregisterEvent(eventId, dataStoreManager.authSchoolId.value.toString())
+            val refreshToken = authManager.getRefreshToken() ?: return@launch
+            val response = kronoxManager.unRegisterForEvent(endpoint, refreshToken)
+
+            when(response){
+                is ApiResponse.Error -> {
+                    if(response.errorMessage == "Empty response body"){
+                        Log.e("unRegister", "Success")
+                    }else{
+                        Log.e("unRegister", "Error")
+                        Log.e("unRegister", response.errorMessage)
+                    }
+                }
+                else -> {
+                    Log.e("unRegister", "lmao")
+                }
+            }
+        }
     }
 
     fun getAllResources(){
@@ -177,35 +209,20 @@ class ResourceViewModel @Inject constructor(
         }
     }
 
-    fun confirmResource(resourceId: String, bookingId: String){
-        val endpoint = Endpoint.ConfirmResource(dataStoreManager.authSchoolId.value.toString())
-        val resource = NetworkRequest.ConfirmKronoxResource(resourceId, bookingId)
-        val refreshToken = authManager.getRefreshToken() ?: return
-
-        viewModelScope.launch {
-            val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)
-        }
-    }
-
-    fun bookResource(resourceId: String, date: Date, availabilityValue: NetworkResponse.AvailabilityValue){
+    suspend fun bookResource(resourceId: String, date: Date, availabilityValue: NetworkResponse.AvailabilityValue): Boolean{
         val endpoint = Endpoint.BookResource(dataStoreManager.authSchoolId.value.toString())
         val resource = NetworkRequest.BookKronoxResource(resourceId, isoDateFormatterDate.format(date), availabilityValue)
-        val refreshToken = authManager.getRefreshToken() ?: return
+        val refreshToken = authManager.getRefreshToken() ?: return false
 
-        viewModelScope.launch {
-            val response = kronoxManager.bookResource(endpoint, refreshToken, resource)
-            if (response.isSuccessful){
-                return@launch
+
+        val response: ApiResponse<Void> = kronoxManager.bookResource(endpoint, refreshToken, resource)
+        when(response){
+            is ApiResponse.Error -> {
+                return response.errorMessage == "Empty response body"
             }
-        }
-    }
-
-    fun unBookResource(bookingId: String){
-        val endpoint = Endpoint.UnBookResource(dataStoreManager.authSchoolId.value.toString(), bookingId)
-        val refreshToken = authManager.getRefreshToken() ?: return
-
-        viewModelScope.launch {
-            val response = kronoxManager.unBookResource(endpoint, refreshToken)
+            else -> {
+                return false
+            }
         }
     }
 }
