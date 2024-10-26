@@ -15,6 +15,7 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -40,7 +41,7 @@ fun SearchField(
     title: String,
     searchBarText: MutableState<String>,
     searching: MutableState<Boolean>,
-    disabled: MutableState<School?>
+    selectedSchool: MutableState<School?>
 ){
     var searchBarText by remember {
         mutableStateOf(searchBarText)
@@ -48,11 +49,10 @@ fun SearchField(
     var searching by remember {
         mutableStateOf(searching)
     }
-    var disaled by remember {
-        mutableStateOf(disabled)
-    }
+    var enabled = selectedSchool.value != null
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
+
     fun searchAction(){
         search?.invoke()
         val activity = context as? Activity
@@ -70,8 +70,7 @@ fun SearchField(
     Row (
         modifier = Modifier
         .padding(8.dp)
-        .fillMaxWidth()
-        .padding(bottom = 70.dp),
+        .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -79,7 +78,7 @@ fun SearchField(
             onQueryChange = { searchBarText.value = it},
             onSearch = { searchAction() },
             active = false,
-            enabled = disaled.value != null,
+            enabled = enabled,
             placeholder = {Text(text = title, color = Color.Black)},
             onActiveChange = {},
             trailingIcon = { if (searching.value) {
@@ -88,10 +87,10 @@ fun SearchField(
                         searchFieldAction = { searchFieldAction() }
                     )
                 }
-                           },
+            },
             modifier = Modifier
-                .onFocusChanged { searching.value = if (it.isFocused) true else disaled.value != null}
-                .blur(if (disaled.value == null) 2.5.dp else 0.dp)
+                .onFocusChanged { searching.value = if (it.isFocused) true else enabled}
+                .blur(if (!enabled) 2.5.dp else 0.dp)
         ) {}
     }
 }
@@ -101,13 +100,13 @@ fun InBarButtons(searchAction: () -> Unit, searchFieldAction: () -> Unit){
     Row{  IconButton(onClick = { searchAction() },) {
         Icon(imageVector = Icons.Default.Search,
             contentDescription = null,
-            tint = MaterialTheme.colors.surface,
+            tint = MaterialTheme.colors.primary,
             modifier = Modifier.size(24.dp))
     }
         IconButton(onClick = { searchFieldAction() },) {
             Icon(imageVector = Icons.Default.Close,
                 contentDescription = null,
-                tint = MaterialTheme.colors.surface,
+                tint = MaterialTheme.colors.primary,
                 modifier = Modifier.size(24.dp))
         }
     }

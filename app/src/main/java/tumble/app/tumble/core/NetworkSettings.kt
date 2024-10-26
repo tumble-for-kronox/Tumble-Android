@@ -10,14 +10,12 @@ class NetworkSettings private constructor(val port: Int, val scheme: String, val
         }
 
         object Environments {
-            // Production URL
             val production = NetworkSettings(
-                port = 443, scheme = "https", tumbleUrl = "tumble.hkr.se"
+                port = 443, scheme = "https", tumbleUrl = "app.tumbleforkronox.com"
             )
 
-            // Debug URL
             val development = NetworkSettings(
-                port = 7036, scheme = "https", tumbleUrl = "10.0.2.2"
+                port = 5098, scheme = "http", tumbleUrl = "10.0.2.2"
             )
         }
     }

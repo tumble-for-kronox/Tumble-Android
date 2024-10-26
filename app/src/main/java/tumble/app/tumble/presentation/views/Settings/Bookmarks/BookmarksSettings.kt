@@ -1,26 +1,13 @@
 package tumble.app.tumble.presentation.views.Settings.Bookmarks
 
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import io.realm.kotlin.ext.query
-import io.realm.kotlin.query.RealmResults
-import io.realm.kotlin.query.find
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import tumble.app.tumble.R
-import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
-import tumble.app.tumble.presentation.views.Settings.BackNav
 import tumble.app.tumble.presentation.views.Settings.List.SettingsList
 import tumble.app.tumble.presentation.views.general.Info
 
@@ -31,28 +18,19 @@ fun BookmarksSettings(
 ) {
     val schedules = parentViewModel.bookmarks.collectAsState()
 
-    Scaffold(
-        topBar =  {
-            BackNav(onClick = { navController.popBackStack() },
-                label = stringResource(R.string.settings))
-        }
-    ) { padding ->
-        if (schedules.value.isNotEmpty()) {
-            SettingsList(
-                modifier = Modifier.padding(padding)
-            ) {
-                schedules.value.forEachIndexed { index, schedule ->
-                    BookmarkSettingsRow(
-                        schedule = schedule,
-                        index = index,
-                        onDelete = { offsets, id ->
-                            parentViewModel.deleteBookmark(schedule)
-                        }
-                    )
-                }
+    if (schedules.value.isNotEmpty()) {
+        SettingsList {
+            schedules.value.forEachIndexed { index, schedule ->
+                BookmarkSettingsRow(
+                    schedule = schedule,
+                    index = index,
+                    onDelete = { offsets, id ->
+                        parentViewModel.deleteBookmark(schedule)
+                    }
+                )
             }
-        } else {
-            Info(title = stringResource(R.string.no_bookmarks), image = null)
         }
+    } else {
+        Info(title = stringResource(R.string.no_bookmarks), image = null)
     }
 }

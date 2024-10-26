@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.*
@@ -44,46 +45,36 @@ fun HomeScreen(
     val showSheet = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.home)) },
-                backgroundColor = MaterialTheme.colors.primarySurface,
-                contentColor = MaterialTheme.colors.onPrimary,
-                elevation = 12.dp
-            )
+
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 15.dp, vertical = 10.dp)
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+    ) {
+        if (newsStatus == PageState.LOADED) {
+            News(news = news?.take(4), showOverlay = showSheet)
         }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .padding(horizontal = 15.dp, vertical = 10.dp)
-                .fillMaxSize()
-                .background(MaterialTheme.colors.background)
-        ) {
-            if (newsStatus == PageState.LOADED) {
-                News(news = news?.take(4), showOverlay = showSheet)
+        Spacer(Modifier.weight(1f))
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
+            when (homeStatus) {
+                HomeStatus.AVAILABLE -> HomeAvailable(
+                    eventsForToday = viewModel.todaysEventsCards,
+                    nextClass = viewModel.nextClass,
+                    swipedCards = viewModel.swipedCards
+                )
+                HomeStatus.LOADING -> CustomProgressIndicator()
+                HomeStatus.NO_BOOKMARKS -> HomeNoBookmarks()
+                HomeStatus.NOT_AVAILABLE -> HomeNotAvailable()
+                HomeStatus.ERROR -> Info(
+                    title = stringResource(id = R.string.error_something_wrong),
+                    image = null
+                )
             }
-            Spacer(Modifier.weight(1f))
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-                when (homeStatus) {
-                    HomeStatus.AVAILABLE -> HomeAvailable(
-                        eventsForToday = viewModel.todaysEventsCards,
-                        nextClass = viewModel.nextClass,
-                        swipedCards = viewModel.swipedCards
-                    )
-                    HomeStatus.LOADING -> CustomProgressIndicator()
-                    HomeStatus.NO_BOOKMARKS -> HomeNoBookmarks()
-                    HomeStatus.NOT_AVAILABLE -> HomeNotAvailable()
-                    HomeStatus.ERROR -> Info(
-                        title = stringResource(id = R.string.error_something_wrong),
-                        image = null
-                    )
-                }
-            }
-            Spacer(Modifier.weight(1f))
         }
+        Spacer(Modifier.weight(1f))
     }
+    
     if (showSheet.value) {
         ModalBottomSheet(onDismissRequest = { showSheet.value = false }) {
             NewsSheet(news = news, sheetState = sheetState, showSheet = showSheet)

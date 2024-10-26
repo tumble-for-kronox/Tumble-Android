@@ -2,6 +2,7 @@ package tumble.app.tumble.presentation.views.bookmarks
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -34,7 +37,7 @@ import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Bookmarks(
     viewModel: BookmarksViewModel = hiltViewModel(),
@@ -50,36 +53,22 @@ fun Bookmarks(
     val bookmarksStatus = viewModel.status
     val viewType = viewModel.defaultViewType.collectAsState()
 
-    Scaffold (
-        topBar = {
-            Column {
-                TopAppBar(
-                    title = { Text(text = stringResource(id = R.string.bookmark)) },
-                    backgroundColor = MaterialTheme.colors.background,
-                    elevation = 12.dp
-                )
+    Column (
+        modifier = Modifier
+            .padding(horizontal = 15.dp, vertical = 10.dp)
+            .fillMaxSize()
+    ) {
+        Column (modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start) {
+            when(bookmarksStatus){
+                BookmarksStatus.LOADING -> CustomProgressIndicator()
+                BookmarksStatus.LOADED -> { BookmarkViewController(viewType = viewType, onEventSelection = onEventSelection) }
+                BookmarksStatus.UNINITIALIZED -> Info(title = stringResource(id = R.string.no_bookmarks), image = null)
+                BookmarksStatus.HIDDEN_ALL -> Info(title = stringResource(id = R.string.bookmarks_hidden), image = null)
+                BookmarksStatus.ERROR -> Info(title = stringResource(id = R.string.error_something_wrong), image = null)
+                BookmarksStatus.EMPTY -> Info(title = stringResource(id = R.string.schedules_contain_no_events), image = null)
             }
-        },
-        backgroundColor = Color.Transparent
-    ){padding ->
-        Column (
-            modifier = Modifier
-                .padding(padding)
-                .padding(horizontal = 15.dp, vertical = 10.dp)
-                .fillMaxSize()
-        ) {
-            Column (modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start) {
-                when(bookmarksStatus){
-                    BookmarksStatus.LOADING -> CustomProgressIndicator()
-                    BookmarksStatus.LOADED -> { BookmarkViewController(viewType = viewType, onEventSelection = onEventSelection) }
-                    BookmarksStatus.UNINITIALIZED -> Info(title = stringResource(id = R.string.no_bookmarks), image = null)
-                    BookmarksStatus.HIDDEN_ALL -> Info(title = stringResource(id = R.string.bookmarks_hidden), image = null)
-                    BookmarksStatus.ERROR -> Info(title = stringResource(id = R.string.error_something_wrong), image = null)
-                    BookmarksStatus.EMPTY -> Info(title = stringResource(id = R.string.schedules_contain_no_events), image = null)
-                }
-            }
-            Spacer(Modifier.weight(1f))
         }
+        Spacer(Modifier.weight(1f))
     }
     AppController.shared.eventSheet?.let {
         EventDetailsSheet(event = it.event)

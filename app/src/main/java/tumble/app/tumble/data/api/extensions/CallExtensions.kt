@@ -11,6 +11,7 @@ suspend fun <T> Call<T>.callToApiResponse(): ApiResponse<T> {
         val response = this.awaitResponse()
         if (response.isSuccessful) {
             val responseBody = response.body()
+            Log.d("response", response.toString())  // Log the response
             if (responseBody != null) {
                 ApiResponse.Success(responseBody)
             } else {
@@ -23,7 +24,7 @@ suspend fun <T> Call<T>.callToApiResponse(): ApiResponse<T> {
         }
     } catch (e: Exception) {
         // In case of exception, return Error with the exception message
-        Log.e("error", "in error catch")
+        Log.e("error", "in error catch", e)
         ApiResponse.Error(e.message ?: "Unknown error", null)
     }
 }

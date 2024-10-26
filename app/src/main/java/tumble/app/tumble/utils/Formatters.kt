@@ -33,5 +33,12 @@ val month_date: SimpleDateFormat by lazy {
 
 val isoVerboseDateFormatter: SimpleDateFormat by lazy {
     val formatter = SimpleDateFormat("EEEE, MMM d,yyyy", Locale.getDefault())
-    formatter
+    formatter}
+
+fun preprocessDateString(dateString: String): String {
+    return if (dateString.contains(".")) {
+        dateString.substring(0, dateString.indexOf('.') + 4) + dateString.substring(dateString.indexOf('+'))
+    } else {
+        dateString
+    }
 }

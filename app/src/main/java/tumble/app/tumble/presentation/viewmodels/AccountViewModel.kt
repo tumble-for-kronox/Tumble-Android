@@ -1,23 +1,20 @@
 package tumble.app.tumble.presentation.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import tumble.app.tumble.data.api.Endpoint
 import tumble.app.tumble.data.api.auth.AuthManager
-import tumble.app.tumble.data.api.url
-import tumble.app.tumble.data.repository.preferences.CombinedData
 import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.datasource.SchoolManager
 import tumble.app.tumble.datasource.network.ApiResponse
 import tumble.app.tumble.datasource.network.kronox.KronoxRepository
-import tumble.app.tumble.domain.enums.ViewType
 import tumble.app.tumble.domain.models.TumbleUser
 import tumble.app.tumble.domain.models.network.NetworkRequest
 import tumble.app.tumble.domain.models.network.NetworkResponse
@@ -51,9 +48,6 @@ class AccountViewModel @Inject constructor(
 
     private val _registeredBookingsSectionState = MutableStateFlow<PageState>(PageState.LOADING)
     val registeredBookingsSectionState: StateFlow<PageState> = _registeredBookingsSectionState
-
-//    private val _combinedData = MutableStateFlow(CombinedData(-1, false, ViewType.LIST, false))
-//    val combinedData: StateFlow<CombinedData> = _combinedData
 
     private val _userBookings = MutableStateFlow<NetworkResponse.KronoxUserBookings?>(null)
     val userBookings: StateFlow<NetworkResponse.KronoxUserBookings?> = _userBookings
@@ -89,17 +83,21 @@ class AccountViewModel @Inject constructor(
     fun autoSignUpEnabled(): Boolean{
         return dataStoreManager.autoSignup.value
     }
+    var isSigningOut = mutableStateOf(false)
 
     init {
         viewModelScope.launch {
             autoLogin()
 
-//            dataStoreManager.authSchoolId.combine(dataStoreManager.autoSignup) { authSchoolId, autoSignup ->
-//                CombinedData(authSchoolId = authSchoolId, autoSignup = autoSignup)
-//            }.collect { combinedData ->
-//                _combinedData.value = combinedData
-//            }
         }
+    }
+
+    fun openLogOutConfirm() {
+        isSigningOut.value = true
+    }
+
+    fun closeLogOutConfirm() {
+        isSigningOut.value = false
     }
 
     fun logOut() {

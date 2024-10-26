@@ -2,7 +2,9 @@ package tumble.app.tumble.presentation.views.search
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -10,6 +12,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -31,7 +35,7 @@ import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun Search(
     viewModel: SearchViewModel = hiltViewModel(),
@@ -63,33 +67,16 @@ fun Search(
         }
     }
 
-    Scaffold (
-        topBar = {
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.search)) },
-                backgroundColor = MaterialTheme.colors.background,
-            )
-        },
-        bottomBar = {
-            SearchField(
-                search = { search() },
-                clearSearch = { viewModel.resetSearchResults() },
-                title = stringResource(id = R.string.search_field_placeholder),
-                searchBarText = viewModel.searchBarText,
-                searching = viewModel.searching,
-                disabled = viewModel.selectedSchool
-            )
-        }
-    ) { padding ->
-        Column(modifier = Modifier
-            .padding(padding)
-            .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            when(viewModel.status){
-                SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)}
-                SearchStatus.LOADING -> { CustomProgressIndicator() }
-                SearchStatus.LOADED -> {
+    Column(modifier = Modifier
+        .fillMaxSize(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally) {
+
+        when(viewModel.status){
+            SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)}
+            SearchStatus.LOADING -> { CustomProgressIndicator() }
+            SearchStatus.LOADED -> {
+                Box(modifier = Modifier.weight(1f)) {
                     SearchResults(
                         searchText = viewModel.searchBarText.value,
                         numberOfSearchResults = viewModel.programmeSearchResults.count(),
@@ -98,12 +85,22 @@ fun Search(
                         universityImage = viewModel.universityImage
                     )
                 }
-                SearchStatus.ERROR -> { Info(title = stringResource(id = R.string.error_something_wrong), image = null) }
-                SearchStatus.EMPTY -> { Info(title = stringResource(id = R.string.error_empty_schedule), image = null) }
             }
+            SearchStatus.ERROR -> { Info(title = stringResource(id = R.string.error_something_wrong), image = null) }
+            SearchStatus.EMPTY -> { Info(title = stringResource(id = R.string.error_empty_schedule), image = null) }
         }
-        LaunchedEffect(key1 = viewModel.selectedSchool) {
-            viewModel.schoolNotSelected.value = viewModel.selectedSchool.value == null
-        }
+
+        SearchField(
+            search = { search() },
+            clearSearch = { viewModel.resetSearchResults() },
+            title = stringResource(id = R.string.search_field_placeholder),
+            searchBarText = viewModel.searchBarText,
+            searching = viewModel.searching,
+            selectedSchool = viewModel.selectedSchool
+        )
+    }
+
+    LaunchedEffect(key1 = viewModel.selectedSchool) {
+        viewModel.schoolNotSelected.value = viewModel.selectedSchool.value == null
     }
 }

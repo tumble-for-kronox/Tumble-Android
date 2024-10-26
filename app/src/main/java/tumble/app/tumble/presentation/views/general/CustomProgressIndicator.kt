@@ -19,7 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 fun CustomProgressIndicator(
     color: Color = MaterialTheme.colors.primary,
     size: Int = 20,
-    speed: Int = 50
+    speed: Int = 20
 ) {
     val infiniteTransition = rememberInfiniteTransition()
     val rotation by infiniteTransition.animateFloat(

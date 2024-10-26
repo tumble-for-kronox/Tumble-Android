@@ -29,6 +29,7 @@ import tumble.app.tumble.extensions.models.flattenAndMerge
 import tumble.app.tumble.extensions.models.groupByWeek
 import tumble.app.tumble.extensions.models.isMissingEvents
 import tumble.app.tumble.extensions.models.ordered
+import tumble.app.tumble.utils.preprocessDateString
 import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject
@@ -150,7 +151,8 @@ class BookmarksViewModel @Inject constructor(
     private fun makeCalendarEvents(days: List<Day>): Map<LocalDate, List<Event>> {
         val dict: MutableMap<LocalDate, List<Event>> = mutableMapOf()
         for (day in days){
-            val date = LocalDate.parse(day.isoString?.substring(0,10))
+            val date = LocalDate.parse(day.isoString?.substring(0,10)
+                ?.let { preprocessDateString(it) })
             for (event in day.events!!){
 
                 if (dict[date] == null){

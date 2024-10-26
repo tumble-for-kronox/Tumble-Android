@@ -14,12 +14,13 @@ import tumble.app.tumble.presentation.navigation.Routes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import tumble.app.tumble.R
 
-enum class BottomNavItem(val route: String, val icon: ImageVector, val title: String) {
-    HOME(Routes.home, Icons.Rounded.Home, "Home"),
-    BOOKMARKS(Routes.bookmarks, Icons.Rounded.Bookmark, "Bookmarks"),
-    SEARCH(Routes.search, Icons.Rounded.Search, "Search"),
-    ACCOUNT(Routes.account, Icons.Rounded.Person, "Account"),
+enum class BottomNavItem(val route: String, val icon: ImageVector, val title: String, val translationId : Int) {
+    HOME(Routes.home, Icons.Rounded.Home, "Home", R.string.home),
+    BOOKMARKS(Routes.bookmarks, Icons.Rounded.Bookmark, "Bookmarks", R.string.bookmark),
+    SEARCH(Routes.search, Icons.Rounded.Search, "Search", R.string.search),
+    ACCOUNT(Routes.account, Icons.Rounded.Person, "Account", R.string.account),
 }
 
 @Composable

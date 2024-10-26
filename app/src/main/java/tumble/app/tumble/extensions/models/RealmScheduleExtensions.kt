@@ -9,9 +9,11 @@ import tumble.app.tumble.domain.models.realm.Day
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.extensions.presentation.toLocalDateTime
+import tumble.app.tumble.utils.preprocessDateString
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.ZoneId
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -23,7 +25,9 @@ fun List<Schedule>.filterEventsMatchingToday(): List<Event> {
     val eventsForToday = mutableListOf<Event>()
     this.filter { it.toggled }.forEach { event ->
         event.days?.forEach { day ->
-            val eventDate = Instant.parse(day.isoString)
+            val preProcessedDate = day.isoString?.let { preprocessDateString(it) }
+            // Use OffsetDateTime to parse the date with offset and then convert to Instant
+            val eventDate = OffsetDateTime.parse(preProcessedDate).toInstant()
             if (dayRange.contains(eventDate)) {
                 day.events?.let { eventsForToday.addAll(it) }
             }
@@ -65,7 +69,7 @@ fun List<Schedule>.flattenAndMerge(): List<Day> {
     val dayDictionary: MutableMap<String, Day> = mutableMapOf()
 
     for (day in days){
-        val existingDay = dayDictionary.get(day.isoString)
+        val existingDay = dayDictionary[day.isoString]
         if (existingDay != null){
             day.events?.let { existingDay.events?.addAll(it) }
             day.isoString?.let { dayDictionary.put(it, existingDay) }

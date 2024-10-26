@@ -4,12 +4,14 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.presentation.navigation.Routes
+import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.Settings.AppearanceSettings.AppearanceSettings
 import tumble.app.tumble.presentation.views.Settings.Bookmarks.BookmarksSettings
 import tumble.app.tumble.presentation.views.Settings.Notifications.NotificationOffsetSettings
@@ -41,7 +43,8 @@ fun AccountNavGraph(
 
 private fun NavGraphBuilder.account(navController: NavHostController) {
     composable(Routes.account) {
-        Account(navController = navController)
+        val viewModel: AccountViewModel = hiltViewModel()
+        Account(viewModel = viewModel, navController = navController)
     }
 }
 
