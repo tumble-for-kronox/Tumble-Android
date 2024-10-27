@@ -81,7 +81,7 @@ fun BookmarkWeekView(
                     modifier = Modifier
                         .fillMaxSize()
                         .pointerInput(Unit) {
-                            test(pointerInputScope = this, pagerState = pagerState, updateUserScroll = updateUserScroll)
+                            handleLeftSwipeOnFirstPage(pointerInputScope = this, pagerState = pagerState, updateUserScroll = updateUserScroll)
                         }
                 ) { page ->
                     var showContend by remember {
@@ -133,7 +133,7 @@ fun BookmarkWeekView(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-suspend fun test(pointerInputScope: PointerInputScope, pagerState: PagerState, updateUserScroll: (Boolean) -> Unit){
+suspend fun handleLeftSwipeOnFirstPage(pointerInputScope: PointerInputScope, pagerState: PagerState, updateUserScroll: (Boolean) -> Unit){
     pointerInputScope.let {
         it.awaitEachGesture {
             awaitFirstDown(pass = PointerEventPass.Initial)
