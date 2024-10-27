@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -33,7 +35,7 @@ fun TimeslotSelection(
     bookResource: suspend (NetworkResponse.AvailabilityValue) -> Boolean,
     availabilityValues: MutableState<List<NetworkResponse.AvailabilityValue>>
 ) {
-    val buttonStateMap = remember { mutableMapOf<String, BookingButtonState>() }
+    val buttonStateMap = remember { mutableStateMapOf<String, BookingButtonState>() }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(availabilityValues.value) {

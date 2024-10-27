@@ -13,6 +13,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import tumble.app.tumble.R
-import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.models.getAvailabilityValues
 import tumble.app.tumble.extensions.models.getFirstTimeSlotWithAvailability
 import tumble.app.tumble.observables.AppController
@@ -37,9 +37,9 @@ fun ResourceSelection(
     navController: NavController
 ) {
     val resource = AppController.shared.resourceModel!!.resource
-    val selectedTimeIndex = remember { mutableStateOf(resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)) }
+    val selectedTimeIndex = remember { mutableIntStateOf(resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)) }
     val availabilityValues = remember {
-        mutableStateOf<List<NetworkResponse.AvailabilityValue>>(resource.availabilities.getAvailabilityValues(timelotId = selectedTimeIndex.value))
+        mutableStateOf(resource.availabilities.getAvailabilityValues(timelotId = selectedTimeIndex.intValue))
     }
     val selectedPickerDate = AppController.shared.resourceModel!!.date
     val timeslots = resource.timeSlots
@@ -65,7 +65,7 @@ fun ResourceSelection(
                 timeslots = timeslots,
                 selectedIndex = selectedTimeIndex,
                 onIndexChange = { index ->
-                    selectedTimeIndex.value = index
+                    selectedTimeIndex.intValue = index
                     availabilityValues.value =
                         resource.availabilities.getAvailabilityValues(timelotId = index)
                 }
