@@ -1,7 +1,6 @@
 package tumble.app.tumble.extensions.models
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import io.realm.kotlin.ext.copyFromRealm
 import io.realm.kotlin.ext.toRealmList
@@ -10,7 +9,6 @@ import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.extensions.presentation.toLocalDateTime
 import tumble.app.tumble.utils.preprocessDateString
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime

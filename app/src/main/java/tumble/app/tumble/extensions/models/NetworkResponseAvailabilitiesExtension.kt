@@ -1,5 +1,6 @@
 package tumble.app.tumble.extensions.models
 
+import android.util.Log
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.network.availabilities
 
@@ -31,10 +32,10 @@ fun availabilities.getAvailabilityValues(timelotId: Int): List<NetworkResponse.A
 
     val availabilities = this?: return emptyList()
     val availabilityValueResult = mutableListOf<NetworkResponse.AvailabilityValue>()
-    for ((location, availabilityValues) in availabilities){
+    for (availabilityValues in availabilities.values){
         val availabilityValue = availabilityValues[timelotId]
         if(availabilityValue?.availability == NetworkResponse.AvailabilityEnum.AVAILABLE){
-            availabilityValueResult.add(availabilityValue.copy(locationId = location, timeSlotId = timelotId.toString()))
+            availabilityValueResult.add(availabilityValue)
         }
     }
     return availabilityValueResult

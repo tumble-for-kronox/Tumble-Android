@@ -13,7 +13,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,9 +47,8 @@ fun TimeslotCard(
                     onBook()
                 }
             },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-            modifier = Modifier
-                .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(20.dp)),
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary, disabledBackgroundColor = MaterialTheme.colors.primary),
+            shape = RoundedCornerShape(20.dp),
             elevation = null,
             enabled = bookingButtonState != BookingButtonState.BOOKED,
         ) {

@@ -37,6 +37,10 @@ fun TopBarBackButton(currentNavController: NavHostController) {
             { currentNavController.popBackStack() },
             stringResource(R.string.accountSettings)
         )
+        Routes.accountResourceDetails -> BackButton(
+            { currentNavController.popBackStack()},
+            stringResource(R.string.resources)
+        )
 
         else -> {}
     }
@@ -59,7 +63,7 @@ fun TopBarTitle(currentNavController: NavHostController) {
         Routes.searchDetails -> Text(stringResource(R.string.search))
         Routes.accountEvents -> Text(stringResource(R.string.events))
         Routes.accountResources -> Text(stringResource(R.string.resources))
-
+        Routes.accountResourceDetails -> Text(stringResource(R.string.rooms))
         else -> Text(stringResource(R.string.app_name))
     }
 }
