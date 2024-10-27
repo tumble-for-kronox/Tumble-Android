@@ -1,6 +1,8 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
+import android.icu.util.Calendar
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -31,6 +33,10 @@ fun ResourceDatePicker(
     val showDatePickerDialog = remember {
         mutableStateOf(false)
     }
+    val starOfDay = remember {
+        mutableStateOf(Calendar.getInstance().apply { set(Calendar.MILLISECONDS_IN_DAY, 0)})
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,6 +56,7 @@ fun ResourceDatePicker(
                 yearContentColor = Color.Yellow,
                 subheadContentColor = Color.Yellow
             ),
+            dateValidator = { Calendar.getInstance().apply { timeInMillis = it }.after(starOfDay.value) },
             title = null,
             headline = null,
         )
