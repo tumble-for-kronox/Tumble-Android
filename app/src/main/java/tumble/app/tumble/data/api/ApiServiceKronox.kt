@@ -49,7 +49,7 @@ interface ApiServiceKronox {
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Body resource: NetworkRequest.BookKronoxResource
-    ): Call<Void>
+    ): Call<KronoxUserBookingElement>
 
     @PUT()
     fun confirmResource(

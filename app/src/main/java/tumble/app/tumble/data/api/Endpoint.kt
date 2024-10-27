@@ -1,6 +1,7 @@
 package tumble.app.tumble.data.api
 
 import android.net.Uri
+import androidx.compose.ui.platform.InspectableModifier
 import tumble.app.tumble.core.NetworkSettings
 import tumble.app.tumble.utils.toIsoString
 import java.util.Date
@@ -10,7 +11,6 @@ sealed class Endpoint {
     data class Schedule(val scheduleId: String, val schoolId: String) : Endpoint()
     data class UserEvents(val schoolId: String) : Endpoint()
     data class ResourceAvailabilities(val schoolId: String, val resourceId: String, val date: String) : Endpoint()
-    data class AllResources(val schoolId: String) : Endpoint()
     data class UserBookings(val schoolId: String) : Endpoint()
     data class Login(val schoolId: String) : Endpoint()
     data class Users(val schoolId: String) : Endpoint()
@@ -21,8 +21,7 @@ sealed class Endpoint {
     data class ConfirmResource(val schoolId: String) : Endpoint()
     data class UnBookResource(val schoolId: String, val bookingId: String) : Endpoint()
     object News : Endpoint()
-    //data class AllResourcesTest(val schoolId: String) : Endpoint()
-    data class AllResourceData(val schoolId: String, val resourceId: String, val date: String) : Endpoint()
+    data class AllResources(val schoolId: String, val date: String): Endpoint()
 }
 
 fun Endpoint.url(): String {
@@ -51,19 +50,10 @@ fun Endpoint.url(): String {
                 .appendQueryParameter("date", date)
         }
         is Endpoint.AllResources -> {
-            components.path("/api/resources")
-                .appendQueryParameter("schoolId", schoolId)
-        }
-        is Endpoint.AllResourceData -> {
-            components.path("/api/resources/$resourceId")
+            components.path("/api/resources/all")
                 .appendQueryParameter("schoolId", schoolId)
                 .appendQueryParameter("date", date)
-
         }
-//        is Endpoint.AllResourcesTest -> {
-//            components.path("/api/resources")
-//                .appendQueryParameter("schoolId", schoolId)
-//        }
         is Endpoint.UserBookings -> {
             components.path("/api/resources/userbookings")
                 .appendQueryParameter("schoolId", schoolId)

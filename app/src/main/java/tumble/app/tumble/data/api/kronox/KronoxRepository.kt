@@ -1,10 +1,7 @@
 package tumble.app.tumble.datasource.network.kronox
 
-import android.util.Log
 import okhttp3.Request
 import okhttp3.RequestBody
-import retrofit2.Call
-import retrofit2.Response
 import retrofit2.Retrofit
 import tumble.app.tumble.data.api.Endpoint
 import tumble.app.tumble.data.api.url
@@ -45,19 +42,19 @@ class KronoxRepository @Inject constructor(private val retrofit: Retrofit): Kron
         return call.callToApiResponse()
     }
 
-    override suspend fun getAllResources(endpoint: Endpoint.AllResources, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>{
+    override suspend fun getAllResources(
+        endpoint: Endpoint.AllResources,
+        refreshToken: String?,
+        sessionDetails: String?
+    ): ApiResponse<List<NetworkResponse.KronoxResourceElement>> {
         return kronoxApiService.getAllResources(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
-    }
-
-    override suspend fun getAllResourceData(endpoint: Endpoint.AllResourceData, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxResourceElement>{
-        return kronoxApiService.getAllResourceData(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
     }
 
     override suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?):  ApiResponse<Void> {
         return kronoxApiService.registerForEvent(endpoint.url(), refreshToken).callToApiResponse()
     }
 
-    override suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<Void> {
+    override suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<KronoxUserBookingElement> {
         return kronoxApiService.bookResource(endpoint.url(), refreshToken, resource).callToApiResponse()
     }
 

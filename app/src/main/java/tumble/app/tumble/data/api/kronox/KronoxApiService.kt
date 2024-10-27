@@ -29,13 +29,9 @@ interface KronoxApiService {
 
     suspend fun getAllResources(endpoint: Endpoint.AllResources, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>
 
-//    suspend fun getAllResourcesTypes(endpoint: Endpoint.AllResourcesTest, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>
-
-    suspend fun getAllResourceData(endpoint: Endpoint.AllResourceData, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxResourceElement>
-
     suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?):  ApiResponse<Void>
 
-    suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<Void>
+    suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<NetworkResponse.KronoxUserBookingElement>
 
     suspend fun confirmResource(endpoint: Endpoint.ConfirmResource, refreshToken: String?, resource: NetworkRequest.ConfirmKronoxResource): ApiResponse<Void>
 
