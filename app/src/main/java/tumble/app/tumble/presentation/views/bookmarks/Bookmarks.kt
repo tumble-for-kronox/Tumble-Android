@@ -1,7 +1,5 @@
 package tumble.app.tumble.presentation.views.bookmarks
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,7 +44,7 @@ fun Bookmarks(
     val bookmarksStatus = viewModel.status
     val viewType = viewModel.defaultViewType.collectAsState()
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = AppController.shared.eventSheet) {
         setTopNavState(
             AppBarState(
                 title = pageTitle
@@ -72,6 +70,6 @@ fun Bookmarks(
         Spacer(Modifier.weight(1f))
     }
     AppController.shared.eventSheet?.let {
-        EventDetailsSheet(event = it.event)
+        EventDetailsSheet(event = it.event, setTopNavState)
     }
 }

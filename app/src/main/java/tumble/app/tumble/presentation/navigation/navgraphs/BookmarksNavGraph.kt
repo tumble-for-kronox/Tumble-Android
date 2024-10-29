@@ -54,6 +54,6 @@ private fun NavGraphBuilder.bookmarksDetails(navController: NavHostController, s
         }
     ) { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")
-        EventDetailsSheet(event = AppController.shared.eventSheet!!.event)
+        EventDetailsSheet(event = AppController.shared.eventSheet!!.event, setTopNavState)
     }
 }

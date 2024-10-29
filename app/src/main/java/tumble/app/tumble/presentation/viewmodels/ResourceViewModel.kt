@@ -54,25 +54,10 @@ class ResourceViewModel @Inject constructor(
     private val _allResources = MutableStateFlow<List<NetworkResponse.KronoxResourceElement>?>(null)
     val allResources: StateFlow<List<NetworkResponse.KronoxResourceElement>?> = _allResources
 
-//    private val _allResourcesTypes = MutableStateFlow<List<NetworkResponse.KronoxResourceElement>?>(null)
-//    val allResourcesTypes: StateFlow<List<NetworkResponse.KronoxResourceElement>?> = _allResourcesTypes
-
-    //val allResources: List<NetworkResponse.KronoxResourceElement>? = null
-
-//    private val _resourceSelectionModel = MutableStateFlow<ResourceSelectionModel?>(null)
-//    var resourceSelectionModel by mutableStateOf<ResourceSelectionModel?>(null)
-
-//    private val _resourceSelectioned = MutableStateFlow<NetworkResponse.KronoxResourceElement?>(null)
-//    var resourceSelectioned = mutableStateOf<NetworkResponse.KronoxResourceElement?>(null)
-
     fun setBookingDate(newDate: Date){
         _selectedPickerDate.value = newDate
-        viewModelScope.launch { getAllResources(isoDateFormatterDate.format(newDate)) }
+        viewModelScope.launch { getAllResources(newDate) }
     }
-
-//    fun setResourceSelection(resource: NetworkResponse.KronoxResourceElement){
-//        resourceSelectioned.value = resource
-//    }
 
     fun getUserEventsForPage(){
         viewModelScope.launch {
@@ -143,10 +128,11 @@ class ResourceViewModel @Inject constructor(
         }
     }
 
-    fun getAllResources(date: String = isoDateFormatterDate.format(Date())){
+    fun getAllResources(date: Date = Date()){
+        val dateString = isoDateFormatterDate.format(date)
         viewModelScope.launch {
             try {
-                val endpoint = Endpoint.AllResources(dataStoreManager.authSchoolId.value.toString(), date)
+                val endpoint = Endpoint.AllResources(dataStoreManager.authSchoolId.value.toString(), dateString)
                 val refreshToken = authManager.getRefreshToken() ?: return@launch
                 val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>> = kronoxManager.getAllResources(endpoint, refreshToken, null)
 
