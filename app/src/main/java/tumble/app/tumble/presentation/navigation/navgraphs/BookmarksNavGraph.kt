@@ -14,27 +14,27 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.presentation.views.bookmarks.EventDetails.EventDetailsSheet
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BookmarksNavGraph(
     navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
     NavHost(navController, startDestination = Routes.bookmarks) {
-        bookmarksDetails(navController)
-        bookmarks(navController)
+        bookmarksDetails(navController, setTopNavState)
+        bookmarks(navController, setTopNavState)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.bookmarks(navController: NavHostController) {
+private fun NavGraphBuilder.bookmarks(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.bookmarks) {
-        Bookmarks(navController = navController)
+        Bookmarks(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.bookmarksDetails(navController: NavHostController) {
+private fun NavGraphBuilder.bookmarksDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(
         Routes.bookmarksDetails,
         deepLinks = listOf(

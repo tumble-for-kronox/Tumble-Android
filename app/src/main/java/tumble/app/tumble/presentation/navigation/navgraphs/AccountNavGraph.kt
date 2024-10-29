@@ -20,31 +20,32 @@ import tumble.app.tumble.presentation.views.account.Account
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Events.EventBookings
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceBookings
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceSelection
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun AccountNavGraph(
     navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
     NavHost(navController, Routes.account) {
-        account(navController)
+        account(navController, setTopNavState)
         accountLogin(navController)
-        accountSettings(navController)
-        accountSettingsAppearance(navController)
+        accountSettings(navController, setTopNavState)
+        accountSettingsAppearance(navController, setTopNavState)
         accountSettingsLanguage(navController)
-        accountSettingsNotifications(navController)
-        accountSettingsBookmarks(navController)
-        accountResources(navController)
-        accountResourceDetails(navController)
-        accountEvents(navController)
-        accountEventDetails(navController)
+        accountSettingsNotifications(navController, setTopNavState)
+        accountSettingsBookmarks(navController, setTopNavState)
+        accountResources(navController, setTopNavState)
+        accountResourceDetails(navController, setTopNavState)
+        accountEvents(navController, setTopNavState)
+        accountEventDetails(navController, setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.account(navController: NavHostController) {
+private fun NavGraphBuilder.account(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.account) {
-        val viewModel: AccountViewModel = hiltViewModel()
-        Account(viewModel = viewModel, navController = navController)
+        Account(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
@@ -55,15 +56,15 @@ private fun NavGraphBuilder.accountLogin(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.accountSettings(navController: NavHostController) {
+private fun NavGraphBuilder.accountSettings(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountSettings) {
-        SettingsScreen(navController = navController)
+        SettingsScreen(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountSettingsAppearance(navController: NavHostController) {
+private fun NavGraphBuilder.accountSettingsAppearance(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountSettingsAppearance) {
-        AppearanceSettings( navController = navController)
+        AppearanceSettings( navController = navController, setTopNavState = setTopNavState)
     }
 }
 
@@ -74,27 +75,25 @@ private fun NavGraphBuilder.accountSettingsLanguage(navController: NavHostContro
     }
 }
 
-private fun NavGraphBuilder.accountSettingsNotifications(navController: NavHostController) {
+private fun NavGraphBuilder.accountSettingsNotifications(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountSettingsNotifications) {
-        NotificationOffsetSettings()
+        NotificationOffsetSettings(navController =  navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountSettingsBookmarks(navController: NavHostController) {
+private fun NavGraphBuilder.accountSettingsBookmarks(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountSettingsBookmarks) {
-        BookmarksSettings(navController = navController)
+        BookmarksSettings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.accountResources(navController: NavHostController) {
+private fun NavGraphBuilder.accountResources(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountResources) {
-        ResourceBookings(navController = navController)
+        ResourceBookings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.accountResourceDetails(navController: NavHostController) {
+private fun NavGraphBuilder.accountResourceDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(
         Routes.accountResourceDetails,
         deepLinks = listOf(
@@ -102,20 +101,18 @@ private fun NavGraphBuilder.accountResourceDetails(navController: NavHostControl
         )
     ) { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")
-        ResourceSelection(navController = navController)
-        //ResourceBookings(navController = navController)
+        ResourceSelection(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.accountEvents(navController: NavHostController) {
+private fun NavGraphBuilder.accountEvents(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountEvents) {
-        EventBookings(navController =  navController)
+        EventBookings(navController =  navController, setTopNavState = setTopNavState)
+
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-private fun NavGraphBuilder.accountEventDetails(navController: NavHostController) {
+private fun NavGraphBuilder.accountEventDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(
         Routes.accountEventDetails,
     ) { backStackEntry ->

@@ -25,22 +25,35 @@ import tumble.app.tumble.presentation.views.general.Info
 import tumble.app.tumble.presentation.views.home.available.HomeAvailable
 import tumble.app.tumble.presentation.views.home.news.News
 import tumble.app.tumble.presentation.views.home.news.NewsSheet
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterialApi::class
 )
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModelNew = hiltViewModel(),
     parentViewModel: ParentViewModel = hiltViewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    onComposing: (AppBarState) -> Unit
 ) {
+
+    val pageTitle = stringResource(R.string.home);
+
     val newsStatus = viewModel.newsSectionStatus
     val homeStatus = viewModel.status
     val news = viewModel.news
     val showSheet = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
+
+    LaunchedEffect(key1 = true) {
+        onComposing(
+            AppBarState(
+                title = pageTitle
+            )
+        )
+    }
 
     Column(
         modifier = Modifier

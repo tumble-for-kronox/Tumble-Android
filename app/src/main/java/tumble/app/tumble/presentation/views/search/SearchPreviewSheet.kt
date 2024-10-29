@@ -27,6 +27,7 @@ import tumble.app.tumble.presentation.viewmodels.SearchPreviewViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
 import tumble.app.tumble.R
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -34,11 +35,21 @@ import tumble.app.tumble.R
 fun SearchPreviewSheet(
     viewModel: SearchPreviewViewModel = hiltViewModel(),
     searchPreviewModel: SearchPreviewModel,
-    navController: NavController
+    navController: NavController,
+    setTopNavState: (AppBarState) -> Unit
 ){
     fun bookmark(){
         viewModel.bookmark(searchPreviewModel.scheduleId, searchPreviewModel.schoolId)
     }
+
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = searchPreviewModel.scheduleId
+            )
+        )
+    }
+
     Box (
         modifier = Modifier
             .fillMaxSize()

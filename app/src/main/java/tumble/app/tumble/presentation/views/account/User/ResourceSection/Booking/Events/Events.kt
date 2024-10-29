@@ -17,61 +17,81 @@ import tumble.app.tumble.domain.models.network.NetworkResponse.UpcomingKronoxUse
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun RegisteredEventsView(
-    registeredEvents: List<AvailableKronoxUserEvent>,
-    onTapEventAction: ((String, EventType) -> Unit)
+fun Events(
+    registeredEvents: List<AvailableKronoxUserEvent>? = null,
+    unregisteredEvents: List<AvailableKronoxUserEvent>? = null,
+    upcomingEvents: List<UpcomingKronoxUserEvent>? = null,
+    onTapEventAction: ((String, EventType) -> Unit)? = null
 ) {
-    Column {
-        if (registeredEvents.isNotEmpty()) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(15.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                registeredEvents.forEach { event ->
-                    EventCardButton(
-                        event = event,
-                        eventType = EventType.UNREGISTER,
-                        onTap = { onTapEventAction(event.id!!, EventType.UNREGISTER) }
-                    )
-                }
-            }
-        }else {
-            Text(
-                text = stringResource(id = R .string.no_registered_events),
-                modifier = Modifier
-                    .padding(top = 5.dp)
-            )
-        }
-    }
+    UnregisteredEventsView(unregisteredEvents, onTapEventAction)
+    RegisteredEventsView(registeredEvents, onTapEventAction)
+    UpcomingEventsView(upcomingEvents)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun UnregisteredEventsView(
-    unregisteredEvents: List<AvailableKronoxUserEvent>,
-    onTapEventAction: ((String, EventType) -> Unit)
+fun RegisteredEventsView(
+    registeredEvents: List<AvailableKronoxUserEvent>?,
+    onTapEventAction: ((String, EventType) -> Unit)?
 ) {
     Column {
-        if (unregisteredEvents.isNotEmpty()) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(15.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                unregisteredEvents.forEach { event ->
-                    EventCardButton(
-                        event = event,
-                        eventType = EventType.REGISTER,
-                        onTap = { onTapEventAction(event.id!!, EventType.REGISTER) }
-                    )
+        registeredEvents?.let { events ->
+            onTapEventAction?.let { action ->
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    registeredEvents.forEach { event ->
+                        EventCardButton(
+                            event = event,
+                            eventType = EventType.UNREGISTER,
+                            onTap = { action(event.id!!, EventType.UNREGISTER) }
+                        )
+                    }
                 }
             }
+            if (events.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.no_registered_events),
+                    modifier = Modifier
+                        .padding(top = 5.dp)
+                )
+            }
         }
-        else{
-            Text(
-                text = stringResource(id = R.string.no_unregistered_events),
-                modifier = Modifier
-                    .padding(top = 5.dp)
-            )
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun UnregisteredEventsView(
+    unregisteredEvents: List<AvailableKronoxUserEvent>?,
+    onTapEventAction: ((String, EventType) -> Unit)?
+) {
+    Column {
+        unregisteredEvents?.let { events ->
+            onTapEventAction?.let { action ->
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    unregisteredEvents.forEach { event ->
+                        EventCardButton(
+                            event = event,
+                            eventType = EventType.REGISTER,
+                            onTap = { action(event.id!!, EventType.REGISTER) }
+                        )
+                    }
+                }
+            }
+            if (events.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.no_unregistered_events),
+                    modifier = Modifier
+                        .padding(top = 5.dp)
+                )
+            }
         }
     }
 }
@@ -79,24 +99,25 @@ fun UnregisteredEventsView(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun UpcomingEventsView(
-    upcomingEvents: List<UpcomingKronoxUserEvent>
+    upcomingEvents: List<UpcomingKronoxUserEvent>?
 ) {
     Column {
-        if (upcomingEvents.isNotEmpty()) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(15.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                upcomingEvents.forEach { event ->
-                    UpcomingEventCardButton(event = event)
+        upcomingEvents?.let { events ->
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(15.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    upcomingEvents.forEach { event ->
+                        UpcomingEventCardButton(event = event)
+                    }
                 }
-            }
-        } else{
-            Text(
-                text = stringResource(id = R.string.no_upcoming_events),
-                modifier = Modifier
-                    .padding(top = 5.dp)
+            if (events.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.no_upcoming_events),
+                    modifier = Modifier
+                        .padding(top = 5.dp)
                 )
             }
         }
     }
+}

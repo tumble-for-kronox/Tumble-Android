@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,20 +38,24 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import tumble.app.tumble.R
+import tumble.app.tumble.presentation.components.buttons.BackButton
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
 import tumble.app.tumble.presentation.views.Settings.Buttons.SettingsExternalButton
 import tumble.app.tumble.presentation.views.Settings.Buttons.SettingsNavigationButton
 import tumble.app.tumble.presentation.views.Settings.List.SettingsList
 import tumble.app.tumble.presentation.views.Settings.List.SettingsListGroup
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
+    val pageTitle = stringResource(R.string.accountSettings)
+    val backTitle = stringResource(R.string.account)
     val appearance = viewModel.appearance.collectAsState()
     var showShareSheet by remember { mutableStateOf(false) }
 
@@ -66,6 +71,18 @@ fun SettingsScreen(
                 Uri.parse(uri)
             ),
             null)
+    }
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = pageTitle,
+                navigationAction = {
+                    BackButton(label = backTitle) {
+                        navController.popBackStack()
+                    }
+                }
+            )
+        )
     }
 
     Column(

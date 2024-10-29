@@ -35,20 +35,12 @@
     <string name="see_all">See all</string>
     <string name="book_more">Book more</string>
     <string name="copy_tumble_link">Copy link</string>
-    <string name="registered">Registered</string>
-    <string name="unregistered">Unregistered</string>
-    <string name="upcoming">Upcoming</string>
     <string name="available_until">Available until</string>
     <string name="signup_has_passed">Signup has passed</string>
     <string name="unregister">Unregister</string>
     <string name="register">register</string>
-    <string name="no_registered_events">No Registerd Events</string>
-    <string name="no_unregistered_events">No Unregistered Events</string>
-    <string name="no_upcoming_events">No Upcoming Events</string>
     <string name="available_at">Available at</string>
-    <string name="resources">Resources</string>
     <string name="rooms">Rooms</string>
-    <string name="events">Events</string>
     <string name="account">Account</string>
     <string name="github">Tumble on GitHub</string>
     <string name="share_app">Share the app</string>
@@ -93,4 +85,13 @@
     <string name="confirmation">Confirmation</string>
     <string name="remove_booking">Remove booking</string>
     <string name="resource_details">Resource details</string>
+    <string name="resources">Resources</string>
+    <string name="events">Events</string>
+    <string name="registered">Registered</string>
+    <string name="unregistered">Unregistered</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="no_registered_events">No registered events available</string>
+    <string name="no_unregistered_events">No unregistered events available</string>
+    <string name="no_upcoming_events">No upcoming events available</string>
+    <string name="server_error">Could not contact the server, try again later</string>
 </resources>

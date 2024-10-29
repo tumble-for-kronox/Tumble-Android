@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
@@ -22,9 +23,12 @@ import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.presentation.ResourceSelectionModel
 import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.presentation.navigation.UriBuilder
+import tumble.app.tumble.presentation.components.buttons.BackButton
+import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
 import tumble.app.tumble.presentation.viewmodels.ResourceViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
+import tumble.app.tumble.presentation.views.navigation.AppBarState
 import java.util.Calendar
 import java.util.Date
 
@@ -33,10 +37,27 @@ import java.util.Date
 @Composable
 fun ResourceBookings(
     viewModel: ResourceViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
+    setTopNavState: (AppBarState) -> Unit
 ) {
+    val pageTitle = stringResource(R.string.resources)
+    val backTitle = stringResource(R.string.account)
+
     val resourceBookingPageState = viewModel.resourceBookingPageState.collectAsState()
     val selectedPikerDate = viewModel.selectedPickerDate.collectAsState()
+
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = pageTitle,
+                navigationAction = {
+                    BackButton(backTitle) {
+                        navController.popBackStack()
+                    }
+                }
+            )
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -49,6 +70,7 @@ fun ResourceBookings(
             }
         )
         Divider(color = MaterialTheme.colors.onBackground)
+
         when (resourceBookingPageState.value) {
             PageState.LOADING -> {
                 Box(
@@ -94,12 +116,11 @@ fun ResourceBookings(
             }
         }
     }
-    LaunchedEffect(Unit) {
-        viewModel.getAllResources()
+    LaunchedEffect(viewModel.selectedPickerDate) {
+        viewModel.getAllResources(selectedPikerDate.value)
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun isWeekend(date: Date): Boolean{
     val calendar = Calendar.getInstance().apply { time = date }
     val day = calendar.get(Calendar.DAY_OF_WEEK)
