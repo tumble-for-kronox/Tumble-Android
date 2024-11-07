@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navDeepLink
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.Settings.AppearanceSettings.AppearanceSettings
@@ -18,7 +19,9 @@ import tumble.app.tumble.presentation.views.Settings.SettingsScreen
 import tumble.app.tumble.presentation.views.account.Account
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Events.EventBookings
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceBookings
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceSelection
 import tumble.app.tumble.presentation.views.navigation.AppBarState
+
 
 @Composable
 fun AccountNavGraph(
@@ -86,22 +89,26 @@ private fun NavGraphBuilder.accountSettingsBookmarks(navController: NavHostContr
 
 private fun NavGraphBuilder.accountResources(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountResources) {
-        //ResourceBookings(navController = navController)
+        ResourceBookings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
 private fun NavGraphBuilder.accountResourceDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(
         Routes.accountResourceDetails,
+        deepLinks = listOf(
+            navDeepLink { uriPattern = Routes.AccountResourceDetailsUri},
+        )
     ) { backStackEntry ->
         val id = backStackEntry.arguments?.getString("id")
-        ResourceBookings(navController = navController, setTopNavState = setTopNavState)
+        ResourceSelection(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
 private fun NavGraphBuilder.accountEvents(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountEvents) {
-        //EventBookings(navController =  navController)
+        EventBookings(navController =  navController, setTopNavState = setTopNavState)
+
     }
 }
 
@@ -109,8 +116,8 @@ private fun NavGraphBuilder.accountEventDetails(navController: NavHostController
     composable(
         Routes.accountEventDetails,
     ) { backStackEntry ->
-        val id = backStackEntry.arguments?.getString("id")
-        EventBookings(navController =  navController, setTopNavState = setTopNavState)
+//        val id = backStackEntry.arguments?.getString("id")
+//        EventBookings(navController =  navController)
     }
 }
 

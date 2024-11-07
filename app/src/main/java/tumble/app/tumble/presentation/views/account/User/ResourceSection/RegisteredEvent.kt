@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,11 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
+import tumble.app.tumble.extensions.presentation.formatDate
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -23,50 +27,43 @@ fun RegisteredEvent(
     state: State<PageState>,
     registeredEvents: List<NetworkResponse.AvailableKronoxUserEvent>?
 ){
-
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         when(state.value){
             PageState.LOADING -> {
                 CustomProgressIndicator()
             }
             PageState.LOADED -> {
-
                 if(!registeredEvents.isNullOrEmpty()){
                     registeredEvents.forEach{ event ->
                         val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
                         val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
-
                         if (eventStart != null && eventEnd != null){
                             ResourceCard(
                                 eventStart = eventStart,
                                 eventEnd = eventEnd,
                                 type = event.type,
                                 title = event.title,
-                                date = event.eventStart?:"(no date)",
+                                date = event.eventStart.formatDate()?: stringResource(R.string.no_date),
                                 onClick = { onClickEvent(event) }
-
                             )
                         }
-
                     }
                 }else{
                     Text(
-                        text = "No registed event yet",
+                        text = stringResource(R.string.no_registered_event_yet),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
             }
             PageState.ERROR -> {
-                Text(text = "Could not contact the server, try again later",
+                Text(text = stringResource(R.string.could_not_contact_server),
                     modifier = Modifier.padding(16.dp))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
-
-
 }

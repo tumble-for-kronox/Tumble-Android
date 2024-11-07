@@ -15,13 +15,11 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -43,13 +41,13 @@ fun SearchField(
     searching: MutableState<Boolean>,
     selectedSchool: MutableState<School?>
 ){
-    var searchBarText by remember {
+    val searchBarText by remember {
         mutableStateOf(searchBarText)
     }
-    var searching by remember {
+    val searching by remember {
         mutableStateOf(searching)
     }
-    var enabled = selectedSchool.value != null
+    val enabled = selectedSchool.value != null
     val focusManager = LocalFocusManager.current
     val context = LocalContext.current
 

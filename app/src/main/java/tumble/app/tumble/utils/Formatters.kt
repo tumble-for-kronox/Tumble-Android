@@ -15,7 +15,7 @@ val isoDateFormatter: SimpleDateFormat by lazy {
 }
 
 val isoDateFormatterNoTimeZone: SimpleDateFormat by lazy {
-    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
     formatter.timeZone = TimeZone.getDefault()
     formatter
 }
@@ -30,6 +30,10 @@ val month_date: SimpleDateFormat by lazy {
     val formatter = SimpleDateFormat("MMMM", Locale.getDefault())
     formatter
 }
+
+val isoVerboseDateFormatter: SimpleDateFormat by lazy {
+    val formatter = SimpleDateFormat("EEEE, MMM d,yyyy", Locale.getDefault())
+    formatter}
 
 fun preprocessDateString(dateString: String): String {
     return if (dateString.contains(".")) {

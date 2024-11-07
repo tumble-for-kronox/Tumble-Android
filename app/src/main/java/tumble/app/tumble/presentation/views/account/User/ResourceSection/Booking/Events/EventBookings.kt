@@ -1,16 +1,18 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Events
 
-
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,6 +32,7 @@ import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
 import tumble.app.tumble.presentation.views.navigation.AppBarState
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun EventBookings(
@@ -39,7 +42,6 @@ fun EventBookings(
 ) {
     val pageTitle = stringResource(R.string.events)
     val backTitle = stringResource(R.string.account)
-
     val completeUserEvent = viewModel.completeUserEvent.collectAsState()
     val eventBookingPageState = viewModel.eventBookingPageState.collectAsState()
 
@@ -55,7 +57,6 @@ fun EventBookings(
             )
         )
     }
-
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
@@ -72,6 +73,7 @@ fun EventBookings(
                 PageState.LOADING -> {
                     CustomProgressIndicator()
                 }
+
                 PageState.LOADED -> {
                     SectionDivider(
                         title = stringResource(R.string.registered),
@@ -134,12 +136,13 @@ fun EventBookings(
                 }
             }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.getUserEventsForPage()
+        LaunchedEffect(Unit) {
+            viewModel.getUserEventsForPage()
+        }
     }
 }
+
+
 
 fun onTapEventAction(viewModel: ResourceViewModel, eventId: String, eventType: EventType) {
     when (eventType) {

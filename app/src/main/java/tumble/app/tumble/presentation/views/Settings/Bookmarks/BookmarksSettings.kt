@@ -51,6 +51,6 @@ fun BookmarksSettings(
             }
         }
     } else {
-        Info(title = "No bookmarks yet", image = null)
+        Info(title = stringResource(R.string.no_bookmarks), image = null)
     }
 }

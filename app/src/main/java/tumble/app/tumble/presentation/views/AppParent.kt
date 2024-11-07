@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,7 +30,6 @@ import tumble.app.tumble.presentation.views.navigation.BottomNavItem
 import tumble.app.tumble.presentation.views.navigation.TopBar
 import tumble.app.tumble.ui.theme.TumbleTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Preview(showBackground = true, name = "AppParent preview")
@@ -53,8 +51,6 @@ fun AppParent() {
         BottomNavItem.SEARCH -> searchNavController
         BottomNavItem.ACCOUNT -> accountNavController
     }
-
-    val combinedData by viewModel.combinedData.collectAsState()
 
     TumbleTheme(userPreferences =  apperance.value) {
         Surface(

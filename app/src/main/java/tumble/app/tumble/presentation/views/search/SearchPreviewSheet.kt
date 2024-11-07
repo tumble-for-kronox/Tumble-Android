@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,7 +29,7 @@ import tumble.app.tumble.presentation.views.general.Info
 import tumble.app.tumble.R
 import tumble.app.tumble.presentation.views.navigation.AppBarState
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun SearchPreviewSheet(
@@ -71,7 +70,6 @@ fun SearchPreviewSheet(
             }
         }
     }
-
     Row (
         modifier = Modifier
             .fillMaxWidth()
@@ -84,12 +82,10 @@ fun SearchPreviewSheet(
             BookmarkButton(bookmark = { bookmark() }, buttonState = viewModel.buttonState)
         else
             Box {}
-
         CloseCoverButton(
             onClick = { navController.popBackStack() },
         )
     }
-
     LaunchedEffect(Unit) {
         viewModel.getSchedule(searchPreviewModel.scheduleId, searchPreviewModel.schoolId)
     }

@@ -1,5 +1,8 @@
 package tumble.app.tumble.presentation.views.Settings
 
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import tumble.app.tumble.R
@@ -44,7 +48,6 @@ import tumble.app.tumble.presentation.views.Settings.List.SettingsListGroup
 import tumble.app.tumble.presentation.views.navigation.AppBarState
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
@@ -58,7 +61,17 @@ fun SettingsScreen(
 
     val currentLocale = Locale.getDefault().displayLanguage
     val appVersion = "1.0.0" // Replace with actual version retrieval logic
+    val context = LocalContext.current
 
+    val externalNav = {uri:String ->
+        startActivity(
+            context,
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(uri)
+            ),
+            null)
+    }
     LaunchedEffect(key1 = true) {
         setTopNavState(
             AppBarState(
@@ -71,7 +84,6 @@ fun SettingsScreen(
             )
         )
     }
-
 
     Column(
         modifier = Modifier
@@ -88,13 +100,13 @@ fun SettingsScreen(
                     destination = { navController.navigate(Routes.accountSettingsAppearance) }
                 )
                 Divider()
-        SettingsExternalButton(
-            title = stringResource(R.string.app_language),
-            current = currentLocale,
-            leadingIcon = Icons.Default.Language,
-            leadingIconBackgroundColor = Color.Blue,
-            action = {  }
-        )
+                SettingsExternalButton(
+                    title = stringResource(R.string.app_language),
+                    current = currentLocale,
+                    leadingIcon = Icons.Default.Language,
+                    leadingIconBackgroundColor = Color.Blue,
+                    action = {  startActivity(context, Intent(Settings.ACTION_LOCALE_SETTINGS), null) }
+                )
             }
             SettingsListGroup {
                 SettingsNavigationButton(
@@ -114,19 +126,19 @@ fun SettingsScreen(
                 )
             }
             SettingsListGroup {
-        SettingsExternalButton(
-            title = stringResource(R.string.review_app),
-            leadingIcon = Icons.Default.Star,
-            leadingIconBackgroundColor = Color.Yellow,
-            action = { }
-        )
+                SettingsExternalButton(
+                    title = stringResource(R.string.review_app),
+                    leadingIcon = Icons.Default.Star,
+                    leadingIconBackgroundColor = Color.Yellow,
+                    action = { externalNav("market://details?id=com.tumble.kronoxtoapp") }
+                )
                 Divider()
-        SettingsExternalButton(
-            title = stringResource(R.string.share_feedback),
-            leadingIcon = Icons.Default.Email,
-            leadingIconBackgroundColor = Color.Blue,
-            action = {  }
-        )
+                SettingsExternalButton(
+                    title = stringResource(R.string.share_feedback),
+                    leadingIcon = Icons.Default.Email,
+                    leadingIconBackgroundColor = Color.Blue,
+                    action = {  }
+                )
                 Divider()
                 SettingsExternalButton(
                     title = stringResource(R.string.share_app),
@@ -136,12 +148,12 @@ fun SettingsScreen(
                 )
             }
             SettingsListGroup {
-        SettingsExternalButton(
-            title = stringResource(R.string.github),
-            leadingIcon = Icons.Default.Code,
-            leadingIconBackgroundColor = Color.Black,
-            action = {  }
-        )
+                SettingsExternalButton(
+                    title = stringResource(R.string.github),
+                    leadingIcon = Icons.Default.Code,
+                    leadingIconBackgroundColor = Color.Black,
+                    action = { externalNav("https://github.com/tumble-for-kronox/Tumble-Android") }
+                )
             }
 
             if (appVersion != null) {

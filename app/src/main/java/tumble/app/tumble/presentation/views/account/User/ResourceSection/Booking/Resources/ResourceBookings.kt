@@ -1,9 +1,10 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
@@ -13,12 +14,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.presentation.ResourceSelectionModel
+import tumble.app.tumble.observables.AppController
+import tumble.app.tumble.presentation.navigation.UriBuilder
 import tumble.app.tumble.presentation.components.buttons.BackButton
 import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
 import tumble.app.tumble.presentation.viewmodels.ResourceViewModel
@@ -28,6 +32,7 @@ import tumble.app.tumble.presentation.views.navigation.AppBarState
 import java.util.Calendar
 import java.util.Date
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun ResourceBookings(
@@ -40,7 +45,6 @@ fun ResourceBookings(
 
     val resourceBookingPageState = viewModel.resourceBookingPageState.collectAsState()
     val selectedPikerDate = viewModel.selectedPickerDate.collectAsState()
-    val scrollState = rememberScrollState()
 
     LaunchedEffect(key1 = true) {
         setTopNavState(
@@ -58,78 +62,62 @@ fun ResourceBookings(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background) // Replace with your theme's background color
+            .background(MaterialTheme.colors.background)
     ) {
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
-            CloseCoverButton {
-                navController.popBackStack()
+        ResourceDatePicker(
+            onDateChange = { date ->
+                viewModel.setBookingDate(date)
             }
-        }  
-    
-        Column(
-            modifier = Modifier
-                .verticalScroll(scrollState)
-                .fillMaxWidth()
-        ) {
-            ResourceDatePicker(
-                selectedDate = selectedPikerDate.value,
-                onDateChange = { date ->
-                    viewModel.setBookingDate(date)
-                }
-            )
-            Divider(color = MaterialTheme.colors.onBackground) // Replace with your theme's divider color
+        )
+        Divider(color = MaterialTheme.colors.onBackground)
 
-            when (resourceBookingPageState.value) {
-                PageState.LOADING -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CustomProgressIndicator()
+        when (resourceBookingPageState.value) {
+            PageState.LOADING -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CustomProgressIndicator()
+                }
+            }
+            PageState.LOADED -> {
+                ResourceLocationsList(
+                    parentViewModel = viewModel,
+                    selectedPickerDate = selectedPikerDate.value,
+                    navigateToResourceSelection = { resource, date ->
+                        AppController.shared.resourceModel = ResourceSelectionModel(resource, date)
+                        navController.navigate(UriBuilder.buildAccountResourceDetailsUri(resource.id.toString()).toUri())
                     }
-                }
-                PageState.LOADED -> {
-                    ResourceLocationsList(
-                        parentViewModel = viewModel,
-                        selectedPickerDate = selectedPikerDate.value,
-                        navigateToResourceSelection = { resource, date -> viewModel.resourceSelectionModel =  ResourceSelectionModel(resource,date)}
-                    )
-                }
-                PageState.ERROR -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (isWeekend(selectedPikerDate.value)) {
-                            Info(
-                                title = "No rooms available on weekends",
-                                image = null//R.drawable.moon_zzz // Replace with your drawable resource
-                            )
-                        } else {
-                            Info(
-                                title = "Could not contact the server, try again later",
-                                image = null //R.drawable.arrow_clockwise // Replace with your drawable resource
-                            )
-                        }
+                )
+            }
+            PageState.ERROR -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (isWeekend(selectedPikerDate.value)) {
+                        Info(
+                            title = stringResource(R.string.no_rooms_on_weekend),
+                            image = null//R.drawable.moon_zzz // Replace with your drawable resource
+                        )
+                    } else {
+                        Info(
+                            title = stringResource(R.string.could_not_contact_server),
+                            image = null //R.drawable.arrow_clockwise // Replace with your drawable resource
+                        )
                     }
                 }
             }
         }
     }
-
-    viewModel.resourceSelectionModel?.let {
-        ResourceSelection()
-    }
-
     LaunchedEffect(viewModel.selectedPickerDate) {
-        viewModel.getAllResourceData(selectedPikerDate.value)
+        viewModel.getAllResources(selectedPikerDate.value)
     }
 }
 

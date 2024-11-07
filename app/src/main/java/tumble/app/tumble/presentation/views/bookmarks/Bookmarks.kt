@@ -1,27 +1,17 @@
 package tumble.app.tumble.presentation.views.bookmarks
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -30,7 +20,6 @@ import tumble.app.tumble.domain.enums.BookmarksStatus
 import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.observables.AppController
-import tumble.app.tumble.presentation.navigation.UriBuilder
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.views.bookmarks.EventDetails.EventDetailsSheet
@@ -50,13 +39,12 @@ fun Bookmarks(
 
     val onEventSelection = { event: Event ->
         AppController.shared.eventSheet = EventDetailsSheetModel(event = event)
-//        navController.navigate( UriBuilder.buildBookmarksDetailsUri(event.eventId).toUri() )
     }
 
     val bookmarksStatus = viewModel.status
     val viewType = viewModel.defaultViewType.collectAsState()
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = AppController.shared.eventSheet) {
         setTopNavState(
             AppBarState(
                 title = pageTitle
@@ -82,6 +70,6 @@ fun Bookmarks(
         Spacer(Modifier.weight(1f))
     }
     AppController.shared.eventSheet?.let {
-        EventDetailsSheet(event = it.event)
+        EventDetailsSheet(event = it.event, setTopNavState)
     }
 }

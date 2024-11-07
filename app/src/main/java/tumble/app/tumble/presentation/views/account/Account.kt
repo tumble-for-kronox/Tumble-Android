@@ -11,13 +11,10 @@ import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,9 +26,10 @@ import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.account.Login.AccountLogin
 import tumble.app.tumble.presentation.views.account.User.ProfileSection.UserOverview
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Sheets.EventDetailsSheet
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Sheets.ResourceDetailsSheet
 import tumble.app.tumble.presentation.views.navigation.AppBarState
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Account(
     viewModel: AccountViewModel = hiltViewModel(),
@@ -43,21 +41,26 @@ fun Account(
     val isSigningOut by viewModel.isSigningOut
 
     val authStatus by viewModel.authStatus.collectAsState()
+    val booking = viewModel.booking.collectAsState()
+    val event = viewModel.event.collectAsState()
+
+    val setTopBar = {
+        setTopNavState(
+        AppBarState(
+            title = pageTitle,
+            actions = {
+                if (authStatus == AccountViewModel.AuthStatus.AUTHORIZED) {
+                    SignOutButton { viewModel.openLogOutConfirm() }
+                }
+                SettingsButton {
+                    navController.navigate(Routes.accountSettings)
+                }
+            }
+        )
+    )}
 
     LaunchedEffect(key1 = true) {
-        setTopNavState(
-            AppBarState(
-                title = pageTitle,
-                actions = {
-                    if (authStatus == AccountViewModel.AuthStatus.AUTHORIZED) {
-                        SignOutButton { viewModel.openLogOutConfirm() }
-                    }
-                    SettingsButton {
-                        navController.navigate(Routes.accountSettings)
-                    }
-                }
-            )
-        )
+        setTopBar()
     }
 
     Box (modifier = Modifier
@@ -69,7 +72,6 @@ fun Account(
             AccountViewModel.AuthStatus.UNAUTHORIZED -> AccountLogin()
         }
     }
-
     if(isSigningOut){
         AlertDialog(
             onDismissRequest = { viewModel.closeLogOutConfirm() },
@@ -78,17 +80,36 @@ fun Account(
                     viewModel.logOut()
                     viewModel.closeLogOutConfirm()
                 }) {
-                    Text(text = "yes")
+                    Text(text = stringResource(R.string.yes))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.closeLogOutConfirm() }) {
-                    Text(text = "cancel")
+                    Text(text = stringResource(R.string.cancel))
                 }
             },
             text = {
-                Text(text = "coonfirm")
+                Text(text = stringResource(R.string.confirm))
             }
+        )
+    }
+    booking.value?.let {
+        ResourceDetailsSheet(it,
+            {
+            setTopBar()
+            viewModel.unSetBooking()
+            },
+            {viewModel.unBookResource(it.id)},
+            setTopNavState
+        )
+    }
+    event.value?.let {
+        EventDetailsSheet(it,
+            {
+                viewModel.unSetEvent()
+                setTopBar()
+            },
+            setTopNavState
         )
     }
 }

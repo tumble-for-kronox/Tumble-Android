@@ -18,8 +18,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,7 +81,7 @@ fun BookmarkWeekView(
                     modifier = Modifier
                         .fillMaxSize()
                         .pointerInput(Unit) {
-                            test(pointerInputScope = this, pagerState = pagerState, updateUserScroll = updateUserScroll)
+                            handleLeftSwipeOnFirstPage(pointerInputScope = this, pagerState = pagerState, updateUserScroll = updateUserScroll)
                         }
                 ) { page ->
                     var showContend by remember {
@@ -117,7 +115,6 @@ fun BookmarkWeekView(
                     indicatorScrollState = indicatorScrollState,
                     pagerState = pagerState,
                 )
-                Spacer(modifier = Modifier.height(60.dp))
             }
         }
     }
@@ -136,7 +133,7 @@ fun BookmarkWeekView(
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-suspend fun test(pointerInputScope: PointerInputScope, pagerState: PagerState, updateUserScroll: (Boolean) -> Unit){
+suspend fun handleLeftSwipeOnFirstPage(pointerInputScope: PointerInputScope, pagerState: PagerState, updateUserScroll: (Boolean) -> Unit){
     pointerInputScope.let {
         it.awaitEachGesture {
             awaitFirstDown(pass = PointerEventPass.Initial)

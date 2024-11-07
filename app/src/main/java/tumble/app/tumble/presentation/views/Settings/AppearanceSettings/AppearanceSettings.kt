@@ -23,6 +23,7 @@ fun AppearanceSettings(
     navController: NavController,
     setTopNavState: (AppBarState) -> Unit
 ) {
+
     val pageTitle = stringResource(R.string.appearance)
     val backTitle = stringResource(R.string.accountSettings)
 

@@ -1,6 +1,8 @@
 package tumble.app.tumble.presentation.views.account.User.ProfileSection
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -25,7 +27,6 @@ import androidx.navigation.NavHostController
 import tumble.app.tumble.presentation.viewmodels.AccountViewModel
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Resources
 
-
 @Composable
 fun UserOverview(
     viewModel: AccountViewModel = hiltViewModel(),
@@ -34,22 +35,22 @@ fun UserOverview(
     val collapsedHeader = remember {
         mutableStateOf(false)
     }
-
     val user = viewModel.user.collectAsState()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colors.background),
     ) {
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .padding(horizontal = 15.dp)
-                .fillMaxWidth()
-        ){
-            user.value?.name?.let { name ->
-                user.value?.username?.let { username ->
+        user.value?.name?.let { name ->
+            user.value?.username?.let { username ->
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier
+                        .animateContentSize()
+                        .padding(horizontal = 15.dp)
+                        .fillMaxWidth()
+                ) {
                     UserAvatar(name = name, collapsedHeader = collapsedHeader.value)
                     Spacer(modifier = Modifier.width(5.dp))
                     Column(

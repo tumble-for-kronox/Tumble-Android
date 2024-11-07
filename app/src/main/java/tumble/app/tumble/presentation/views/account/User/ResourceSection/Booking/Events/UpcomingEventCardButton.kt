@@ -3,7 +3,13 @@ package tumble.app.tumble.presentation.views.account.User.ResourceSection.Bookin
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -14,16 +20,15 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
-import tumble.app.tumble.extensions.presentation.toLocalDateTime
-import tumble.app.tumble.utils.isoDateFormatterDate
+import tumble.app.tumble.extensions.presentation.formatDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -33,7 +38,7 @@ fun UpcomingEventCardButton(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(20.dp)) // Replace with your theme colors
+            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(20.dp))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -45,7 +50,7 @@ fun UpcomingEventCardButton(
             Text(
                 text = event.title,
                 fontSize = 17.sp,
-                color = MaterialTheme.colors.onSurface, // Replace with your theme colors
+                color = MaterialTheme.colors.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -54,20 +59,20 @@ fun UpcomingEventCardButton(
                 Icon(
                     painter = rememberVectorPainter(Icons.Default.CalendarToday),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f) // Replace with your theme colors
+                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
-                val eventDate = event.eventStart.toLocalDateTime()
+                val eventDate = event.eventStart.formatDate()
                 val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
                 val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
                 val eventDateText = if (eventDate != null && eventStart != null && eventEnd != null) {
-                    String.format("stringResource(id = R.string.event_time_format)", eventDate, eventStart, eventEnd)
+                    "$eventDate: $eventStart - $eventEnd"
                 } else {
-                    "stringResource(id = R.string.no_date_at_this_time)"
+                    stringResource(id = R.string.no_date)
                 }
                 Text(
                     text = eventDateText,
                     fontSize = 15.sp,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f) // Replace with your theme colors
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
             }
             // Signup Availability
@@ -75,12 +80,12 @@ fun UpcomingEventCardButton(
                 Icon(
                     painter = rememberVectorPainter(Icons.Default.Edit),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f) // Replace with your theme colors
+                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
                 Text(
-                    text = "${"stringResource(id = R.string.available_at)"} ${ isoDateFormatterDate.parse(event.firstSignupDate) ?: "stringResource(id = R.string.no_date_set)"}",
+                    text = "${stringResource(id = R.string.available_at)} ${event.firstSignupDate.formatDate() ?: stringResource(id = R.string.no_date)}",
                     fontSize = 15.sp,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f) // Replace with your theme colors
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
                 )
             }
         }

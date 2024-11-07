@@ -4,7 +4,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.runtime.*
@@ -28,6 +27,7 @@ import tumble.app.tumble.presentation.views.home.news.News
 import tumble.app.tumble.presentation.views.home.news.NewsSheet
 import tumble.app.tumble.presentation.views.navigation.AppBarState
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class,
     ExperimentalMaterialApi::class
 )
@@ -38,12 +38,11 @@ fun HomeScreen(
     navController: NavHostController = rememberNavController(),
     onComposing: (AppBarState) -> Unit
 ) {
+
     val pageTitle = stringResource(R.string.home);
 
-//    val schedules by viewModel.schedules(query = "YOUR_QUERY_HERE").collectAsState(initial = listOf())
     val newsStatus = viewModel.newsSectionStatus
     val homeStatus = viewModel.status
-
     val news = viewModel.news
     val showSheet = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
@@ -84,7 +83,6 @@ fun HomeScreen(
         }
         Spacer(Modifier.weight(1f))
     }
-    
     if (showSheet.value) {
         ModalBottomSheet(onDismissRequest = { showSheet.value = false }) {
             NewsSheet(news = news, sheetState = sheetState, showSheet = showSheet)

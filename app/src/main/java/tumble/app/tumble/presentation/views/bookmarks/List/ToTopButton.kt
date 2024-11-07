@@ -17,7 +17,7 @@ fun ToTopButton( onClick: () -> Unit){
     FloatingActionButton(
         onClick = onClick,
         containerColor = MaterialTheme.colors.primary,
-        modifier = Modifier.padding(bottom = 40.dp),
+        //modifier = Modifier.padding(bottom = 40.dp),
         shape = CircleShape
     ){
         Icon(

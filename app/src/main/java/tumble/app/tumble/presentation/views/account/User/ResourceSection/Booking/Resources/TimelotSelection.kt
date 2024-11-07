@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,21 +10,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.presentation.views.general.Info
-import java.time.LocalDate
-import java.util.Date
 
 enum class BookingButtonState {
     LOADING,
@@ -33,12 +32,10 @@ enum class BookingButtonState {
 
 @Composable
 fun TimeslotSelection(
-    resourceId: String,
-    bookResource: (String, Date, NetworkResponse.AvailabilityValue) -> Boolean,
-    selectedPickerDate: Date,
+    bookResource: suspend (NetworkResponse.AvailabilityValue) -> Boolean,
     availabilityValues: MutableState<List<NetworkResponse.AvailabilityValue>>
 ) {
-    val buttonStateMap = remember { mutableMapOf<String, BookingButtonState>() }
+    val buttonStateMap = remember { mutableStateMapOf<String, BookingButtonState>() }
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(availabilityValues.value) {
@@ -52,7 +49,7 @@ fun TimeslotSelection(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Info(title = "No available timeslots", image = null)
+            Info(title = stringResource(R.string.no_timeslots), image = null)
         }
     } else {
         Column(
@@ -62,9 +59,15 @@ fun TimeslotSelection(
                 .padding(16.dp)
         ) {
             availabilityValues.value.forEach { availabilityValue ->
-                availabilityValue.locationID?.let { locationId ->
+                availabilityValue.locationId?.let { locationId ->
                     TimeslotCard(
-                        onBook = { bookResource(resourceId, selectedPickerDate, availabilityValue) },
+                        onBook = { handleBooking(
+                            locationId = locationId,
+                            availabilityValue = availabilityValue,
+                            bookResource = bookResource,
+                            buttonStateMap = buttonStateMap,
+                            scope = scope
+                        )},
                         locationId = locationId,
                         bookingButtonState = buttonStateMap[locationId] ?: BookingButtonState.AVAILABLE
                     )
@@ -79,7 +82,7 @@ private fun setupButtons(
     buttonStateMap: MutableMap<String, BookingButtonState>
 ) {
     availabilityValues.value.forEach { availabilityValue ->
-        availabilityValue.locationID?.let { locationId ->
+        availabilityValue.locationId?.let { locationId ->
             buttonStateMap[locationId] = BookingButtonState.AVAILABLE
         }
     }
@@ -88,16 +91,14 @@ private fun setupButtons(
 private fun handleBooking(
     locationId: String,
     availabilityValue: NetworkResponse.AvailabilityValue,
-    resourceId: String,
-    selectedPickerDate: LocalDate,
-    bookResource: suspend (String, LocalDate, NetworkResponse.AvailabilityValue) -> Boolean,
+    bookResource: suspend (NetworkResponse.AvailabilityValue) -> Boolean,
     buttonStateMap: MutableMap<String, BookingButtonState>,
     scope: CoroutineScope
 ) {
     buttonStateMap[locationId] = BookingButtonState.LOADING
     scope.launch {
         val result = withContext(Dispatchers.IO) {
-            bookResource(resourceId, selectedPickerDate, availabilityValue)
+            bookResource(availabilityValue)
         }
         buttonStateMap[locationId] = if (result) BookingButtonState.BOOKED else BookingButtonState.AVAILABLE
     }

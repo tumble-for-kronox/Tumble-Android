@@ -1,7 +1,5 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,10 +20,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 
 enum class ResourceType{
     EVENT, RESOURCE
@@ -36,10 +35,8 @@ fun ResourceSectionDivider(
     title: String,
     resourceType: ResourceType? = null,
     destination: (() -> Unit)? = null,
-    onBook: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ){
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +46,8 @@ fun ResourceSectionDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ){
             Text(
                 text = title,
@@ -58,10 +56,9 @@ fun ResourceSectionDivider(
                 color = MaterialTheme.colors.onBackground
             )
             if(destination != null){
-                Log.e("error", "in if")
                 when(resourceType){
-                    ResourceType.EVENT -> ResourceNavigationItem(title = "See all", destination)
-                    ResourceType.RESOURCE -> ResourceNavigationItem(title = "Book more", destination)
+                    ResourceType.EVENT -> ResourceNavigationItem(title = stringResource(R.string.see_all), destination)
+                    ResourceType.RESOURCE -> ResourceNavigationItem(title = stringResource(R.string.book_more), destination)
                     null -> {}
                 }
             }
@@ -75,16 +72,12 @@ fun ResourceNavigationItem(
     title: String,
     destination:  () -> Unit
 ){
-
     Button(
         onClick = { destination() },
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Transparent),
-        modifier = Modifier
-            .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(20.dp)),
+        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+        shape = RoundedCornerShape(15.dp),
         elevation = null
-
     ) {
-
         Row (verticalAlignment = Alignment.CenterVertically){
             Text(
                 text = title,
@@ -101,5 +94,4 @@ fun ResourceNavigationItem(
             )
         }
     }
-
 }

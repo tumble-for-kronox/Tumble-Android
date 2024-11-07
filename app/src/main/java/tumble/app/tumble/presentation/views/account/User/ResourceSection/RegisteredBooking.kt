@@ -1,19 +1,30 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
+import tumble.app.tumble.extensions.presentation.formatDate
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -21,12 +32,14 @@ import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 fun RegisteredBooking(
     onClickResource: (NetworkResponse.KronoxUserBookingElement) -> Unit,
     state: State<PageState>,
-    bookings: List<NetworkResponse.KronoxUserBookingElement>?
+    bookings: List<NetworkResponse.KronoxUserBookingElement>?,
+    confirmBooking: (String, String) -> Unit,
+    unBook: (String) -> Unit
 ){
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         when(state.value){
             PageState.LOADING -> {
@@ -35,30 +48,61 @@ fun RegisteredBooking(
             PageState.LOADED -> {
                 if(!bookings.isNullOrEmpty()){
                     bookings.forEach{ resource ->
+                        val eventStart = resource.timeSlot.from?.convertToHoursAndMinutesISOString()
+                        val eventEnd = resource.timeSlot.to?.convertToHoursAndMinutesISOString()
+                        val noDate = stringResource(R.string.no_date)
                         ResourceCard(
-                            eventStart = resource.timeSlot.from?.convertToHoursAndMinutesISOString()?:"(no date)",
-                            eventEnd = resource.timeSlot.to?.convertToHoursAndMinutesISOString()?:"(no date)",
-                            title = "Booked resource",
-                            location = resource.locationID,
-                            date = resource.timeSlot.from?: "(no date)",
+                            eventStart = eventStart?: noDate,
+                            eventEnd = eventEnd?: noDate,
+                            title = stringResource(R.string.user_booked_resource),
+                            location = resource.locationId,
+                            date = resource.timeSlot.from?.formatDate()?: noDate,
                             onClick = { onClickResource(resource) }
                         )
-
+                        if (resource.showConfirmButton){
+                            Row (
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement =  Arrangement.SpaceEvenly
+                            ){
+                                Button(
+                                    onClick = {confirmBooking(resource.resourceId, resource.id)},
+                                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                                    shape = RoundedCornerShape(15.dp),
+                                    ) {
+                                    Text(
+                                        text = stringResource(R.string.confirm),
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colors.onPrimary
+                                    )
+                                }
+                                Button(
+                                    onClick = {unBook(resource.id)},
+                                    colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                                    shape = RoundedCornerShape(15.dp),) {
+                                    Text(
+                                        text = stringResource(R.string.cancel_booking),
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = MaterialTheme.colors.onPrimary
+                                    )
+                                }
+                            }
+                        }
                     }
                 }else{
-                    Text(text = "no booking resource yet",
+                    Text(text = stringResource(R.string.no_booked_resource),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
             }
             PageState.ERROR -> {
                 Text(
-                    text = "Could not contat the server, try again later",
+                    text = stringResource(R.string.could_not_contact_server),
                     modifier = Modifier.padding(16.dp)
                 )
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
     }
-
 }
