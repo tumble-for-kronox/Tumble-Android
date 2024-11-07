@@ -1,7 +1,7 @@
 ---
 name: Feature
 about: An issue for any new feature or improvement of current features
-title: "[FEATURE]"
+title: Related Section - Feature title
 labels: enhancement
 assignees: ''
 
