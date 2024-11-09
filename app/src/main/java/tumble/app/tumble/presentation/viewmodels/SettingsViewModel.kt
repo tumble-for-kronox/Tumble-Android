@@ -3,19 +3,18 @@ package tumble.app.tumble.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.kotlin.ext.copyFromRealm
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import tumble.app.tumble.data.api.Endpoint
 import tumble.app.tumble.data.notifications.NotificationManager
 import tumble.app.tumble.data.repository.preferences.CombinedData
 import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.datasource.SchoolManager
 import tumble.app.tumble.domain.enums.Types.AppearanceType
-import tumble.app.tumble.domain.enums.ViewType
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.presentation.views.Settings.Notifications.NotificationOffset
@@ -108,6 +107,12 @@ class SettingsViewModel @Inject constructor(
 
     fun deleteBookmark(schedule: Schedule){
         //TODO
+    }
+
+    fun updateBookmarkVisibility(visibility: Boolean, schedule: Schedule){
+        viewModelScope.launch {
+            realmManager.updateScheduleVisibility(schedule.scheduleId, visibility)
+        }
     }
 
     fun deleteAllSchedules(){
