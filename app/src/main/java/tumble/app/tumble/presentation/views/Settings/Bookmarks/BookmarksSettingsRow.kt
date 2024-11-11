@@ -36,8 +36,8 @@ import tumble.app.tumble.domain.models.realm.Schedule
 @Composable
 fun BookmarkSettingsRow(
     schedule: Schedule,
-    index: Int,
-    onDelete: (Int, String) -> Unit
+    onDelete: (String) -> Unit,
+    onToggle: (Boolean) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
 
@@ -60,15 +60,12 @@ fun BookmarkSettingsRow(
             checked = isToggled,
             onCheckedChange = { checked ->
                 isToggled = checked
-                schedule.toggled = checked
+                onToggle(checked)
                 // Trigger the widget update when the toggle changes
             },
             colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colors.primary),
             modifier = Modifier.scale(2f)
         )
-
-
-
     }
 }
 
