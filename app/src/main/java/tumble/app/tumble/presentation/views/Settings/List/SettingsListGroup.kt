@@ -1,6 +1,7 @@
 package tumble.app.tumble.presentation.views.Settings.List
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,9 +19,9 @@ fun SettingsListGroup(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 15.dp, vertical = 15.dp)
-            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(10.dp)) // Replace Color.LightGray with your surface color
-            .padding(10.dp) // Inner padding
+            .padding(horizontal = 20.dp, vertical = 24.dp)
+        ,
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         content()
     }

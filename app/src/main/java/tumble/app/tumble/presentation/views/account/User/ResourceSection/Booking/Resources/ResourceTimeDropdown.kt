@@ -1,6 +1,7 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.models.timelotHasAvailable
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
+import tumble.app.tumble.extensions.presentation.noRippleClickable
 
 @Composable
 fun TimeslotDropdown(
@@ -45,19 +47,22 @@ fun TimeslotDropdown(
 ) {
     val isSelecting = remember { mutableStateOf(false) }
     val selectionTitle = remember { mutableStateOf("") }
+    val rotation = animateFloatAsState(
+        targetValue = if (isSelecting.value) 270f else 90f
+    )
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(16.dp))
-            .padding(10.dp)
-            .clickable {
+            .noRippleClickable {
                     isSelecting.value = !isSelecting.value
             }
             .animateContentSize()
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(15.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -71,7 +76,7 @@ fun TimeslotDropdown(
                 imageVector = Icons.Default.ArrowForwardIos,
                 contentDescription = null,
                 tint = MaterialTheme.colors.onSurface,
-                modifier = Modifier.rotate(90f)
+                modifier = Modifier.rotate(rotation.value)
             )
         }
         if (isSelecting.value) {
@@ -119,39 +124,28 @@ fun DropdownMenuItemView(
     item: DropdownItem
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Button(
-            onClick = {
+        modifier = Modifier
+            .fillMaxWidth()
+            .noRippleClickable {
                 isSelecting.value = false
                 selectionTitle.value = item.title
                 item.onSelect()
-            },
-            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
-            modifier = Modifier.fillMaxWidth(),
-            elevation = null,
-            contentPadding = PaddingValues(0.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                Text(
-                    text = item.title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colors.onSurface
-                )
-                Spacer(Modifier.weight(1f))
-                if (selectedIndex.value == item.id) {
-                    Icon(
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.onSurface
-                    )
-                }
             }
+            .padding(15.dp)
+    ) {
+        Text(
+            text = item.title,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colors.onSurface
+        )
+        Spacer(Modifier.weight(1f))
+        if (selectedIndex.value == item.id) {
+            Icon(
+                imageVector = Icons.Default.CheckCircle,
+                contentDescription = null,
+                tint = MaterialTheme.colors.onSurface
+            )
         }
     }
 }

@@ -3,6 +3,7 @@ package tumble.app.tumble.presentation.views.account.User.ResourceSection.Bookin
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
@@ -50,6 +52,7 @@ fun EventDetailsSheet(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .background(MaterialTheme.colors.background)
+            .padding(15.dp)
     ) {
         DetailsBuilder(title = stringResource(R.string.title), image = Icons.Default.Title) {
 

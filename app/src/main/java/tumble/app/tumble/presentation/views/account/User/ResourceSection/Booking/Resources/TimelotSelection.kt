@@ -56,7 +56,8 @@ fun TimeslotSelection(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp)
+                .padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             availabilityValues.value.forEach { availabilityValue ->
                 availabilityValue.locationId?.let { locationId ->

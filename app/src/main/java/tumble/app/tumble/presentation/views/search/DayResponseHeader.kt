@@ -22,13 +22,13 @@ import tumble.app.tumble.domain.models.network.NetworkResponse
 @Composable
 fun DayResponseHeader(day: NetworkResponse.Day){
     Row (modifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 7.5.dp),
+        .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ){
         Text(text = day.name,
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.onBackground
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(text = day.date,

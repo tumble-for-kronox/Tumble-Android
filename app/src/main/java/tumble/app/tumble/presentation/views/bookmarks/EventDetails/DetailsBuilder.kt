@@ -33,7 +33,6 @@ fun DetailsBuilder(
     Row (
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 15.dp, vertical = 10.dp)
             .background(color = MaterialTheme.colors.surface, RoundedCornerShape(15.dp))
             .padding(15.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -50,7 +49,7 @@ fun DetailsBuilder(
                     imageVector = image,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(17.dp),
+                    modifier = Modifier.size(20.dp),
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
                 )
                 Text(

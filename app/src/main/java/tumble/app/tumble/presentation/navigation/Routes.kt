@@ -13,9 +13,10 @@ object Routes {
     const val account = "account"
     const val accountLogin = "account/login"
     const val accountSettings = "account/settings"
-    const val accountSettingsAppearance = "account/settings/appearance"
-    const val accountSettingsLanguage = "account/settings/language"
-    const val accountSettingsNotifications = "account/settings/notifications"
+    const val accountSettingsPreferences = "account/settings/preferences"
+    const val accountSettingsAppearance = "account/settings/preferences/appearance"
+    const val accountSettingsLanguage = "account/settings/preferences/language"
+    const val accountSettingsNotifications = "account/settings/preferences/notifications"
     const val accountSettingsBookmarks = "account/settings/bookmarks"
 
     // Protected routes

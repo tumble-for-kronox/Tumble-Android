@@ -1,13 +1,9 @@
-package tumble.app.tumble.presentation.views.Settings.Notifications
+package tumble.app.tumble.presentation.views.Settings.Preferences.Notifications
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import tumble.app.tumble.R
@@ -71,9 +67,6 @@ fun NotificationOffsetSettings(
                         )
                     }
                 )
-                if (type != NotificationOffset.allCases.last()) {
-                    Divider(Modifier.padding(horizontal = 10.dp))
-                }
             }
         }
     }

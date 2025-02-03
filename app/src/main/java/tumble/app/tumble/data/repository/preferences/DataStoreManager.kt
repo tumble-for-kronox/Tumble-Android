@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import tumble.app.tumble.domain.enums.Types.AppearanceType
 import tumble.app.tumble.domain.enums.ViewType
-import tumble.app.tumble.presentation.views.Settings.Notifications.NotificationOffset
+import tumble.app.tumble.presentation.views.Settings.Preferences.Notifications.NotificationOffset
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext

@@ -88,7 +88,6 @@ class AccountViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             autoLogin()
-
         }
     }
 

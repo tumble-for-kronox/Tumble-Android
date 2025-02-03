@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,65 +31,41 @@ import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
 import tumble.app.tumble.extensions.presentation.formatDate
+import tumble.app.tumble.extensions.presentation.noRippleClickable
+import tumble.app.tumble.presentation.views.account.User.ResourceSection.InformationView
+import tumble.app.tumble.presentation.views.general.Info
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun UpcomingEventCardButton(
     event: NetworkResponse.UpcomingKronoxUserEvent
 ) {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(20.dp))
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(16.dp))
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.weight(1f)
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+            horizontalAlignment = Alignment.Start,
+            modifier = Modifier.fillMaxWidth().padding(15.dp)
         ) {
-            // Event Title
             Text(
                 text = event.title,
                 fontSize = 17.sp,
                 color = MaterialTheme.colors.onSurface,
-                maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            // Event Date and Time
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Default.CalendarToday),
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
-                )
-                val eventDate = event.eventStart.formatDate()
-                val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
-                val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
-                val eventDateText = if (eventDate != null && eventStart != null && eventEnd != null) {
-                    "$eventDate: $eventStart - $eventEnd"
-                } else {
-                    stringResource(id = R.string.no_date)
-                }
-                Text(
-                    text = eventDateText,
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
-                )
+            val eventDate = event.eventStart.formatDate()
+            val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
+            val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
+            val eventDateText = if (eventDate != null && eventStart != null && eventEnd != null) {
+                "$eventDate, ${stringResource(id = R.string.from)} $eventStart ${stringResource(id = R.string.to)} $eventEnd"
+            } else {
+                stringResource(id = R.string.no_date)
             }
-            // Signup Availability
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = rememberVectorPainter(Icons.Default.Edit),
-                    contentDescription = null,
-                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
-                )
-                Text(
-                    text = "${stringResource(id = R.string.available_at)} ${event.firstSignupDate.formatDate() ?: stringResource(id = R.string.no_date)}",
-                    fontSize = 15.sp,
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
-                )
-            }
+            InformationView(Icons.Default.CalendarMonth, eventDateText)
+            InformationView(Icons.Default.Edit, "${stringResource(id = R.string.available_at)}: ${event.firstSignupDate.formatDate() ?: stringResource(id = R.string.no_date)}")
         }
         Spacer(modifier = Modifier.width(10.dp))
     }

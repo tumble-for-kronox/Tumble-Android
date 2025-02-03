@@ -1,20 +1,17 @@
 package tumble.app.tumble.presentation.navigation.navgraphs
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.presentation.navigation.Routes
-import tumble.app.tumble.presentation.viewmodels.AccountViewModel
-import tumble.app.tumble.presentation.views.Settings.AppearanceSettings.AppearanceSettings
+import tumble.app.tumble.presentation.views.Settings.Preferences.AppearanceSettings.AppearanceSettings
 import tumble.app.tumble.presentation.views.Settings.Bookmarks.BookmarksSettings
-import tumble.app.tumble.presentation.views.Settings.Notifications.NotificationOffsetSettings
+import tumble.app.tumble.presentation.views.Settings.Preferences.Notifications.NotificationOffsetSettings
+import tumble.app.tumble.presentation.views.Settings.Preferences.PreferencesScreen
 import tumble.app.tumble.presentation.views.Settings.SettingsScreen
 import tumble.app.tumble.presentation.views.account.Account
 import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Events.EventBookings
@@ -40,6 +37,7 @@ fun AccountNavGraph(
         accountResourceDetails(navController, setTopNavState)
         accountEvents(navController, setTopNavState)
         accountEventDetails(navController, setTopNavState)
+        accountSettingsPreferences(navController, setTopNavState)
     }
 }
 
@@ -59,6 +57,12 @@ private fun NavGraphBuilder.accountLogin(navController: NavHostController) {
 private fun NavGraphBuilder.accountSettings(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountSettings) {
         SettingsScreen(navController = navController, setTopNavState = setTopNavState)
+    }
+}
+
+private fun NavGraphBuilder.accountSettingsPreferences(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+    composable(Routes.accountSettingsPreferences) {
+        PreferencesScreen(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
@@ -108,7 +112,6 @@ private fun NavGraphBuilder.accountResourceDetails(navController: NavHostControl
 private fun NavGraphBuilder.accountEvents(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountEvents) {
         EventBookings(navController =  navController, setTopNavState = setTopNavState)
-
     }
 }
 

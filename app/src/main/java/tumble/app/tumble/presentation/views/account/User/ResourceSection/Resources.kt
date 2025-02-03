@@ -60,51 +60,51 @@ fun Resources(
             .background(color = MaterialTheme.colors.background)
     ) {
         //TODO pull to refresh
-        ResourceSectionDivider(title = stringResource(R.string.user_options)){
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(R.string.auto_signup)
-                )
-                Spacer(modifier = Modifier.weight(1f))
-                Switch(
-                    checked = parentViewModel.autoSignUpEnabled(),
-                    onCheckedChange = {
-                        if (it) {
-                            showingConfirmationDialog = true
-                        } else {
-                            parentViewModel.toggleAutoSignup(false)
-                        }
-                    },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colors.onPrimary,
-                        checkedTrackColor = MaterialTheme.colors.primary
-                    )
-                )
-            }
-            if(showingConfirmationDialog){
-                AlertDialog(
-                    onDismissRequest = { showingConfirmationDialog = false },
-                    title = { Text(text = stringResource(R.string.confirm_Action))},
-                    text = { Text(text = stringResource(R.string.experimental_feature_confirmation))},
-                    confirmButton = {
-                        TextButton(onClick = {
-                            parentViewModel.toggleAutoSignup(true)
-                            showingConfirmationDialog = false
-                        }) {
-                            Text(text = stringResource(R.string.yes))
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = {
-                            parentViewModel.toggleAutoSignup(false)
-                            showingConfirmationDialog = false
-                        }) {
-                            Text(text = stringResource(R.string.cancel))
-                        }
-                    }
-                )
-            }
-        }
+//        ResourceSectionDivider(title = stringResource(R.string.user_options)){
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Text(
+//                    text = stringResource(R.string.auto_signup)
+//                )
+//                Spacer(modifier = Modifier.weight(1f))
+//                Switch(
+//                    checked = parentViewModel.autoSignUpEnabled(),
+//                    onCheckedChange = {
+//                        if (it) {
+//                            showingConfirmationDialog = true
+//                        } else {
+//                            parentViewModel.toggleAutoSignup(false)
+//                        }
+//                    },
+//                    colors = SwitchDefaults.colors(
+//                        checkedThumbColor = MaterialTheme.colors.onPrimary,
+//                        checkedTrackColor = MaterialTheme.colors.primary
+//                    )
+//                )
+//            }
+//            if(showingConfirmationDialog){
+//                AlertDialog(
+//                    onDismissRequest = { showingConfirmationDialog = false },
+//                    title = { Text(text = stringResource(R.string.confirm_Action))},
+//                    text = { Text(text = stringResource(R.string.experimental_feature_confirmation))},
+//                    confirmButton = {
+//                        TextButton(onClick = {
+//                            parentViewModel.toggleAutoSignup(true)
+//                            showingConfirmationDialog = false
+//                        }) {
+//                            Text(text = stringResource(R.string.yes))
+//                        }
+//                    },
+//                    dismissButton = {
+//                        TextButton(onClick = {
+//                            parentViewModel.toggleAutoSignup(false)
+//                            showingConfirmationDialog = false
+//                        }) {
+//                            Text(text = stringResource(R.string.cancel))
+//                        }
+//                    }
+//                )
+//            }
+//        }
         ResourceSectionDivider(
             title = stringResource(R.string.user_booking),
             resourceType = ResourceType.RESOURCE,

@@ -48,7 +48,6 @@ fun UserOverview(
                     horizontalArrangement = Arrangement.Start,
                     modifier = Modifier
                         .animateContentSize()
-                        .padding(horizontal = 15.dp)
                         .fillMaxWidth()
                 ) {
                     UserAvatar(name = name, collapsedHeader = collapsedHeader.value)
@@ -59,27 +58,25 @@ fun UserOverview(
                     ) {
                         Text(
                             text = name,
-                            fontSize = if (collapsedHeader.value) 20.sp else 22.sp,
-                            fontWeight = if ( collapsedHeader.value) FontWeight.SemiBold else FontWeight.Normal
+                            fontSize = if (collapsedHeader.value) 20.sp else 24.sp,
+                            fontWeight = FontWeight.SemiBold
                         )
                         if (!collapsedHeader.value){
                             Text(text = username,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Normal
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier.padding(top = 5.dp)
                             )
                             Text(text = viewModel.getSchoolName()?.name?: "",
                                 fontSize = 14.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier = Modifier.padding(top = 10.dp))
+                                fontWeight = FontWeight.SemiBold
+                            )
                         }
                     }
                 }
             }
         }
-        Divider(
-            color = MaterialTheme.colors.onBackground,
-            modifier = Modifier.padding(horizontal = 15.dp)
-        )
+        Divider()
         Resources(
             parentViewModel = viewModel,
             getResourcesAndEvents = { getResourcesAndEvents(viewModel) },

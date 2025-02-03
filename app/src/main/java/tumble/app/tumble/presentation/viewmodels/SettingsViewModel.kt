@@ -8,17 +8,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import tumble.app.tumble.data.api.Endpoint
 import tumble.app.tumble.data.notifications.NotificationManager
 import tumble.app.tumble.data.repository.preferences.CombinedData
 import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.datasource.SchoolManager
 import tumble.app.tumble.domain.enums.Types.AppearanceType
-import tumble.app.tumble.domain.enums.ViewType
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
-import tumble.app.tumble.presentation.views.Settings.Notifications.NotificationOffset
+import tumble.app.tumble.presentation.views.Settings.Preferences.Notifications.NotificationOffset
 import javax.inject.Inject
 
 @HiltViewModel

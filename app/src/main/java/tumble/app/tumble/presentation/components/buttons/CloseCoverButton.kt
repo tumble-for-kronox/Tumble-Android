@@ -2,10 +2,8 @@ package tumble.app.tumble.presentation.components.buttons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Colors
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
@@ -21,7 +19,8 @@ fun CloseCoverButton(onClick: () -> Unit) {
             contentDescription = "close",
             modifier = Modifier
                 .background(Color.Transparent)
-                .size(24.dp)
+                .size(24.dp),
+            tint = Color.White
         )
     }
 }

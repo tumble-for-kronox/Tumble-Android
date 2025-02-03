@@ -19,7 +19,7 @@ fun UserAvatar(name: String, collapsedHeader: Boolean){
     val abbreviation = name.abbreviate()
     Text(
         text = abbreviation,
-        fontSize = if (collapsedHeader) 20.sp else 40.sp,
+        fontSize = if (collapsedHeader) 20.sp else 32.sp,
         fontWeight = FontWeight.SemiBold,
         color = MaterialTheme.colors.onPrimary,
         textAlign = TextAlign.Center,
@@ -28,7 +28,7 @@ fun UserAvatar(name: String, collapsedHeader: Boolean){
             .padding(16.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colors.primary)
-            .padding(16.dp)
+            .padding(24.dp)
     )
 }
 

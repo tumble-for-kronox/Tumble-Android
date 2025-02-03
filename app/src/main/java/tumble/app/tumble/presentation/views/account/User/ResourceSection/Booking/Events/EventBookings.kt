@@ -3,8 +3,12 @@ package tumble.app.tumble.presentation.views.account.User.ResourceSection.Bookin
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -13,10 +17,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Tag
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.icons.filled.PersonAddAlt1
+import androidx.compose.material.icons.filled.PersonRemove
+import androidx.compose.material.icons.filled.PersonSearch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -57,27 +66,34 @@ fun EventBookings(
             )
         )
     }
-    BoxWithConstraints(
+
+    val scrollState = rememberScrollState()
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
+            .verticalScroll(scrollState)
     ) {
-        val scrollState = rememberScrollState()
-
         Column(
             modifier = Modifier
-                .verticalScroll(scrollState)
+                .fillMaxHeight()
                 .background(MaterialTheme.colors.background)
+                .padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(48.dp)
         ) {
             when (eventBookingPageState.value) {
                 PageState.LOADING -> {
-                    CustomProgressIndicator()
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CustomProgressIndicator()
+                    }
                 }
-
                 PageState.LOADED -> {
                     SectionDivider(
                         title = stringResource(R.string.registered),
-                        image = Icons.Default.Tag,
+                        image = Icons.Default.PersonAddAlt1,
                         content = {
                             if (completeUserEvent.value?.registeredEvents != null) {
                                 Events(
@@ -96,7 +112,7 @@ fun EventBookings(
                     )
                     SectionDivider(
                         title = stringResource(R.string.unregistered),
-                        image = Icons.Default.Tag,
+                        image = Icons.Default.PersonRemove,
                         content = {
                             if (completeUserEvent.value?.unregisteredEvents != null) {
                                 Events(
@@ -115,7 +131,7 @@ fun EventBookings(
                     )
                     SectionDivider(
                         title = stringResource(R.string.upcoming),
-                        image = Icons.Default.Tag,
+                        image = Icons.Default.PersonSearch,
                         content = {
                             if (completeUserEvent.value?.upcomingEvents != null) {
                                 Events(upcomingEvents = completeUserEvent.value?.upcomingEvents)

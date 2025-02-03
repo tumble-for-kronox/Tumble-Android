@@ -31,7 +31,8 @@ fun TodaysEvents(
             text = stringResource(R.string.todays_events),
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colors.onBackground
+            color = MaterialTheme.colors.onBackground,
+            modifier = Modifier.padding(bottom = 10.dp)
         )
         if (localEventsForToday.isNotEmpty()) {
             TodaysEventsCarousel(

@@ -36,28 +36,38 @@ fun SettingsRadioButton(
 
         Row(
             modifier = Modifier
-                .noRippleClickable { onValueChange() }
+                .noRippleClickable {
+                    onValueChange()
+                    // haptics
+                }
                 .fillMaxWidth()
-                .padding(7.dp)
-                .padding(vertical = 8.dp),
+                .padding(vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                text = title,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Normal,
-                color = MaterialTheme.colors.onSurface
-            )
-            Spacer(modifier = Modifier.weight(1f))
             if (isSelected) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = null,
+                Box(
                     modifier = Modifier
                         .size(25.dp)
-                        .background(MaterialTheme.colors.primary, CircleShape),
-                    tint = MaterialTheme.colors.onPrimary
-                )
+                        .background(
+                            color = MaterialTheme.colors.background,
+                            shape = CircleShape
+                        )
+                        .border(
+                            2.dp,
+                            MaterialTheme.colors.primary,
+                            CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(14.dp)
+                            .background(
+                                color = MaterialTheme.colors.primary,
+                                shape = CircleShape
+                            )
+                    )
+                }
             } else {
                 Box(
                     modifier = Modifier
@@ -69,5 +79,12 @@ fun SettingsRadioButton(
                         )
                 )
             }
+            Text(
+                text = title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colors.onSurface,
+                modifier = Modifier.padding(start = 20.dp)
+            )
         }
 }

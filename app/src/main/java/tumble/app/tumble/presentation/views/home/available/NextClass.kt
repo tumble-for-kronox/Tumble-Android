@@ -22,14 +22,22 @@ fun NextClass(nextClass: Event?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp)
-            .height(100.dp),
+            .padding(top = 20.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.Start
         ) {
+            Text(
+                text = stringResource(R.string.next_class),
+                color = MaterialTheme.colors.onBackground,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.weight(1f))
             nextClass?.let {
                 Text(
                     text = it.from.formatDate() ?: "",
@@ -38,26 +46,13 @@ fun NextClass(nextClass: Event?) {
                     fontWeight = FontWeight.Medium
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(R.string.next_class),
-                color = MaterialTheme.colors.onBackground,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold
-            )
         }
         if (nextClass?.course != null) {
-            val color = nextClass.course?.color?.toColor() ?: Color.White // Assume toColor() extension function exists
-            CompactEventButtonLabel( // Assume CompactEventButtonLabel composable exists
+            val color = nextClass.course?.color?.toColor() ?: Color.White
+            CompactEventButtonLabel(
                 event = nextClass,
                 color = color
-            ).apply {
-                Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                    .padding(bottom = 10.dp)
-                    .borderRadius(15.dp)
-            }
+            )
         } else {
             Text(
                 text = stringResource(R.string.no_upcoming_class),

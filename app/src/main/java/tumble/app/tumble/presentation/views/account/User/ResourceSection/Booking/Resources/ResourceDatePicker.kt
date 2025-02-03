@@ -30,9 +30,6 @@ fun ResourceDatePicker(
     onDateChange: (Date) -> Unit
 ) {
     val datePickerState = rememberDatePickerState()
-    val showDatePickerDialog = remember {
-        mutableStateOf(false)
-    }
     val starOfDay = remember {
         mutableStateOf(Calendar.getInstance().apply { set(Calendar.MILLISECONDS_IN_DAY, 0)})
     }
@@ -40,12 +37,11 @@ fun ResourceDatePicker(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 15.dp)
             .background(color = MaterialTheme.colors.background)
     ) {
         DatePicker(
             state = datePickerState,
-            showModeToggle = showDatePickerDialog.value,
+            showModeToggle = false,
             colors = DatePickerDefaults.colors(
                 selectedDayContentColor = MaterialTheme.colors.onBackground,
                 dayContentColor = MaterialTheme.colors.onBackground,
@@ -53,8 +49,11 @@ fun ResourceDatePicker(
                 weekdayContentColor = MaterialTheme.colors.primary,
                 todayContentColor = MaterialTheme.colors.onBackground,
                 todayDateBorderColor = MaterialTheme.colors.primary,
-                yearContentColor = Color.Yellow,
-                subheadContentColor = Color.Yellow
+                yearContentColor = MaterialTheme.colors.onBackground,
+                subheadContentColor = Color.Red,
+                selectedYearContainerColor = MaterialTheme.colors.primary,
+                selectedYearContentColor = MaterialTheme.colors.onPrimary,
+                currentYearContentColor = MaterialTheme.colors.onBackground,
             ),
             dateValidator = { Calendar.getInstance().apply { timeInMillis = it }.after(starOfDay.value) },
             title = null,
