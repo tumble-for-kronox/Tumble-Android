@@ -40,12 +40,14 @@ fun BookmarksSettings(
 
     if (schedules.value.isNotEmpty()) {
         SettingsList {
-            schedules.value.forEachIndexed { index, schedule ->
+            schedules.value.forEach{ schedule ->
                 BookmarkSettingsRow(
                     schedule = schedule,
-                    index = index,
-                    onDelete = { offsets, id ->
+                    onDelete = { offsets ->
                         parentViewModel.deleteBookmark(schedule)
+                    },
+                    onToggle = {visibility ->
+                        parentViewModel.updateBookmarkVisibility(visibility, schedule)
                     }
                 )
             }

@@ -73,6 +73,13 @@ class RealmManager {
         }
     }
 
+    suspend fun updateScheduleVisibility(scheduleId: String, visibility: Boolean){
+        realm.write {
+            val schedule: Schedule? = this.query<Schedule>("scheduleId == $0", scheduleId).first().find()
+            schedule?.toggled = visibility
+        }
+    }
+
     fun getCourseColors(): MutableMap<String, String> {
         val courses: RealmResults<Course> = realm.query<Course>().find()
         val courseColors = mutableMapOf<String, String>()
