@@ -1,5 +1,6 @@
 package tumble.app.tumble.extensions.models
 
+import androidx.core.text.HtmlCompat
 import io.realm.kotlin.ext.toRealmList
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.realm.Course
@@ -35,7 +36,7 @@ fun NetworkResponse.Event.toRealmEvent(courseColorsForPreview: Map<String, Strin
     }
     val event = Event()
     event.eventId = this.id
-    event.title = this.title
+    event.title = HtmlCompat.fromHtml(this.title, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
     event.course = course
     event.from = this.from
     event.to = this.to
