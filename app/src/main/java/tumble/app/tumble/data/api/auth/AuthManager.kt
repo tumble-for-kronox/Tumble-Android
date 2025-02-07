@@ -22,13 +22,7 @@ class AuthManager @Inject constructor(
         val response = authApiService.loginUser(authSchoolId, user)
         if (response.isSuccessful) {
             response.body()?.let {// No need to check header for tokens, first login
-
-                // before
-                storeTokens(it.refreshToken, it.sessionDetails.toString())
-
-                // after
                 storeTokens(it.refreshToken, "{\"sessionToken\":\"${it.sessionDetails.sessionToken}\",\"sessionLocation\":\"${it.sessionDetails.sessionLocation}\"}")
-
                 return TumbleUser(username = it.username, name = it.name)
             } ?: throw AuthError.DecodingError
         }
@@ -39,9 +33,6 @@ class AuthManager @Inject constructor(
         val authSchoolId = dataStoreManager.authSchoolId.value.toString()
         val refreshToken = secureStorageManager.read(TokenType.REFRESH_TOKEN.name, secureStorageAccount) ?: throw AuthError.TokenError
         val sessionDetails = secureStorageManager.read(TokenType.SESSION_DETAILS.name, secureStorageAccount) ?: throw AuthError.TokenError
-        Log.d("ALogin", "authSchoolId: $authSchoolId")
-        Log.d("ALogin", "refreshToken: $refreshToken")
-        Log.d("ALogin", "sessionDetails: $sessionDetails")
         val response = authApiService.autoLoginUser(authSchoolId, refreshToken, sessionDetails)
         if (response.isSuccessful) {
             storeHeaderTokens(response.headers()) // Store potentially new tokens served from backend
@@ -49,8 +40,6 @@ class AuthManager @Inject constructor(
                 return TumbleUser(username = it.username, name = it.name)
             } ?: throw AuthError.DecodingError
         }
-        Log.e("ALogin" ,response.toString())
-        Log.e("ALogin", response.headers().toString())
         throw AuthError.HttpResponseError
     }
 
