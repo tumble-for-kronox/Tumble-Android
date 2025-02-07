@@ -2,6 +2,7 @@ package tumble.app.tumble.extensions.models
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.text.HtmlCompat
 import io.realm.kotlin.ext.toRealmList
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.realm.Course
@@ -78,7 +79,7 @@ fun NetworkResponse.Schedule.toRealmSchedule(scheduleRequiresAuth: Boolean, scho
 
             val event = Event()
             event.eventId = responseEvent.id
-            event.title = responseEvent.title
+            event.title = HtmlCompat.fromHtml(responseEvent.title, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
             event.course = course
             event.from = responseEvent.from
             event.to = responseEvent.to
