@@ -1,10 +1,13 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Sheets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +24,7 @@ import androidx.compose.material.icons.filled.Timelapse
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,7 +64,8 @@ fun ResourceDetailsSheet(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colors.background).padding(15.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         DetailsBuilder(title = stringResource(R.string.location), image = Icons.Default.LocationOn) {
             if (booking.locationId.isNotEmpty()) {
@@ -110,15 +115,17 @@ fun ResourceDetailsSheet(
             Button(
                 onClick = { onBookingRemove() },
                 shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red),
+                modifier = Modifier.fillMaxWidth(),
                 elevation = null
             ) {
                 Text(
                     text = stringResource(R.string.remove_booking),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colors.onPrimary
+                    color = Color.White,
+                    letterSpacing = 0.sp,
+                    modifier = Modifier.padding(vertical = 5.dp)
                 )
             }
         }

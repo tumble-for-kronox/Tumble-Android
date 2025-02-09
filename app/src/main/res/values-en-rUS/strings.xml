@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="recent_news">Recent News</string>
-    <string name="search_news">Search News</string>
-    <string name="other_news">Other News</string>
+    <string name="recent_news">Recent news</string>
+    <string name="search_news">Search news</string>
+    <string name="other_news">Other news</string>
     <string name="news_button">News from us %1$d</string>
     <string name="no_other_news">No other news</string>
-    <string name="next_class">Next Class</string>
+    <string name="next_class">Next class</string>
     <string name="unknown">Unknown</string>
     <string name="no_teachers_listed">No teachers listed</string>
     <string name="no_upcoming_class">No upcoming class</string>
@@ -17,7 +17,7 @@
     <string name="choose_university">Choose a university to begin your search</string>
     <string name="search_results">%1$d results</string>
     <string name="search">Search</string>
-    <string name="search_field_placeholder">Search Schedules</string>
+    <string name="search_field_placeholder">Search schedules</string>
     <string name="bookmark">Bookmarks</string>
     <string name="no_bookmarks">No bookmarks yet</string>
     <string name="bookmarks_hidden">All your bookmakrs are hidden</string>
@@ -38,7 +38,7 @@
     <string name="available_until">Available until</string>
     <string name="signup_has_passed">Signup has passed</string>
     <string name="unregister">Unregister</string>
-    <string name="register">register</string>
+    <string name="register">Register</string>
     <string name="available_at">Available at</string>
     <string name="rooms">Rooms</string>
     <string name="account">Account</string>
@@ -57,20 +57,20 @@
     <string name="bookmark_remove">Remove</string>
     <string name="user_booked_resource">Booked resource</string>
     <string name="no_date">(no date)</string>
-    <string name="no_booked_resource">no booked resource yet</string>
+    <string name="no_booked_resource">No booked resources yet</string>
     <string name="could_not_contact_server">Could not contact the server, try again later</string>
     <string name="confirm">Confirm</string>
-    <string name="cancel_booking">cancel booking</string>
-    <string name="no_registered_event_yet">No registered event yet</string>
+    <string name="cancel_booking">Cancel booking</string>
+    <string name="no_registered_event_yet">No registered events yet</string>
     <string name="no_title">No title</string>
     <string name="user_options">User options</string>
     <string name="auto_signup">Automatic exam signup</string>
     <string name="confirm_Action">Confirm Action</string>
-    <string name="experimental_feature_confirmation">are you sure you want to enable this experimental feature?</string>
+    <string name="experimental_feature_confirmation">Are you sure you want to enable this experimental feature?</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
-    <string name="user_events">Your Events</string>
-    <string name="user_booking">Your Bookings</string>
+    <string name="user_events">Your events</string>
+    <string name="user_booking">Your bookings</string>
     <string name="no_rooms_on_weekend">No rooms available on weekends</string>
     <string name="no_name">No name</string>
     <string name="available_timeslots">Available timeslots</string>
@@ -94,4 +94,9 @@
     <string name="no_unregistered_events">No unregistered events available</string>
     <string name="no_upcoming_events">No upcoming events available</string>
     <string name="server_error">Could not contact the server, try again later</string>
+    <string name="discord">Tumble on Discord</string>
+    <string name="logout_confirm">Are you sure you want to log out of your account?</string>
+    <string name="preferences">Preferences</string>
+    <string name="from">from</string>
+    <string name="to">to</string>
 </resources>

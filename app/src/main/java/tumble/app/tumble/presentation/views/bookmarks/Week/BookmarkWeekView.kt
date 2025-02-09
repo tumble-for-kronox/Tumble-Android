@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -65,17 +66,13 @@ fun BookmarkWeekView(
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-
     ) {
-        Spacer(modifier = Modifier.height(60.dp))
-
         Box(contentAlignment = Alignment.BottomCenter) {
             CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
-
                 HorizontalPager(
                     state = pagerState,
                     beyondBoundsPageCount = 3,
-                    pageSpacing = 12.dp,
+                    pageSpacing = 0.dp,
                     verticalAlignment = Alignment.Top,
                     userScrollEnabled = userScrollEnabled,
                     modifier = Modifier
@@ -110,7 +107,7 @@ fun BookmarkWeekView(
                     }
                 }
             }
-            Column {
+            Box(modifier = Modifier.padding(bottom = 64.dp)) {
                 PageIndicator(
                     indicatorScrollState = indicatorScrollState,
                     pagerState = pagerState,

@@ -27,6 +27,7 @@ import tumble.app.tumble.presentation.viewmodels.SearchPreviewViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
 import tumble.app.tumble.R
+import tumble.app.tumble.presentation.components.buttons.BackButton
 import tumble.app.tumble.presentation.views.navigation.AppBarState
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -45,7 +46,16 @@ fun SearchPreviewSheet(
     LaunchedEffect(key1 = true) {
         setTopNavState(
             AppBarState(
-                title = searchPreviewModel.scheduleId
+                title = searchPreviewModel.scheduleId,
+                actions = {
+                    if (viewModel.status == SchedulePreviewStatus.LOADED)
+                        BookmarkButton(bookmark = { bookmark() }, buttonState = viewModel.buttonState)
+                },
+                navigationAction = {
+                    BackButton("") {
+                        navController.popBackStack()
+                    }
+                }
             )
         )
     }
@@ -53,7 +63,8 @@ fun SearchPreviewSheet(
     Box (
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colors.background),
+        contentAlignment = Alignment.Center
     ){
         when(viewModel.status){
             SchedulePreviewStatus.LOADED -> {
@@ -70,22 +81,7 @@ fun SearchPreviewSheet(
             }
         }
     }
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.background)
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top,
-    ) {
-        if (viewModel.status == SchedulePreviewStatus.LOADED)
-            BookmarkButton(bookmark = { bookmark() }, buttonState = viewModel.buttonState)
-        else
-            Box {}
-        CloseCoverButton(
-            onClick = { navController.popBackStack() },
-        )
-    }
+
     LaunchedEffect(Unit) {
         viewModel.getSchedule(searchPreviewModel.scheduleId, searchPreviewModel.schoolId)
     }

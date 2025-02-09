@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,19 +27,18 @@ fun SearchPreviewList(
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.padding(top = 2.5.dp)
+        modifier = Modifier.padding(top = 2.5.dp).fillMaxHeight()
     ) {
         item {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(20.dp))
         }
         viewModel.schedule?.flatten()?.ordered()?.forEach{day ->
             if (day.events.isNotEmpty()) {
                 item {
-                    Column {
+                    Column(verticalArrangement = Arrangement.spacedBy(15.dp)) {
                         DayResponseHeader(day = day)
                         day.events.forEach { event ->
                             VerboseEventButtonLabel(event = event.toRealmEvent(viewModel.courseColorsForPreview))
-                            Spacer(modifier = Modifier.height(10.dp))
                         }
                     }
                     Spacer(modifier = Modifier.height(20.dp))

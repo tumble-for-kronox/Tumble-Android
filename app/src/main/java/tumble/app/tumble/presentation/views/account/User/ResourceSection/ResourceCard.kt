@@ -1,7 +1,10 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,12 +24,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
+import tumble.app.tumble.extensions.presentation.noRippleClickable
 
 @Composable
 fun ResourceCard(
@@ -38,17 +43,16 @@ fun ResourceCard(
     location: String? = null,
     onClick: () -> Unit
 ){
-    Button(
-        onClick = { onClick() },
-        shape = RoundedCornerShape(16.dp),
-        colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.surface),
+    Box(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .noRippleClickable { onClick() }
+            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(16.dp))
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
             horizontalAlignment = Alignment.Start,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(15.dp)
         ) {
             TitleView(title = title)
             if(!type.isNullOrEmpty()){
@@ -76,16 +80,15 @@ fun TitleView(title: String?){
 @Composable
 fun InformationView(icon: ImageVector, text: String){
     Row (
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = 4.dp)
+        verticalAlignment = Alignment.CenterVertically
     ){
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(15.dp),
+            modifier = Modifier.size(17.dp),
             tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
         )
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(9.dp))
         Text(
             text = text,
             fontSize = 15.sp,
@@ -101,16 +104,15 @@ fun DataView(
     end: String
 ){
     Row (
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(top = 4.dp)
+        verticalAlignment = Alignment.CenterVertically
     ){
         Icon(
             imageVector = Icons.Default.CalendarToday,
             contentDescription = null,
-            modifier = Modifier.size(15.dp),
+            modifier = Modifier.size(17.dp),
             tint = MaterialTheme.colors.onBackground.copy(alpha = 0.7f)
         )
-        Spacer(modifier = Modifier.width(4.dp))
+        Spacer(modifier = Modifier.width(9.dp))
         Text(
             text = "$date, from $start to $end",
             fontSize = 15.sp,

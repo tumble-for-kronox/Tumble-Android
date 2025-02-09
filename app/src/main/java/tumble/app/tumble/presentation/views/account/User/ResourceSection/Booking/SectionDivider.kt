@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -29,13 +30,12 @@ fun SectionDivider(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(25.dp)
             .background(MaterialTheme.colors.background)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .padding(bottom = 8.dp)
+                .padding(bottom = 15.dp)
                 .background(MaterialTheme.colors.background)
         ) {
             Icon(
@@ -48,7 +48,8 @@ fun SectionDivider(
             Text(
                 text = title,
                 fontSize = 17.sp,
-                color = MaterialTheme.colors.onBackground
+                color = MaterialTheme.colors.onBackground,
+                fontWeight = FontWeight.SemiBold
             )
             Spacer(modifier = Modifier.width(8.dp))
             Divider(

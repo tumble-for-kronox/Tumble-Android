@@ -3,6 +3,7 @@ package tumble.app.tumble.presentation.views.bookmarks.Week
 import android.icu.text.SimpleDateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.domain.models.realm.Day
 import tumble.app.tumble.domain.models.realm.Event
+import tumble.app.tumble.extensions.presentation.noRippleClickable
 import tumble.app.tumble.utils.sortedEventOrder
 import java.util.Date
 import java.util.Locale
@@ -37,11 +39,16 @@ fun WeekDays(
     val dateFormatterDay = SimpleDateFormat("EEEE", Locale.getDefault())
     val dateFormatterDayMonth = SimpleDateFormat("d/MM", Locale.getDefault())
 
-    Column {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(15.dp),
+        modifier = Modifier
+            .padding(vertical = 15.dp)
+            .fillMaxWidth()
+    ) {
         Row (
             modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 20.dp),
+                .fillMaxWidth()
+                .padding(bottom = 15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -59,27 +66,16 @@ fun WeekDays(
             )
         }
         if (day != null){
-            day.events!!.sortedWith{a,b -> sortedEventOrder(a,b)}.forEach{
-                Surface(
-                    color = MaterialTheme.colors.surface,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(20))
-                        .padding(vertical = 5.dp)
-                        .clickable{ onEventSelection(it) }
-                ){
+            day.events!!.sortedWith { a, b -> sortedEventOrder(a, b) }.forEach {
+                Row(modifier = Modifier
+                    .fillMaxWidth()
+                    .noRippleClickable { onEventSelection(it) }
+                ) {
                     WeekEvent(it)
                 }
             }
         }else{
-            Surface(
-                color = MaterialTheme.colors.surface,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(20))
-            ) {
-                EmptyEvent()
-            }
+            EmptyEvent()
         }
     }
 }

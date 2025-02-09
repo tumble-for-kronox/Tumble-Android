@@ -1,7 +1,9 @@
 package tumble.app.tumble.presentation.views.search
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,14 +35,17 @@ fun SchoolPill(
     selectedSchool: MutableState<School?>
 ){
     val isSelected = selectedSchool.value == school
-    val fontSize = if (isSelected) 18.sp else 16.sp
+    val fontSize by animateFloatAsState(
+        targetValue = if (isSelected) 18f else 16f,
+        animationSpec = tween(durationMillis = 300)
+    )
     val icon = school.logo
     val buttonColor by animateColorAsState(
         targetValue = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.surface,
-        animationSpec = spring()
+        animationSpec = tween(durationMillis = 300)
     )
     Surface (
-        shape = RoundedCornerShape(20.dp),
+        shape = RoundedCornerShape(19.dp),
         modifier = Modifier
             .padding(2.dp)
             .noRippleClickable {
@@ -54,21 +59,23 @@ fun SchoolPill(
     ) {
         Row (
             modifier = Modifier
-                .padding(8.dp),
+                .padding(8.dp)
+                .padding(start = 3.dp)
+                .padding(vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ){
             Image(
                 painter = painterResource(id = icon),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(fontSize.value.dp)
+                    .size(fontSize.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Fit
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = school.domain.uppercase(),
-                fontSize = fontSize,
+                fontSize = fontSize.sp,
                 fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
                 color = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSurface
             )

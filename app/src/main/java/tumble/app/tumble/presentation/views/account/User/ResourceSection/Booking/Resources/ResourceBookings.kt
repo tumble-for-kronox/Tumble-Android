@@ -6,6 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,15 +72,14 @@ fun ResourceBookings(
                 viewModel.setBookingDate(date)
             }
         )
-        Divider(color = MaterialTheme.colors.onBackground)
+        Divider()
 
         when (resourceBookingPageState.value) {
             PageState.LOADING -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(16.dp),
+                        .padding(48.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CustomProgressIndicator()
@@ -97,19 +99,18 @@ fun ResourceBookings(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
-                        .padding(16.dp),
+                        .padding(top = 48.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     if (isWeekend(selectedPikerDate.value)) {
                         Info(
                             title = stringResource(R.string.no_rooms_on_weekend),
-                            image = null//R.drawable.moon_zzz // Replace with your drawable resource
+                            icon = Icons.Default.Bedtime
                         )
                     } else {
                         Info(
                             title = stringResource(R.string.could_not_contact_server),
-                            image = null //R.drawable.arrow_clockwise // Replace with your drawable resource
+                            icon = Icons.Default.ErrorOutline
                         )
                     }
                 }

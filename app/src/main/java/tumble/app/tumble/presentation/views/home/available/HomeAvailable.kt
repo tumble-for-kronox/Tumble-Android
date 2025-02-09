@@ -1,8 +1,10 @@
 package tumble.app.tumble.presentation.views.home.available
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -19,8 +21,8 @@ fun HomeAvailable(
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 17.5.dp) // Adjusted for half of 35dp to match SwiftUI padding
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         TodaysEvents(
             eventsForToday = eventsForToday.value,

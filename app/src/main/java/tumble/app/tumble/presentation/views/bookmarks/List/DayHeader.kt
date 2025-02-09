@@ -23,19 +23,22 @@ import tumble.app.tumble.domain.models.realm.Day
 fun DayHeader(day: Day){
     Row (
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 7.5.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ){
         Text(text = day.name?: "",
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold)
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.onBackground
+        )
 
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(text = day.date?: "",
             fontSize = 18.sp,
-            fontWeight = FontWeight.Bold)
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.onBackground
+        )
         
         Spacer(modifier = Modifier.width(8.dp))
 

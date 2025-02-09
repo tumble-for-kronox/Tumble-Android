@@ -2,10 +2,14 @@ package tumble.app.tumble.presentation.views.account.User.ResourceSection
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -15,6 +19,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.Button
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -63,7 +68,13 @@ fun ResourceSectionDivider(
                 }
             }
         }
-        content()
+        Row(
+            modifier = Modifier
+                .fillMaxHeight(0.1f)
+                .heightIn(min = 60.dp)
+        ) {
+            content()
+        }
     }
 }
 
@@ -76,21 +87,28 @@ fun ResourceNavigationItem(
         onClick = { destination() },
         colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
         shape = RoundedCornerShape(15.dp),
-        elevation = null
+        elevation = null,
+        contentPadding = PaddingValues(0.dp)
     ) {
-        Row (verticalAlignment = Alignment.CenterVertically){
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(start = 10.dp, end = 4.dp)
+                .padding(vertical = 8.dp)
+        ){
             Text(
                 text = title,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colors.onPrimary
+                color = MaterialTheme.colors.onPrimary,
+                letterSpacing = 0.sp
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Default.ChevronRight,
                 contentDescription = null,
                 tint = MaterialTheme.colors.onPrimary,
-                modifier = Modifier.size(14.dp)
+                modifier = Modifier.size(24.dp)
             )
         }
     }

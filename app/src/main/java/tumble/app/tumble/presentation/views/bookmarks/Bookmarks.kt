@@ -54,7 +54,6 @@ fun Bookmarks(
 
     Column (
         modifier = Modifier
-            .padding(horizontal = 15.dp, vertical = 10.dp)
             .fillMaxSize()
     ) {
         Column (modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start) {

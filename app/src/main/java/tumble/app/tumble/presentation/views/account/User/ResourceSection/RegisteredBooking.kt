@@ -43,7 +43,14 @@ fun RegisteredBooking(
     ) {
         when(state.value){
             PageState.LOADING -> {
-                CustomProgressIndicator()
+                Row(
+                    modifier = Modifier
+                        .padding(top = 15.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CustomProgressIndicator()
+                }
             }
             PageState.LOADED -> {
                 if(!bookings.isNullOrEmpty()){
@@ -91,16 +98,11 @@ fun RegisteredBooking(
                         }
                     }
                 }else{
-                    Text(text = stringResource(R.string.no_booked_resource),
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    Text(text = stringResource(R.string.no_booked_resource))
                 }
             }
             PageState.ERROR -> {
-                Text(
-                    text = stringResource(R.string.could_not_contact_server),
-                    modifier = Modifier.padding(16.dp)
-                )
+                Text(text = stringResource(R.string.could_not_contact_server))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

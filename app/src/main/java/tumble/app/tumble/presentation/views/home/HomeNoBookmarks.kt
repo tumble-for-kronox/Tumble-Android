@@ -9,16 +9,18 @@ import androidx.compose.material.icons.filled.Pending
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 
 @Composable
 fun HomeNoBookmarks() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
+            .padding(top = 15.dp),
         horizontalAlignment = Alignment.Start
     ) {
         Column(
@@ -42,10 +44,8 @@ fun HomeNoBookmarks() {
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-
         Image(
-            imageVector = Icons.Default.Pending,
-//            painter = painterResource(id = R.drawable.man_waiting), // Replace with your drawable resource
+            painter = painterResource(id = R.drawable.man_waiting),
             contentDescription = "man_waiting",
             modifier = Modifier
                 .fillMaxWidth()

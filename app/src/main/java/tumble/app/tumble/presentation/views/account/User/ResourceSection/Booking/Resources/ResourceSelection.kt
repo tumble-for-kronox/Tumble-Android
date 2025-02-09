@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import tumble.app.tumble.R
@@ -74,8 +75,10 @@ fun ResourceSelection(
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colors.onBackground,
                 modifier = Modifier
-                    .padding(horizontal = 15.dp, vertical = 20.dp)
-                    .fillMaxWidth()
+                    .padding(horizontal = 15.dp)
+                    .padding(top = 20.dp, bottom = 5.dp)
+                    .fillMaxWidth(),
+                fontSize = 20.sp
             )
             Spacer(modifier = Modifier.weight(1f))
         }
@@ -90,7 +93,7 @@ fun ResourceSelection(
                         resource.availabilities.getAvailabilityValues(timelotId = index)
                 }
             )
-            Divider(modifier = Modifier.padding(vertical = 8.dp))
+            Divider()
             TimeslotSelection(
                 bookResource = { availabilityValue ->
                      parentViewModel.bookResource(

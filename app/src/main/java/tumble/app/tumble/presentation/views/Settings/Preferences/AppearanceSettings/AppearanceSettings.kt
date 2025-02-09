@@ -1,7 +1,6 @@
-package tumble.app.tumble.presentation.views.Settings.AppearanceSettings
+package tumble.app.tumble.presentation.views.Settings.Preferences.AppearanceSettings
 
 
-import androidx.compose.material.Divider
 import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,15 +44,12 @@ fun AppearanceSettings(
     SettingsList {
         SettingsListGroup {
             val appearanceTypes = AppearanceType.values()
-            appearanceTypes.forEachIndexed { index, type ->
+            appearanceTypes.forEach { type ->
                 SettingsRadioButton(
                     title = stringResource(type.id),
                     isSelected = appearance.value == type,
                     onValueChange = { viewModel.upDateAppearance(type) },
                 )
-                if (index < appearanceTypes.size - 1) {
-                    Divider()
-                }
             }
         }
     }

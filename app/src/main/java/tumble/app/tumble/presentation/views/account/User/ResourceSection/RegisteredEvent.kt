@@ -2,6 +2,7 @@ package tumble.app.tumble.presentation.views.account.User.ResourceSection
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,7 +35,14 @@ fun RegisteredEvent(
     ) {
         when(state.value){
             PageState.LOADING -> {
-                CustomProgressIndicator()
+                Row(
+                    modifier = Modifier
+                        .padding(top = 15.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    CustomProgressIndicator()
+                }
             }
             PageState.LOADED -> {
                 if(!registeredEvents.isNullOrEmpty()){
@@ -53,15 +61,11 @@ fun RegisteredEvent(
                         }
                     }
                 }else{
-                    Text(
-                        text = stringResource(R.string.no_registered_event_yet),
-                        modifier = Modifier.padding(16.dp)
-                    )
+                    Text(text = stringResource(R.string.no_registered_event_yet))
                 }
             }
             PageState.ERROR -> {
-                Text(text = stringResource(R.string.could_not_contact_server),
-                    modifier = Modifier.padding(16.dp))
+                Text(text = stringResource(R.string.could_not_contact_server))
             }
         }
         Spacer(modifier = Modifier.height(16.dp))

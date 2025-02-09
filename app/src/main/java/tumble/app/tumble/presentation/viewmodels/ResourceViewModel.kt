@@ -130,6 +130,7 @@ class ResourceViewModel @Inject constructor(
 
     fun getAllResources(date: Date = Date()){
         val dateString = isoDateFormatterDate.format(date)
+        _resourceBookingPageState.value = PageState.LOADING
         viewModelScope.launch {
             try {
                 val endpoint = Endpoint.AllResources(dataStoreManager.authSchoolId.value.toString(), dateString)

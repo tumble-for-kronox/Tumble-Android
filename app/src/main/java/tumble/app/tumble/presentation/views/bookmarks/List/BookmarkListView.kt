@@ -1,7 +1,10 @@
 package tumble.app.tumble.presentation.views.bookmarks.List
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +30,7 @@ import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.models.sorted
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BookmarkListView(
@@ -39,27 +44,42 @@ fun BookmarkListView(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        floatingActionButton = { ToTopButton { coroutineScope.launch { listState.animateScrollToItem(0) } } },
-        floatingActionButtonPosition = FabPosition.End,
-        containerColor = MaterialTheme.colors.background
-    ) {padding ->
-        LazyColumn(
-            state = listState,
+        containerColor = MaterialTheme.colors.background,
+    ) {
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(60.dp))
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(15.dp))
+                }
+                items(days.size) { day ->
+                    DayItem(days[day], onEventSelection = onEventSelection)
+                }
+                item {
+                    Spacer(modifier = Modifier.height(68.dp))
+                }
             }
-            items(days.size) { day ->
-                DayItem(days[day], onEventSelection = onEventSelection)
-            }
-            item{
-                Spacer(modifier = Modifier.height(30.dp))
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 15.dp, end = 7.5.dp),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                ToTopButton {
+                    coroutineScope.launch {
+                        listState.animateScrollToItem(0)
+                    }
+                }
             }
         }
     }
+
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -67,7 +87,7 @@ fun BookmarkListView(
 fun DayItem(
     day: Day, onEventSelection: (Event) -> Unit){
     Column(
-        modifier = Modifier.padding(vertical = 15.dp)
+        modifier = Modifier.padding(15.dp)
     ) {
         DayHeader(day)
         EventList(events = day.events?.toList()?: listOf(), onEventSelection )
@@ -78,8 +98,9 @@ fun DayItem(
 @Composable
 fun EventList(events: List<Event>, onEventSelection: (Event) -> Unit){
     Column (
-        modifier = Modifier
-    ){
+        modifier = Modifier.padding(top = 15.dp),
+        verticalArrangement = Arrangement.spacedBy(15.dp)
+    ) {
         val sortedEvents = events.sorted()
         sortedEvents.forEach{event ->
             BookmarkCard(

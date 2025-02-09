@@ -27,6 +27,7 @@ import java.net.URL
 import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +35,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -43,6 +45,8 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +55,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import tumble.app.tumble.R
 import tumble.app.tumble.presentation.components.buttons.CloseCoverButton
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
@@ -70,23 +75,33 @@ fun ShareSheet(context: Context, onDismiss: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.surface)
-            .verticalScroll(scrollState),
+            .background(MaterialTheme.colors.background)
+            .verticalScroll(scrollState)
+            .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = stringResource(R.string.share_app),
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
             Spacer(modifier = Modifier.weight(1f))
-            CloseCoverButton {
-                onDismiss()
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+                shape = RoundedCornerShape(15.dp),
+                elevation = null,
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Text(
-            text = stringResource(R.string.share_app),
-            fontSize = 24.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -133,8 +148,6 @@ fun ShareSheet(context: Context, onDismiss: () -> Unit) {
                 )
             } ?: CustomProgressIndicator()
         }
-
-        Spacer(modifier = Modifier.height(60.dp))
     }
 }
 
@@ -154,7 +167,8 @@ fun CopyButton(link: String, context: Context) {
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
                 Text(text = stringResource(R.string.copy_tumble_link) , fontSize = 16.sp)

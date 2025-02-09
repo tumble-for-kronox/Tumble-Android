@@ -3,12 +3,15 @@ package tumble.app.tumble.presentation.views
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -66,13 +69,16 @@ fun AppParent() {
                     TopBar(appBarState)
                 },
                 bottomBar = {
-                    BottomBar(
-                        homeNavController,
-                        bookmarksNavController,
-                        searchNavController,
-                        accountNavController,
-                        currentNavGraph,
-                    )
+                    Column {
+                        Divider()
+                        BottomBar(
+                            homeNavController,
+                            bookmarksNavController,
+                            searchNavController,
+                            accountNavController,
+                            currentNavGraph,
+                        )
+                    }
                 }
             ) { innerPadding ->
                 Box(

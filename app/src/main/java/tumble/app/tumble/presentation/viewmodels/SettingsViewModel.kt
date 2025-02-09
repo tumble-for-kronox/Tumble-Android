@@ -17,7 +17,7 @@ import tumble.app.tumble.datasource.SchoolManager
 import tumble.app.tumble.domain.enums.Types.AppearanceType
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
-import tumble.app.tumble.presentation.views.Settings.Notifications.NotificationOffset
+import tumble.app.tumble.presentation.views.Settings.Preferences.Notifications.NotificationOffset
 import javax.inject.Inject
 
 @HiltViewModel

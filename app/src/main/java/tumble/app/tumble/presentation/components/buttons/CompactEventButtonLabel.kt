@@ -30,40 +30,40 @@ fun CompactEventButtonLabel(event: Event, color: Color) {
             .background(
                 if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else color.copy(alpha = 0.2f),
                 RoundedCornerShape(15.dp)
-            ),
+            )
+            .height(100.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         event.from.convertToHoursAndMinutesISOString()?.let { timeStart ->
             event.to.convertToHoursAndMinutesISOString()?.let { timeEnd ->
             Column(
                 modifier = Modifier
-                    .width(65.dp)
+                    .width(100.dp)
                     .padding(horizontal = 8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
-//                Box(
-//                    modifier = Modifier
-//                        .size(7.dp)
-//                        .clip(CircleShape)
-//                        .background(if (event.isSpecial) Color.Red else color)
-//                )
                 Text(
                     text = timeStart,
                     color = MaterialTheme.colors.onSurface,
-                    fontSize = 16.sp,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold
                 )
-                Icon(imageVector = Icons.Default.ArrowDownward, contentDescription = null)
-                //Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Default.ArrowDownward,
+                    contentDescription = null,
+                    modifier = Modifier.size(13.dp),
+                    tint = MaterialTheme.colors.onSurface
+                )
                 Text(
                     text = timeEnd,
                     color = MaterialTheme.colors.onSurface,
-                    fontSize = 16.sp,
+                    fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold
                 )
             }
             Divider(
-                color = MaterialTheme.colors.background,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f),
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(1.dp)
@@ -71,8 +71,7 @@ fun CompactEventButtonLabel(event: Event, color: Color) {
         }
         }
         Column(
-            modifier = Modifier.padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(10.dp).padding(start = 5.dp),
             horizontalAlignment = Alignment.Start
         ) {
             // Event Course Name
@@ -89,17 +88,19 @@ fun CompactEventButtonLabel(event: Event, color: Color) {
                     Icon(
                         imageVector = Icons.Default.Error,
                         contentDescription = "important_event",
-                        tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                        tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
-
+            Spacer(Modifier.weight(1f))
             // Event Location
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Place,
                     contentDescription = "location",
-                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(end = 5.dp).size(15.dp)
                 )
                 Text(
                     text = event.locations?.firstOrNull()?.locationId?.replaceFirstChar {
@@ -108,36 +109,41 @@ fun CompactEventButtonLabel(event: Event, color: Color) {
                         ) else it.toString()
                     }
                         ?: stringResource(R.string.unknown),
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
-                    fontSize = 15.sp
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium
                 )
             }
-
+            Spacer(Modifier.weight(1f))
             // Event Teachers
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Default.Person,
                     contentDescription = "person",
-                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f)
+                    tint = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(end = 5.dp).size(15.dp)
                 )
                 event.teachers?.firstOrNull()?.let { teacher ->
                     if (teacher.firstName!!.isNotEmpty() && teacher.lastName!!.isNotEmpty()) {
                         Text(
                             text = "${teacher.firstName} ${teacher.lastName}",
-                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
-                            fontSize = 15.sp
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium
                         )
                     } else {
                         Text(
                             text = stringResource(R.string.no_teachers_listed),
-                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
-                            fontSize = 15.sp
+                            color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Medium
                         )
                     }
                 } ?: Text(
                     text = stringResource(R.string.no_teachers_listed),
-                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
-                    fontSize = 15.sp
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.6f),
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

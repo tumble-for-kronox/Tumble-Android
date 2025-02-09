@@ -4,22 +4,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.PersonOff
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 
 @Composable
 fun HomeNotAvailable() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp),
+            .padding(top = 15.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
@@ -44,10 +43,8 @@ fun HomeNotAvailable() {
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-
         Image(
-            imageVector = Icons.Default.Person,
-//            painter = painterResource(id = R.drawable.woman_lounging), // Replace with your drawable resource
+            painter = painterResource(id = R.drawable.woman_lounging),
             contentDescription = "woman_lounging",
             modifier = Modifier
                 .fillMaxWidth()

@@ -32,7 +32,7 @@ val month_date: SimpleDateFormat by lazy {
 }
 
 val isoVerboseDateFormatter: SimpleDateFormat by lazy {
-    val formatter = SimpleDateFormat("EEEE, MMM d,yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("EEEE, MMMM d,yyyy", Locale.getDefault())
     formatter}
 
 fun preprocessDateString(dateString: String): String {

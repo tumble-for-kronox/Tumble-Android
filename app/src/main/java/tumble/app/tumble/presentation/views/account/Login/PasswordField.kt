@@ -17,8 +17,11 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -35,44 +38,42 @@ fun PasswordField(
     password: MutableState<String>,
     visiblePassword: MutableState<Boolean>
 ){
-    Row (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 10.dp)
-            .background(color = MaterialTheme.colors.surface, shape = RoundedCornerShape(15.dp))
-            .padding(15.dp)
-    ){
-        Icon(imageVector = Icons.Default.Lock,
-            contentDescription = null,
-            tint = MaterialTheme.colors.onSurface.copy(alpha = 0.75f),
-            modifier = Modifier.size(18.dp)
-        )
-        Spacer(modifier = Modifier.width(10.dp))
-        TextField(value = password.value,
-            onValueChange = {password.value = it},
-            placeholder = { Text(text = "Password")},
-            textStyle = MaterialTheme.typography.body1,
-            modifier = Modifier.fillMaxWidth(),
-            singleLine = true,
-            visualTransformation = if (visiblePassword.value) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done,
-                autoCorrect = false
-            ),
-            trailingIcon = {
-                IconButton(onClick = { visiblePassword.value = !visiblePassword.value }
-                ) {
-                    Icon(imageVector = if (visiblePassword.value) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = null,
-                        tint = MaterialTheme.colors.onSurface.copy(alpha = 0.75f)
-                    )
-                }
-            },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.Transparent,
-                textColor = MaterialTheme.colors.onSurface
+    OutlinedTextField(
+        value = password.value,
+        onValueChange = { value: String -> password.value = value },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Lock,
+                contentDescription = "Email Icon",
+                tint = MaterialTheme.colors.onSurface.copy(.4f)
             )
+        },
+        trailingIcon = {
+            IconButton(onClick = { visiblePassword.value = !visiblePassword.value }
+            ) {
+                Icon(imageVector = if (visiblePassword.value) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.onSurface.copy(.4f)
+                )
+            }
+        },
+        placeholder = {
+            Text("Password", color = MaterialTheme.colors.onSurface.copy(.25f))
+        },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Done,
+            autoCorrect = false
+        ),
+        visualTransformation = if (visiblePassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colors.primary,
+            unfocusedBorderColor = MaterialTheme.colors.onSurface.copy(.4f),
+            cursorColor = MaterialTheme.colors.primary,
+            focusedTextColor = MaterialTheme.colors.onBackground,
+            unfocusedTextColor = MaterialTheme.colors.onBackground
         )
-    }
+    )
 }

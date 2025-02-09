@@ -56,10 +56,9 @@ fun BookmarkCalendarView(
     )
 
     val scroll = rememberLazyListState()
-    LazyColumn(state = scroll) {
+    LazyColumn(state = scroll, modifier = Modifier.padding(horizontal = 15.dp)) {
         item {
-            Spacer(modifier = Modifier.height(60.dp))
-
+            Spacer(Modifier.height(15.dp))
             VerticalPager(
                 state = monthTitlePagerState,
                 beyondBoundsPageCount = 3,
@@ -112,7 +111,7 @@ fun BookmarkCalendarView(
             BottomSheet()
         }
         item{
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(modifier = Modifier.height(68.dp))
         }
     }
 

@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
@@ -42,10 +43,11 @@ fun SearchInfo(
         )
         Text(
             text = stringResource(id = R.string.choose_university),
-            fontSize = 20.sp,
-            color = MaterialTheme.colors.onBackground.copy(alpha = textAlpha)
+            fontSize = 24.sp,
+            color = MaterialTheme.colors.onBackground.copy(alpha = textAlpha),
+            fontWeight = FontWeight.SemiBold
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
         FlowStack<School>(items = schools, viewGenerator = {SchoolPill(school = it, selectedSchool = selectedSchool)})
         selectedSchool.value?.let { selectedSchool ->
             if (schools.any{it.loginRq && it == selectedSchool}){

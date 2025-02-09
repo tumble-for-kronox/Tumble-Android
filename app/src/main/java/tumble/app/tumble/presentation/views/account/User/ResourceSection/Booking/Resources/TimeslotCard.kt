@@ -1,6 +1,7 @@
 package tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,9 +30,8 @@ fun TimeslotCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp)
             .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(16.dp))
-            .padding(10.dp),
+            .padding(15.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
@@ -48,9 +48,10 @@ fun TimeslotCard(
                 }
             },
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary, disabledBackgroundColor = MaterialTheme.colors.primary),
-            shape = RoundedCornerShape(20.dp),
+            shape = RoundedCornerShape(17.dp),
             elevation = null,
             enabled = bookingButtonState != BookingButtonState.BOOKED,
+            contentPadding = PaddingValues(horizontal = 25.dp, vertical = 8.dp)
         ) {
             when (bookingButtonState) {
                 BookingButtonState.LOADING -> {
@@ -61,7 +62,8 @@ fun TimeslotCard(
                         text = "Booked",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colors.onPrimary
+                        color = MaterialTheme.colors.onPrimary,
+                        letterSpacing = 0.sp
                     )
                 }
                 BookingButtonState.AVAILABLE -> {
@@ -69,7 +71,8 @@ fun TimeslotCard(
                         text = "Book",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colors.onPrimary
+                        color = MaterialTheme.colors.onPrimary,
+                        letterSpacing = 0.sp
                     )
                 }
             }

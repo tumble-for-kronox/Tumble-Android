@@ -4,14 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import tumble.app.tumble.R
 
 @Composable
 fun HomeError() {
@@ -44,9 +44,8 @@ fun HomeError() {
         Spacer(modifier = Modifier.weight(1f))
 
         Image(
-            imageVector = Icons.Default.Warning,
-//            painter = painterResource(id = R.drawable.woman_arms_up), // Replace with your drawable resource
-            contentDescription = "woman_arms_up", // Provide an appropriate content description
+            painter = painterResource(id = R.drawable.woman_arms_up),
+            contentDescription = "Woman with arms up",
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
