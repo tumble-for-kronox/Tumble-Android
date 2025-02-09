@@ -35,7 +35,7 @@ import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 @Composable
 fun BookmarkListView(
     viewModel: BookmarksViewModel = hiltViewModel(),
-    onEventSelection: (Event) -> Unit = {Event -> }
+    onEventSelection: (Event) -> Unit = {Event -> print("Opened event") }
 ){
     val days by remember {
        mutableStateOf(viewModel.bookmarkData.days)

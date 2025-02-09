@@ -2,6 +2,8 @@ package tumble.app.tumble.domain.models.network
 
 import com.squareup.moshi.JsonClass
 import tumble.app.tumble.domain.models.network.NetworkResponse.AvailabilityValue
+import tumble.app.tumble.domain.models.util.DateComponents
+import java.time.ZonedDateTime
 import java.util.*
 
 typealias NewsItems = List<NetworkResponse.NotificationContent>
@@ -184,9 +186,28 @@ sealed class NetworkResponse {
         val locationId: String,
         val showConfirmButton: Boolean,
         val showUnbookButton: Boolean,
-        val confirmationOpen: String,
-        val confirmationClosed: String
-    ): NetworkResponse()
+        val confirmationOpen: String?,
+        val confirmationClosed: String?
+    ): NetworkResponse() {
+        val dateComponentsConfirmation: DateComponents?
+            get() {
+                val confirmationOpen = confirmationOpen ?: return null
+
+                return try {
+                    val dateTime = ZonedDateTime.parse(confirmationOpen)
+                    DateComponents(
+                        year = dateTime.year,
+                        month = dateTime.monthValue,
+                        day = dateTime.dayOfMonth,
+                        hour = dateTime.hour,
+                        minute = dateTime.minute,
+                        second = dateTime.second
+                    )
+                } catch (e: Exception) {
+                    null
+                }
+            }
+    }
 
     @JsonClass(generateAdapter = true)
     data class KronoxUserBookings(

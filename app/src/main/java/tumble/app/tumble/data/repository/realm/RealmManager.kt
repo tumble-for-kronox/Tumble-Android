@@ -14,7 +14,6 @@ import javax.inject.Singleton
 
 @Singleton
 class RealmManager {
-
     private var config = RealmConfiguration.create(
         schema = setOf(
             Schedule::class,
@@ -63,7 +62,6 @@ class RealmManager {
                 }
         }
     }
-
 
     suspend fun updateSchedule(scheduleId: String, newSchedule: Schedule) {
         realm.write {

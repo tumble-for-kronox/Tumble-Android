@@ -4,5 +4,6 @@ import tumble.app.tumble.domain.models.util.DateComponents
 
 data class BookingNotification(
     override val id: String,
-    val dateComponents: DateComponents
+    override val dateComponents: DateComponents,
+    override val categoryIdentifier: String
 ) : LocalNotification

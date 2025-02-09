@@ -35,7 +35,7 @@ class EventDetailsSheetViewModel@Inject constructor(
     var color = event.course?.color?.toColor() ?: Color.Gray
     var isNotificationSetForEvent by mutableStateOf<NotificationState>(NotificationState.LOADING)
     var isNotificationSetForCourse by mutableStateOf<NotificationState>(NotificationState.LOADING)
-    val notificationOffset by mutableStateOf<Int>(60)
+    private val notificationOffset by mutableStateOf<Int>(60)
     var notificationsAllowed by mutableStateOf<Boolean>(false)
     private val oldColor: Color = event.course?.color?.toColor() ?: Color.White
 
@@ -85,7 +85,7 @@ class EventDetailsSheetViewModel@Inject constructor(
         val events = realmManager.getAllSchedules()
             .flatMap { it.days?: listOf() }
             .flatMap { it.events?: listOf() }
-            .filter { it.dateComponents?.before(Date()) == false }
+            //.filter { it.dateComponents?..before(Date()) == false }
             .filter { it.course?.courseId == event.course?.courseId }
 
         viewModelScope.launch {
@@ -119,21 +119,25 @@ class EventDetailsSheetViewModel@Inject constructor(
         return notificationManager.areNotificationsAllowed()
     }
 
-    private fun checkNotificationIsSetForCourse(){
-        isNotificationSetForCourse = event.course?.courseId?.let {
-            if (notificationManager.isNotificationScheduledUsingCategory(it)){
-                NotificationState.SET
-            }else{
-                NotificationState.NOT_SET
-            }
-        }?: NotificationState.NOT_SET
+    private fun checkNotificationIsSetForCourse() {
+        viewModelScope.launch {
+            isNotificationSetForCourse = event.course?.courseId?.let {
+                if (notificationManager.isNotificationScheduledUsingCategory(it)) {
+                    NotificationState.SET
+                } else {
+                    NotificationState.NOT_SET
+                }
+            } ?: NotificationState.NOT_SET
+        }
     }
 
-    private fun checkNotificationIsSetForEvent(){
-        if (notificationManager.isNotificationScheduled(eventId = event.eventId)){
-            isNotificationSetForEvent = NotificationState.SET
-        }else{
-            isNotificationSetForEvent = NotificationState.NOT_SET
+    private fun checkNotificationIsSetForEvent() {
+        viewModelScope.launch {
+            isNotificationSetForEvent = if (notificationManager.isNotificationScheduled(eventId = event.eventId)) {
+                NotificationState.SET
+            } else {
+                NotificationState.NOT_SET
+            }
         }
     }
 }

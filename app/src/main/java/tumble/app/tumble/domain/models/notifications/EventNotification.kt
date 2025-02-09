@@ -4,8 +4,8 @@ import tumble.app.tumble.domain.models.util.DateComponents
 
 data class EventNotification(
     override val id: String,
-    val dateComponents: DateComponents,
-    val categoryIdentifier: String?,
+    override val dateComponents: DateComponents,
+    override val categoryIdentifier: String,
     val content: Map<String, Any>?
 ) : LocalNotification
 

@@ -103,9 +103,9 @@ fun ResourceDetailsSheet(
         DetailsBuilder(title = stringResource(R.string.confirmation), image = Icons.Default.CheckCircleOutline) {
             val bookingDate = booking.timeSlot.from?.formatDate()
             val bookingConfirmationStart =
-                booking.confirmationOpen.convertToHoursAndMinutesISOString()
+                booking.confirmationOpen?.convertToHoursAndMinutesISOString()
             val bookingConfirmationEnd =
-                booking.confirmationClosed.convertToHoursAndMinutesISOString()
+                booking.confirmationClosed?.convertToHoursAndMinutesISOString()
             Text(
                 text = "$bookingDate, from $bookingConfirmationStart to $bookingConfirmationEnd"
             )

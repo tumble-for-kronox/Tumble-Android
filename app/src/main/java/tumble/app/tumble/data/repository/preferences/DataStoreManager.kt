@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import tumble.app.tumble.domain.enums.Types.AppearanceType
@@ -40,6 +41,7 @@ class DataStoreManager @Inject constructor(
         val AUTO_SIGNUP = booleanPreferencesKey("auto_signup")
         val APPEARANCE = stringPreferencesKey("appearance")
         val VIEW_TYPE = stringPreferencesKey("view_type")
+        val SCHEDULED_NOTIFICATIONS = stringPreferencesKey("scheduled_notifications")
     }
 
     private val _authSchoolId = MutableStateFlow(-1)
@@ -110,4 +112,36 @@ class DataStoreManager @Inject constructor(
             preferences[PreferencesKeys.VIEW_TYPE] = type.name
         }
     }
+
+    suspend fun addNotificationCategory(notificationId: String, categoryIdentifier: String?) {
+        context.dataStore.edit { preferences ->
+            val existingNotifications = preferences[PreferencesKeys.SCHEDULED_NOTIFICATIONS]?.split(",")?.toMutableList() ?: mutableListOf()
+            existingNotifications.add("$notificationId:$categoryIdentifier")
+            preferences[PreferencesKeys.SCHEDULED_NOTIFICATIONS] = existingNotifications.joinToString(",")
+        }
+    }
+
+    suspend fun getScheduledNotifications(): Map<String, String> {
+        return context.dataStore.data
+            .map { preferences ->
+                preferences[PreferencesKeys.SCHEDULED_NOTIFICATIONS]
+                    ?.split(",")
+                    ?.mapNotNull { entry ->
+                        val parts = entry.split(":")
+                        if (parts.size == 2) parts[0] to parts[1] else null
+                    }
+                    ?.toMap() ?: emptyMap()
+            }
+            .first()
+    }
+
+    suspend fun removeNotificationCategory(notificationId: String) {
+        context.dataStore.edit { preferences ->
+            val existingNotifications = preferences[PreferencesKeys.SCHEDULED_NOTIFICATIONS]?.split(",")?.toMutableList() ?: mutableListOf()
+            existingNotifications.removeIf { it.startsWith("$notificationId:") }
+            preferences[PreferencesKeys.SCHEDULED_NOTIFICATIONS] = existingNotifications.joinToString(",")
+        }
+    }
+
+
 }

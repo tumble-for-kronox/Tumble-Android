@@ -41,8 +41,11 @@ object KronoxModule {
 object NotificationModule {
     @Provides
     @Singleton
-    fun provideNotificationManager(): NotificationManager {
-        return NotificationManager()
+    fun provideNotificationManager(
+        dataStoreManager: DataStoreManager,
+        @ApplicationContext context: Context
+    ): NotificationManager {
+        return NotificationManager(context, dataStoreManager)
     }
 }
 
