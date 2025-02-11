@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import tumble.app.tumble.data.api.Endpoint
 import tumble.app.tumble.data.api.auth.AuthManager
+import tumble.app.tumble.data.notifications.NotificationManager
 import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.datasource.SchoolManager
 import tumble.app.tumble.datasource.network.ApiResponse
@@ -29,7 +30,8 @@ class AccountViewModel @Inject constructor(
     private val authManager: AuthManager,
     private val kronoxManager: KronoxRepository,
     private val dataStoreManager: DataStoreManager,
-    private val schoolManager: SchoolManager
+    private val schoolManager: SchoolManager,
+    private val notificationManager: NotificationManager
 ) : ViewModel() {
     private val _authStatus = MutableStateFlow(AuthStatus.UNAUTHORIZED)
     val authStatus: StateFlow<AuthStatus> = _authStatus
@@ -162,7 +164,7 @@ class AccountViewModel @Inject constructor(
                     is ApiResponse.Success -> {
                         _userBookings.value = NetworkResponse.KronoxUserBookings(bookings = response.data)
                         _registeredBookingsSectionState.value = PageState.LOADED
-                        scheduleBookingNotifications()
+                        scheduleBookingNotifications(_userBookings)
                     }
                     is ApiResponse.Error -> {
                         _registeredBookingsSectionState.value = PageState.ERROR
@@ -283,8 +285,12 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    private fun scheduleBookingNotifications() {
-        // Implement the logic for scheduling notifications
+    private fun scheduleBookingNotifications(userBookings: MutableStateFlow<NetworkResponse.KronoxUserBookings?>) {
+        userBookings.let {
+            userBookings.value?.bookings?.forEach {
+                notificationManager.createNotificationFromBooking(it)
+            }
+        }
     }
 
     private fun registerAutoSignup() {

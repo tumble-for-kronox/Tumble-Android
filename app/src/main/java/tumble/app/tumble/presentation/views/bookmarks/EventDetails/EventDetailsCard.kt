@@ -20,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.EventDetailsSheetViewModel
 import tumble.app.tumble.presentation.viewmodels.NotificationState
-import tumble.app.tumble.utils.isoDateFormatter
+import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
 import java.util.Date
 
 @Composable
@@ -121,7 +121,7 @@ fun notificationCourseAction(viewModel: EventDetailsSheetViewModel){
 }
 
 private fun String.isAvailableNotificationDate(): Boolean{
-    val eventDate = isoDateFormatter.parse(this) ?: return false
+    val eventDate = isoDateFormatterNoTimeZone.parse(this) ?: return false
     val calendar = Calendar.getInstance()
     calendar.add(Calendar.HOUR, 3)
     val now = Date()
