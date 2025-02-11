@@ -9,7 +9,7 @@
     <string name="unknown">Unknown</string>
     <string name="no_teachers_listed">No teachers listed</string>
     <string name="no_upcoming_class">No upcoming class</string>
-    <string name="todays_events">Todays events</string>
+    <string name="todays_events">Today\'s events</string>
     <string name="no_events_for_today">No events for today</string>
     <string name="home">Home</string>
     <string name="error_something_wrong">Something went wrong</string>
@@ -99,4 +99,11 @@
     <string name="preferences">Preferences</string>
     <string name="from">from</string>
     <string name="to">to</string>
+    <string name="event_notification">Event notification</string>
+    <string name="event_notification_description">This channel displays notifications about events.</string>
+    <string name="booking_notification">Booking Notification</string>
+    <string name="booking_notification_description">This channel displays notifications about bookings.</string>
+    <string name="booking_notification_description_start">The booking for</string>
+    <string name="booking_notification_description_end">needs to be confirmed.</string>
+    <string name="confirm_booking">Confirm booking</string>
 </resources>
