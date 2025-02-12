@@ -58,6 +58,20 @@ class NotificationManager @Inject constructor(
         return scheduled
     }
 
+    override fun createNotificationUsingCategory(categoryIdentifier: String, userOffset: Int) {
+        val events = realmManager.getAllSchedules()
+            .flatMap { it.days?: listOf() }
+            .flatMap { it.events?: listOf() }
+            .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
+            .filter { it.course?.courseId == categoryIdentifier }
+        
+        for (event in events){
+            if (!isNotificationScheduled(event.eventId)){
+                createNotificationFromEvent(event, userOffset)
+            }
+        }
+    }
+
     override fun cancelNotificationsWithCategory(categoryIdentifier: String) {
         val events = realmManager.getAllSchedules()
             .flatMap { it.days?: listOf() }
