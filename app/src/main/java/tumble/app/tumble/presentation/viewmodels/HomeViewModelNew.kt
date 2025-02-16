@@ -21,6 +21,7 @@ import tumble.app.tumble.datasource.network.kronox.KronoxRepository
 import tumble.app.tumble.domain.enums.HomeStatus
 import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.network.NewsItems
+import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
 import tumble.app.tumble.extensions.models.filterEventsMatchingToday
@@ -49,6 +50,7 @@ class HomeViewModelNew @Inject constructor(
     private val appController = AppController.shared
     private val _cancellables = mutableListOf<Job>()
     private var initialisedSession = mutableStateOf(false)
+    var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
 
     init {
         setupFlows()

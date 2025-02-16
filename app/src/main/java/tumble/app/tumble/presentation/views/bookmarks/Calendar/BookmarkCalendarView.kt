@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
+import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.utils.month_date
@@ -43,6 +44,7 @@ import kotlin.math.abs
 @Composable
 fun BookmarkCalendarView(
     viewModel: BookmarksViewModel = hiltViewModel(),
+    onEventSelection: (Event) -> Unit
 ){
     val monthTitlePagerState = rememberPagerState(
         initialPage = 0,
@@ -108,7 +110,7 @@ fun BookmarkCalendarView(
             }
         }
         item{
-            BottomSheet()
+            BottomSheet(onEventSelection = onEventSelection,)
         }
         item{
             Spacer(modifier = Modifier.height(68.dp))

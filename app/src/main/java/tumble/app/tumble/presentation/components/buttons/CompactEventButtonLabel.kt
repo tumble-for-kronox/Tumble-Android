@@ -1,6 +1,7 @@
 package tumble.app.tumble.presentation.components.buttons
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -23,14 +24,17 @@ import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOStri
 import java.util.Locale
 
 @Composable
-fun CompactEventButtonLabel(event: Event, color: Color) {
+fun CompactEventButtonLabel(event: Event,
+                            color: Color,
+                            onEventSelection: (Event) -> Unit = {},
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(
                 if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else color.copy(alpha = 0.2f),
                 RoundedCornerShape(15.dp)
-            )
+            ).clickable { onEventSelection(event) }
             .height(100.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

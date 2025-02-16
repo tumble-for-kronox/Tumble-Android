@@ -31,24 +31,23 @@ class EventDetailsSheetViewModel@Inject constructor(
     private val realmManager: RealmManager,
     private val notificationManager: NotificationManager
 ): ViewModel() {
-    var event = AppController.shared.eventSheet!!.event
-    var color = event.course?.color?.toColor() ?: Color.Gray
+    lateinit var event: Event// = AppController.shared.eventSheet!!.event
+    var color: Color? = null // = event.course?.color?.toColor() ?: Color.Gray
     var isNotificationSetForEvent by mutableStateOf<NotificationState>(NotificationState.LOADING)
     var isNotificationSetForCourse by mutableStateOf<NotificationState>(NotificationState.LOADING)
     val notificationOffset by mutableStateOf<Int>(60)
     var notificationsAllowed by mutableStateOf<Boolean>(false)
-    private val oldColor: Color = event.course?.color?.toColor() ?: Color.White
 
     init {
-        viewModelScope.launch {
-            val allowed = userAllowedNotifications()
-            notificationsAllowed = allowed
-            checkNotificationIsSetForEvent()
-            checkNotificationIsSetForCourse()
-        }
+//        viewModelScope.launch {
+//            val allowed = userAllowedNotifications()
+//            notificationsAllowed = allowed
+//            checkNotificationIsSetForEvent()
+//            checkNotificationIsSetForCourse()
+//        }
     }
 
-    fun setEventSheetView(newEvent: Event, newColor: Color){
+    fun setEventSheetView(newEvent: Event, newColor: Color?){
         event = newEvent
         color = newColor
     }
@@ -109,8 +108,9 @@ class EventDetailsSheetViewModel@Inject constructor(
     }
 
     suspend fun updateCourseColor(){
+        val oldColor: Color = event.course?.color?.toColor() ?: Color.White
         if(oldColor == color) return
-        val colorHex = color.toArgb().toHexString() ?:return
+        val colorHex = color?.toArgb()?.toHexString() ?:return
         val courseId = event.course?.courseId ?: return
         realmManager.updateCourseColors(courseId, colorHex)
     }

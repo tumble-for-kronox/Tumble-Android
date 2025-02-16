@@ -55,7 +55,7 @@ fun BookmarkViewController(
                     )
                 }
                 ViewType.CALENDAR.ordinal -> {
-                    BookmarkCalendarView()
+                    BookmarkCalendarView(onEventSelection = onEventSelection,)
                 }
             }
         }
