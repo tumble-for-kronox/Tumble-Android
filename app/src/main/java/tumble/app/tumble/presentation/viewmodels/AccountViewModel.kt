@@ -288,7 +288,9 @@ class AccountViewModel @Inject constructor(
     private fun scheduleBookingNotifications(userBookings: MutableStateFlow<NetworkResponse.KronoxUserBookings?>) {
         userBookings.let {
             userBookings.value?.bookings?.forEach {
-                notificationManager.createNotificationFromBooking(it)
+                if (!notificationManager.isNotificationScheduled(it.id)) {
+                    notificationManager.createNotificationFromBooking(it)
+                }
             }
         }
     }

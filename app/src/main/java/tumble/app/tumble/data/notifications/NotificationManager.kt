@@ -37,8 +37,8 @@ class NotificationManager @Inject constructor(
         WorkManager.getInstance(context).cancelUniqueWork(id)
     }
 
-    override fun isNotificationScheduled(eventId: String): Boolean {
-        return WorkManager.getInstance(context).getWorkInfosForUniqueWork(eventId).get().isNotEmpty()
+    override fun isNotificationScheduled(notificationId: String): Boolean {
+        return WorkManager.getInstance(context).getWorkInfosForUniqueWork(notificationId).get().isNotEmpty()
     }
 
     override fun isNotificationScheduledUsingCategory(categoryIdentifier: String): Boolean {
