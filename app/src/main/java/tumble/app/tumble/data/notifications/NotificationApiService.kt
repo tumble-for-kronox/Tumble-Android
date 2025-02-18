@@ -5,7 +5,7 @@ import tumble.app.tumble.domain.models.realm.Event
 
 interface NotificationApiService {
     fun cancelNotification(id: String)
-    fun isNotificationScheduled(eventId: String): Boolean
+    fun isNotificationScheduled(notificationId: String): Boolean
     fun isNotificationScheduledUsingCategory(categoryIdentifier: String): Boolean
     fun createNotificationUsingCategory(categoryIdentifier: String, userOffset: Int)
     fun cancelNotificationsWithCategory(categoryIdentifier: String)
