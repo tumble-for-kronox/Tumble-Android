@@ -123,7 +123,7 @@ class EventDetailsSheetViewModel@Inject constructor(
     }
 
     private fun checkNotificationIsSetForEvent(){
-        if (notificationManager.isNotificationScheduled(eventId = event.eventId)){
+        if (notificationManager.isNotificationScheduled(event.eventId)){
             isNotificationSetForEvent = NotificationState.SET
         }else{
             isNotificationSetForEvent = NotificationState.NOT_SET
