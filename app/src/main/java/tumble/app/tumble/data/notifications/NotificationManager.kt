@@ -19,6 +19,7 @@ import tumble.app.tumble.R
 import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.domain.models.realm.Event
+import tumble.app.tumble.extensions.models.findEventsByCategory
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
 import tumble.app.tumble.extensions.presentation.toLocalDateTime
 import java.time.ZoneId
@@ -42,28 +43,13 @@ class NotificationManager @Inject constructor(
     }
 
     override fun isNotificationScheduledUsingCategory(categoryIdentifier: String): Boolean {
-        val events = realmManager.getAllSchedules()
-            .flatMap { it.days?: listOf() }
-            .flatMap { it.events?: listOf() }
-            .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
-            .filter { it.course?.courseId == categoryIdentifier }
+        val events = realmManager.getAllSchedules().findEventsByCategory(categoryIdentifier)
 
-        var scheduled = true
-        for (event in events){
-            if (!isNotificationScheduled(event.eventId)){
-                scheduled = false
-                break
-            }
-        }
-        return scheduled
+        return events.all { isNotificationScheduled(it.eventId) }
     }
 
     override fun createNotificationUsingCategory(categoryIdentifier: String, userOffset: Int) {
-        val events = realmManager.getAllSchedules()
-            .flatMap { it.days?: listOf() }
-            .flatMap { it.events?: listOf() }
-            .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
-            .filter { it.course?.courseId == categoryIdentifier }
+        val events = realmManager.getAllSchedules().findEventsByCategory(categoryIdentifier)
         
         for (event in events){
             if (!isNotificationScheduled(event.eventId)){
@@ -73,15 +59,9 @@ class NotificationManager @Inject constructor(
     }
 
     override fun cancelNotificationsWithCategory(categoryIdentifier: String) {
-        val events = realmManager.getAllSchedules()
-            .flatMap { it.days?: listOf() }
-            .flatMap { it.events?: listOf() }
-            .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
-            .filter { it.course?.courseId == categoryIdentifier }
+        val events = realmManager.getAllSchedules().findEventsByCategory(categoryIdentifier)
 
-        for (event in events){
-            cancelNotification(event.eventId)
-        }
+        events.forEach { cancelNotification(it.eventId) }
     }
 
     override fun cancelNotifications() {
