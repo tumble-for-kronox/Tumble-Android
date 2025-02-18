@@ -16,7 +16,6 @@ import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.presentation.toColor
-import tumble.app.tumble.observables.AppController
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -38,17 +37,17 @@ class EventDetailsSheetViewModel@Inject constructor(
     var notificationsAllowed by mutableStateOf<Boolean>(false)
 
     init {
-//        viewModelScope.launch {
-//            val allowed = userAllowedNotifications()
-//            notificationsAllowed = allowed
-//            checkNotificationIsSetForEvent()
-//            checkNotificationIsSetForCourse()
-//        }
+        viewModelScope.launch {
+            val allowed = userAllowedNotifications()
+            notificationsAllowed = allowed
+        }
     }
 
     fun setEventSheetView(newEvent: Event, newColor: Color?){
         event = newEvent
         color = newColor
+        checkNotificationIsSetForEvent()
+        checkNotificationIsSetForCourse()
     }
 
     fun cancelNotificationForEvent(){
