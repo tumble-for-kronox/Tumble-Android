@@ -20,6 +20,7 @@ import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.domain.enums.BookmarksStatus
 import tumble.app.tumble.domain.enums.ViewType
+import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.realm.Day
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.domain.models.realm.Schedule
@@ -58,6 +59,7 @@ class BookmarksViewModel @Inject constructor(
 
     var selectedDate by mutableStateOf<LocalDate?>(null)
     var todayDate by mutableStateOf<LocalDate>(LocalDate.now())
+    var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
 
     init {
         setupFlows()

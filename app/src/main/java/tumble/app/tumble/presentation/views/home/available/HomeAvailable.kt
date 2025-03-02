@@ -17,7 +17,8 @@ import tumble.app.tumble.presentation.models.WeekEventCardModel
 fun HomeAvailable(
     eventsForToday: MutableState<List<WeekEventCardModel>>,
     nextClass: Event?,
-    swipedCards: MutableState<Int>
+    swipedCards: MutableState<Int>,
+    onEventSelection: (Event) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -28,7 +29,7 @@ fun HomeAvailable(
             eventsForToday = eventsForToday.value,
             swipedCards = swipedCards.value
         )
-        NextClass(nextClass = nextClass)
+        NextClass(nextClass = nextClass, onEventSelection)
         Spacer(modifier = Modifier.weight(1f))
     }
 }

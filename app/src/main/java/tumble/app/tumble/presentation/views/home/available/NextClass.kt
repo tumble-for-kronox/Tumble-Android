@@ -18,7 +18,7 @@ import tumble.app.tumble.extensions.presentation.formatDate
 import tumble.app.tumble.extensions.presentation.toColor
 
 @Composable
-fun NextClass(nextClass: Event?) {
+fun NextClass(nextClass: Event?, onEventSelection: (Event) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -51,7 +51,8 @@ fun NextClass(nextClass: Event?) {
             val color = nextClass.course?.color?.toColor() ?: Color.White
             CompactEventButtonLabel(
                 event = nextClass,
-                color = color
+                color = color,
+                onEventSelection = onEventSelection
             )
         } else {
             Text(

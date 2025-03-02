@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,9 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import tumble.app.tumble.domain.models.realm.Event
+import tumble.app.tumble.extensions.presentation.toColor
 import tumble.app.tumble.presentation.viewmodels.EventDetailsSheetViewModel
 import tumble.app.tumble.presentation.viewmodels.NotificationState
 import tumble.app.tumble.utils.isoDateFormatter
+import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
 import java.util.Date
 
 @Composable
@@ -84,6 +87,9 @@ fun EventDetailsCard(
             }
         }
     }
+    LaunchedEffect(key1 = true) {
+        viewModel.setEventSheetView(event, event.course?.color?.toColor())
+    }
 }
 
 @Composable
@@ -121,7 +127,7 @@ fun notificationCourseAction(viewModel: EventDetailsSheetViewModel){
 }
 
 private fun String.isAvailableNotificationDate(): Boolean{
-    val eventDate = isoDateFormatter.parse(this) ?: return false
+    val eventDate = isoDateFormatterNoTimeZone.parse(this) ?: return false
     val calendar = Calendar.getInstance()
     calendar.add(Calendar.HOUR, 3)
     val now = Date()

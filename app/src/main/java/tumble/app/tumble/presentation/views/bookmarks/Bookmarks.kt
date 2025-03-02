@@ -38,13 +38,13 @@ fun Bookmarks(
     val pageTitle = stringResource(R.string.bookmark)
 
     val onEventSelection = { event: Event ->
-        AppController.shared.eventSheet = EventDetailsSheetModel(event = event)
+        viewModel.eventSheet = EventDetailsSheetModel(event = event)
     }
 
     val bookmarksStatus = viewModel.status
     val viewType = viewModel.defaultViewType.collectAsState()
 
-    LaunchedEffect(key1 = AppController.shared.eventSheet) {
+    LaunchedEffect(key1 = viewModel.eventSheet) {
         setTopNavState(
             AppBarState(
                 title = pageTitle
@@ -68,7 +68,9 @@ fun Bookmarks(
         }
         Spacer(Modifier.weight(1f))
     }
-    AppController.shared.eventSheet?.let {
-        EventDetailsSheet(event = it.event, setTopNavState)
+    viewModel.eventSheet?.let {
+        EventDetailsSheet(event = it.event, setTopNavState,
+            {viewModel.eventSheet = null}
+        )
     }
 }

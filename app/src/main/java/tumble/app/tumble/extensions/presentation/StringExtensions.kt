@@ -18,20 +18,15 @@ fun String.formatDate(): String? {
 }
 
 fun String.convertToHoursAndMinutesISOString(): String? {
-    val isoDateFormatterTimeZone = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()) // This format includes the timezone
-    val isoDateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault())
-    //val date = isoDateFormatter.parse(this) ?: return null
-    val date = if (this.length > 21){
-         isoDateFormatterTimeZone.parse(this)?: return null
-    }else{
-         isoDateFormatter.parse(this)?: return null
-    }
+
+    val date = isoDateFormatterNoTimeZone.parse(this)?: return null
+
     val calendar = Calendar.getInstance().apply {
         time = date
     }
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
-    return String.format("%02d:%02d", hour, minute)
+    return String.format( Locale.getDefault(),"%02d:%02d", hour, minute)
 }
 
 fun String.toColor(): Color {

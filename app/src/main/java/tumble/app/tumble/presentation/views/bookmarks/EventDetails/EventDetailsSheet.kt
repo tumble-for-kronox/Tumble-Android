@@ -27,8 +27,8 @@ import tumble.app.tumble.presentation.views.navigation.AppBarState
 @Composable
 fun EventDetailsSheet(
     event: Event,
-    setTopNavState: (AppBarState) -> Unit
-
+    setTopNavState: (AppBarState) -> Unit,
+    onClose: () -> Unit = {}
 ) {
 
     val title = stringResource(R.string.event_details)

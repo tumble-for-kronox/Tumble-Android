@@ -23,11 +23,13 @@ import tumble.app.tumble.extensions.presentation.toColor
 import tumble.app.tumble.presentation.components.buttons.CompactEventButtonLabel
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 import tumble.app.tumble.R
+import tumble.app.tumble.domain.models.realm.Event
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun BottomSheet(
     viewModel: BookmarksViewModel = hiltViewModel(),
+    onEventSelection: (Event) -> Unit,
 ) {
     viewModel.selectedDate?.let {
         val events = viewModel.bookmarkData.calendarEventsByDate.getOrDefault(it, emptyList())
@@ -49,7 +51,8 @@ fun BottomSheet(
                 events.forEach { event ->
                     CompactEventButtonLabel(
                         event = event,
-                        color = event.course?.color?.toColor() ?: Color.Red
+                        color = event.course?.color?.toColor() ?: Color.Red,
+                        onEventSelection = onEventSelection
                     )
                 }
             }

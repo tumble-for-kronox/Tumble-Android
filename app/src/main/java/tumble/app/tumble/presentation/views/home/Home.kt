@@ -18,8 +18,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.HomeStatus
 import tumble.app.tumble.domain.enums.PageState
+import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
+import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.HomeViewModelNew
 import tumble.app.tumble.presentation.viewmodels.ParentViewModel
+import tumble.app.tumble.presentation.views.bookmarks.EventDetails.EventDetailsSheet
 import tumble.app.tumble.presentation.views.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.views.general.Info
 import tumble.app.tumble.presentation.views.home.available.HomeAvailable
@@ -47,12 +50,16 @@ fun HomeScreen(
     val showSheet = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = viewModel.eventSheet) {
         onComposing(
             AppBarState(
                 title = pageTitle
             )
         )
+    }
+
+    val onEventSelection = { event: Event ->
+        viewModel.eventSheet = EventDetailsSheetModel(event = event)
     }
 
     Column(
@@ -70,7 +77,8 @@ fun HomeScreen(
                 HomeStatus.AVAILABLE -> HomeAvailable(
                     eventsForToday = viewModel.todaysEventsCards,
                     nextClass = viewModel.nextClass,
-                    swipedCards = viewModel.swipedCards
+                    swipedCards = viewModel.swipedCards,
+                    onEventSelection = onEventSelection
                 )
                 HomeStatus.LOADING -> CustomProgressIndicator()
                 HomeStatus.NO_BOOKMARKS -> HomeNoBookmarks()
@@ -87,5 +95,8 @@ fun HomeScreen(
         ModalBottomSheet(onDismissRequest = { showSheet.value = false }) {
             NewsSheet(news = news, sheetState = sheetState, showSheet = showSheet)
         }
+    }
+    viewModel.eventSheet?.let {
+        EventDetailsSheet(event = it.event, onComposing, {viewModel.eventSheet = null})
     }
 }
