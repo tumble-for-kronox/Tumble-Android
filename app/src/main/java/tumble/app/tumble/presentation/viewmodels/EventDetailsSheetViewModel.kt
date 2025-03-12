@@ -14,11 +14,9 @@ import okhttp3.internal.toHexString
 import tumble.app.tumble.data.notifications.NotificationManager
 import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.data.repository.realm.RealmManager
-import tumble.app.tumble.domain.models.notifications.NotificationType
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.presentation.toColor
-import tumble.app.tumble.observables.AppController
-import java.util.Date
+import java.util.Calendar
 import javax.inject.Inject
 
 enum class NotificationState{
@@ -39,17 +37,17 @@ class EventDetailsSheetViewModel@Inject constructor(
     var notificationsAllowed by mutableStateOf<Boolean>(false)
 
     init {
-//        viewModelScope.launch {
-//            val allowed = userAllowedNotifications()
-//            notificationsAllowed = allowed
-//            checkNotificationIsSetForEvent()
-//            checkNotificationIsSetForCourse()
-//        }
+        viewModelScope.launch {
+            val allowed = userAllowedNotifications()
+            notificationsAllowed = allowed
+        }
     }
 
     fun setEventSheetView(newEvent: Event, newColor: Color?){
         event = newEvent
         color = newColor
+        checkNotificationIsSetForEvent()
+        checkNotificationIsSetForCourse()
     }
 
     fun cancelNotificationForEvent(){
@@ -67,14 +65,8 @@ class EventDetailsSheetViewModel@Inject constructor(
 
     fun scheduleNotificationForEvent(event: Event){
         isNotificationSetForEvent = NotificationState.LOADING
-        val notification = notificationManager.createNotificationFromEvent(event)
-        notification?.let {
-            notificationManager.scheduleNotification(
-                notification = it,
-                type = NotificationType.EVENT,
-                userOffset = notificationOffset
-            )
-        }
+        notificationManager.createNotificationFromEvent(event, notificationOffset)
+        isNotificationSetForEvent = NotificationState.SET
     }
 
     fun scheduleNotificationForCourse(){
@@ -84,7 +76,7 @@ class EventDetailsSheetViewModel@Inject constructor(
         val events = realmManager.getAllSchedules()
             .flatMap { it.days?: listOf() }
             .flatMap { it.events?: listOf() }
-            .filter { it.dateComponents?.before(Date()) == false }
+            .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
             .filter { it.course?.courseId == event.course?.courseId }
 
         viewModelScope.launch {
@@ -130,7 +122,7 @@ class EventDetailsSheetViewModel@Inject constructor(
     }
 
     private fun checkNotificationIsSetForEvent(){
-        if (notificationManager.isNotificationScheduled(eventId = event.eventId)){
+        if (notificationManager.isNotificationScheduled(event.eventId)){
             isNotificationSetForEvent = NotificationState.SET
         }else{
             isNotificationSetForEvent = NotificationState.NOT_SET

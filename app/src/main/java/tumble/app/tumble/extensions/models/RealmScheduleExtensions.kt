@@ -1,7 +1,5 @@
 package tumble.app.tumble.extensions.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import io.realm.kotlin.ext.copyFromRealm
 import io.realm.kotlin.ext.toRealmList
 import tumble.app.tumble.domain.models.realm.Day
@@ -13,8 +11,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId
+import java.util.Calendar
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun List<Schedule>.filterEventsMatchingToday(): List<Event> {
     val now = LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()
     val end = LocalDate.now().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant()
@@ -34,7 +32,6 @@ fun List<Schedule>.filterEventsMatchingToday(): List<Event> {
     return eventsForToday
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun List<Schedule>.findNextUpcomingEvent(): Event? {
     val now = LocalDateTime.now()
 
@@ -96,4 +93,12 @@ fun Schedule.isMissingEvents(): Boolean{
         }
    }
     return true
+}
+
+fun List<Schedule>.findEventsByCategory(categoryIdentifier: String): List<Event>{
+    return this.asSequence().flatMap { it.days?: listOf() }
+        .flatMap { it.events?: listOf() }
+        .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
+        .filter { it.course?.courseId == categoryIdentifier }
+        .toList()
 }

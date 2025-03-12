@@ -1,7 +1,6 @@
 package tumble.app.tumble.core
 
 import android.content.Context
-import android.util.Log
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -15,7 +14,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import tumble.app.tumble.BuildConfig
 import tumble.app.tumble.datasource.SchoolManager
-import tumble.app.tumble.data.api.HeadersInterceptor
 import tumble.app.tumble.data.api.auth.AuthApiService
 import tumble.app.tumble.data.api.auth.AuthManager
 import tumble.app.tumble.data.notifications.NotificationManager
@@ -41,8 +39,8 @@ object KronoxModule {
 object NotificationModule {
     @Provides
     @Singleton
-    fun provideNotificationManager(): NotificationManager {
-        return NotificationManager()
+    fun provideNotificationManager(@ApplicationContext context: Context, realmManager: RealmManager): NotificationManager {
+        return NotificationManager(context, realmManager)
     }
 }
 
