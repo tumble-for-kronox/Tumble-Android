@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.views.bookmarks.EventDetails
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Person2
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
@@ -23,7 +25,8 @@ import tumble.app.tumble.extensions.presentation.formatDate
 fun EventDetailsBody(event: Event){
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         DetailsBuilder(title = "Course", image = Icons.Default.Book){
             Text(

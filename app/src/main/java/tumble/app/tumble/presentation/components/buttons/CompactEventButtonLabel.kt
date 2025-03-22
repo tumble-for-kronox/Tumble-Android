@@ -78,10 +78,10 @@ fun CompactEventButtonLabel(event: Event,
             modifier = Modifier.padding(10.dp).padding(start = 5.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            // Event Course Name
+            // Event Name
             Row {
                 Text(
-                    text = event.course?.englishName ?: stringResource(R.string.unknown),
+                    text = event.title,
                     color = MaterialTheme.colors.onSurface,
                     fontSize = 17.sp,
                     fontWeight = FontWeight.Medium,
