@@ -1,6 +1,11 @@
 package tumble.app.tumble.presentation.views.home
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -96,7 +101,15 @@ fun HomeScreen(
             NewsSheet(news = news, sheetState = sheetState, showSheet = showSheet)
         }
     }
-    viewModel.eventSheet?.let {
-        EventDetailsSheet(event = it.event, onComposing, {viewModel.eventSheet = null})
+    AnimatedVisibility(
+        visible = viewModel.eventSheet != null,
+        enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+        exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
+    ) {
+        viewModel.eventSheet?.let {
+            EventDetailsSheet(event = it.event, onComposing,
+                {viewModel.eventSheet = null}
+            )
+        }
     }
 }

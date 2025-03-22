@@ -35,7 +35,7 @@ fun EventDetailsCard(
 ){
     Column(
         modifier = Modifier
-            .padding(horizontal = 15.dp)
+            .padding(bottom = 15.dp)
             .background(
                 if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else color.copy(alpha = 0.2f),
                 shape = RoundedCornerShape(15.dp)
@@ -50,37 +50,26 @@ fun EventDetailsCard(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = event.course?.englishName.orEmpty(),
-                    fontSize = 20.sp,
+                Text(text = event.title,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colors.onSurface,
-                    modifier = Modifier.padding(bottom = 7.dp)
+                    modifier = Modifier.padding(top = 5.dp, bottom = 8.dp)
                 )
-                Text(text = event.title,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colors.onSurface,
-                    modifier = Modifier.padding(bottom = 20.dp)
-                )
-                Column {
+                Row(horizontalArrangement = Arrangement.spacedBy(7.5.dp)) {
                     if(viewModel.notificationsAllowed){
-                        Row (
-                            horizontalArrangement = Arrangement.spacedBy(5.dp)
-                        ){
-                            if (event.from.isAvailableNotificationDate()){
+                        if (event.from.isAvailableNotificationDate()){
                                 NotificationPill(
                                     state = viewModel.isNotificationSetForEvent,
                                     title = notificationEventTitle(viewModel),
-                                    image = "bell.badge",
                                     onTap = { notificationEventAction(viewModel, event) }
                                 )
                             }
                             NotificationPill(
                                 state = viewModel.isNotificationSetForCourse,
                                 title = notificationCourseTitle(viewModel),
-                                image = "bell.badge",
                                 onTap = { notificationCourseAction(viewModel) }
                             )
-                        }
                     }
                     ColorPickerPill(openColorPicker = openColorPicker)
                 }
