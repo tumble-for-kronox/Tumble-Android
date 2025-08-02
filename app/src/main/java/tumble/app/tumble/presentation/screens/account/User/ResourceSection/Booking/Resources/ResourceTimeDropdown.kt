@@ -2,6 +2,7 @@ package tumble.app.tumble.presentation.screens.account.User.ResourceSection.Book
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,19 +10,31 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -34,6 +47,7 @@ import tumble.app.tumble.extensions.models.timelotHasAvailable
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
 import tumble.app.tumble.extensions.presentation.noRippleClickable
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeslotDropdown(
     resource: NetworkResponse.KronoxResourceElement,
@@ -41,107 +55,120 @@ fun TimeslotDropdown(
     selectedIndex: MutableState<Int>,
     onIndexChange: (Int) -> Unit
 ) {
-    val isSelecting = remember { mutableStateOf(false) }
-    val selectionTitle = remember { mutableStateOf("") }
-    val rotation = animateFloatAsState(
-        targetValue = if (isSelecting.value) 270f else 90f
-    )
+    var isExpanded by remember { mutableStateOf(false) }
+    val selectedTimeslot = timeslots.getOrNull(selectedIndex.value)
+    val selectedText = remember(selectedTimeslot) {
+        selectedTimeslot?.let { timeslot ->
+            val start = timeslot.from?.convertToHoursAndMinutesISOString()
+            val end = timeslot.to?.convertToHoursAndMinutesISOString()
+            if (start != null && end != null) "$start - $end" else "Select time"
+        } ?: "Select time"
+    }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
-            .noRippleClickable {
-                    isSelecting.value = !isSelecting.value
-            }
-            .animateContentSize()
+    ExposedDropdownMenuBox(
+        expanded = isExpanded,
+        onExpandedChange = { isExpanded = !isExpanded }
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(15.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Surface(
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(0.75f),
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colorScheme.surface,
+            border = BorderStroke(
+                width = 1.dp,
+                color = if (isExpanded) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)
+                }
+            ),
+            shadowElevation = if (isExpanded) 4.dp else 2.dp
         ) {
-            Text(
-                text = selectionTitle.value,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Icon(
-                imageVector = Icons.Default.ArrowForwardIos,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.rotate(rotation.value)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AccessTime,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = selectedText,
+                        color = if (selectedTimeslot != null) {
+                            MaterialTheme.colorScheme.onSurface
+                        } else {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        },
+                        fontSize = 16.sp,
+                        fontWeight = if (selectedTimeslot != null) {
+                            FontWeight.Medium
+                        } else {
+                            FontWeight.Normal
+                        }
+                    )
+                }
+                Icon(
+                    imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
         }
-        if (isSelecting.value) {
-            Divider(color = Color.White)
+
+        ExposedDropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             timeslots.forEachIndexed { index, timeslot ->
                 timeslot.id?.let { timeslotId ->
                     if (resource.availabilities.timelotHasAvailable(timeslotId)) {
                         val start = timeslot.from?.convertToHoursAndMinutesISOString()
                         val end = timeslot.to?.convertToHoursAndMinutesISOString()
                         if (start != null && end != null) {
-                            DropdownMenuItemView(
-                                isSelecting = isSelecting,
-                                selectionTitle = selectionTitle,
-                                selectedIndex = selectedIndex,
-                                item = DropdownItem(
-                                    id = index,
-                                    title = "$start - $end",
-                                    onSelect = {
-                                        onIndexChange(index)
+                            DropdownMenuItem(
+                                onClick = {
+                                    selectedIndex.value = index
+                                    onIndexChange(index)
+                                    isExpanded = false
+                                },
+                                text = {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        Text(
+                                            text = "$start - $end",
+                                            fontSize = 16.sp,
+                                            color = MaterialTheme.colorScheme.onSurface
+                                        )
+                                        if (selectedIndex.value == index) {
+                                            Icon(
+                                                imageVector = Icons.Default.Check,
+                                                contentDescription = "Selected",
+                                                tint = MaterialTheme.colorScheme.primary,
+                                                modifier = Modifier.size(20.dp)
+                                            )
+                                        }
                                     }
-                                )
+                                }
                             )
                         }
                     }
                 }
             }
-        }
-    }
-    LaunchedEffect(timeslots, selectedIndex.value) {
-        timeslots.getOrNull(selectedIndex.value)?.let { timeslot ->
-            val start = timeslot.from?.convertToHoursAndMinutesISOString()
-            val end = timeslot.to?.convertToHoursAndMinutesISOString()
-            if (start != null && end != null) {
-                selectionTitle.value = "$start - $end"
-            }
-        }
-    }
-}
-
-@Composable
-fun DropdownMenuItemView(
-    isSelecting: MutableState<Boolean>,
-    selectionTitle: MutableState<String>,
-    selectedIndex: MutableState<Int>,
-    item: DropdownItem
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .noRippleClickable {
-                isSelecting.value = false
-                selectionTitle.value = item.title
-                item.onSelect()
-            }
-            .padding(15.dp)
-    ) {
-        Text(
-            text = item.title,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(Modifier.weight(1f))
-        if (selectedIndex.value == item.id) {
-            Icon(
-                imageVector = Icons.Default.CheckCircle,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface
-            )
         }
     }
 }

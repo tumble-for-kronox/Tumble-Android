@@ -33,7 +33,7 @@ fun BookmarkButton(
                 Icon(
                     imageVector = Icons.Filled.BookmarkRemove,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
                 )
@@ -42,7 +42,7 @@ fun BookmarkButton(
                 Icon(
                     imageVector = Icons.Filled.BookmarkAdd,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .size(24.dp)
                 )

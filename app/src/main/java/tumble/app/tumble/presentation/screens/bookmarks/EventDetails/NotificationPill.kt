@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.screens.bookmarks.EventDetails
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -12,9 +13,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,14 +34,14 @@ fun NotificationPill(
     title: String,
     onTap: () -> Unit
 ){
-    Button(
+    FilledTonalButton(
         onClick = onTap,
+        modifier = Modifier.semantics {
+            contentDescription = "Open color picker to change event color"
+        },
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        ),
-        shape = RoundedCornerShape(15.dp),
-        elevation = null
+            containerColor = MaterialTheme.colorScheme.primary
+        )
     ) {
         Row (verticalAlignment = Alignment.CenterVertically){
             when(state){
@@ -44,17 +49,12 @@ fun NotificationPill(
                     Icon(
                         imageVector = Icons.Default.Notifications,
                         contentDescription = null,
-                        modifier = Modifier.size(14.dp),
-                        tint = MaterialTheme.colorScheme.onSurface
+                        modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(7.5.dp))
                     Text(
                         text = title,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        letterSpacing = 0.sp
+                        style = MaterialTheme.typography.labelLarge
                     )
                 }
                 NotificationState.LOADING -> {

@@ -19,7 +19,8 @@ fun HomeNotAvailable() {
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 15.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
         Column(
             modifier = Modifier.padding(vertical = 20.dp),
@@ -29,6 +30,7 @@ fun HomeNotAvailable() {
             Text(
                 text = "Everything looks good for this week", // Replace with string resource for localization
                 fontSize = 30.sp,
+                lineHeight = 35.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground,
                 modifier = Modifier.padding(end = 10.dp)
@@ -42,12 +44,14 @@ fun HomeNotAvailable() {
                 modifier = Modifier.padding(end = 25.dp)
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
+
+        Spacer(modifier = Modifier.height(40.dp))
+
         Image(
             painter = painterResource(id = R.drawable.woman_lounging),
             contentDescription = "woman_lounging",
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(0.75f)
                 .aspectRatio(1f)
         )
     }

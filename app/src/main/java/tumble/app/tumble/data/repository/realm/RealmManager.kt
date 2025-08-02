@@ -50,17 +50,13 @@ class RealmManager {
 
     suspend fun updateCourseColors(courseId: String, color: String) {
         realm.write {
-            val schedules: RealmResults<Schedule> = realm.query<Schedule>().find()
-            schedules.mapNotNull { it.days }
-                .flatMap { it.flatMap { day -> day.events?.toList().orEmpty() } }
-                .filter { it.course?.courseId == courseId }
-                .forEach { event ->
-                    event.course?.let { course ->
-                        if (course.color != color) {
-                            course.color = color
-                        }
-                    }
+            val coursesToUpdate = this.query<Course>("courseId == $0", courseId).find()
+
+            coursesToUpdate.forEach { course ->
+                if (course.color != color) {
+                    course.color = color
                 }
+            }
         }
     }
 

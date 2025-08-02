@@ -43,7 +43,7 @@ data class BookmarkData(
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
     private val realmManager: RealmManager,
-    private val preferenceModule: DataStoreManager,
+    private val dataStoreManager: DataStoreManager,
 ): ViewModel(){
 
     private val _cancellables = mutableListOf<Job>()
@@ -68,7 +68,7 @@ class BookmarksViewModel @Inject constructor(
             setupRealmListener()
         }
         val job2 = viewModelScope.launch {
-            preferenceModule.viewType.collect { viewType ->
+            dataStoreManager.viewType.collect { viewType ->
                 _defaultViewType.value = viewType
             }
         }
@@ -112,6 +112,9 @@ class BookmarksViewModel @Inject constructor(
 
     fun setViewType(viewType: ViewType){
         _defaultViewType.value = viewType
+        viewModelScope.launch {
+            dataStoreManager.setBookmarksViewType(viewType)
+        }
     }
 
     // Helper Functions
@@ -179,6 +182,15 @@ class BookmarksViewModel @Inject constructor(
             return MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
         }
         return MaterialTheme.colorScheme.background
+    }
+
+    fun changeCourseColor(color: String, courseId: String) {
+        viewModelScope.launch {
+            realmManager.updateCourseColors(
+                courseId,
+                color
+            )
+        }
     }
 
     fun updateSelectedDate(clickedDate: LocalDate){

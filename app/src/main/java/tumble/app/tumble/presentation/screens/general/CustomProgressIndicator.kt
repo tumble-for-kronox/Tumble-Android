@@ -2,10 +2,13 @@ package tumble.app.tumble.presentation.screens.general
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -16,6 +19,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @ExperimentalCoroutinesApi
 @Composable
 fun CustomProgressIndicator(
+    modifier: Modifier? = Modifier.fillMaxSize(),
     color: Color = MaterialTheme.colorScheme.primary,
     size: Int = 20,
     speed: Int = 500
@@ -30,15 +34,20 @@ fun CustomProgressIndicator(
         )
     )
 
-    Canvas(modifier = Modifier.size(size.dp)) {
-        rotate(rotation) {
-            drawArc(
-                color = color,
-                startAngle = 36f,
-                sweepAngle = 288f,
-                useCenter = false,
-                style = Stroke(width = 8f)
-            )
+    Box(
+        modifier = modifier!!,
+        contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.size(size.dp)) {
+            rotate(rotation) {
+                drawArc(
+                    color = color,
+                    startAngle = 36f,
+                    sweepAngle = 288f,
+                    useCenter = false,
+                    style = Stroke(width = 8f)
+                )
+            }
         }
     }
 }

@@ -30,18 +30,19 @@ fun String.convertToHoursAndMinutesISOString(): String? {
 }
 
 fun String.toColor(): Color {
-    if (!this.matches(Regex("#[a-fA-F0-9]{6}"))) {
-        throw IllegalArgumentException("Invalid color format. Must be a 6-digit HEX color.")
+    val cleanHex = if (this.startsWith("#")) this else "#$this"
+
+    if (!cleanHex.matches(Regex("#[a-fA-F0-9]{6}"))) {
+        throw IllegalArgumentException("Invalid color format. Must be a 6-digit HEX color. Received: '$this'")
     }
 
-    val r = substring(1..2).toInt(16)
-    val g = substring(3..4).toInt(16)
-    val b = substring(5..6).toInt(16)
+    val r = cleanHex.substring(1..2).toInt(16)
+    val g = cleanHex.substring(3..4).toInt(16)
+    val b = cleanHex.substring(5..6).toInt(16)
 
     return Color(r, g, b)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun String.toLocalDateTime(): LocalDateTime? {
     return try {
         LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
@@ -50,7 +51,6 @@ fun String.toLocalDateTime(): LocalDateTime? {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun String.isValidRegistrationDate(): Boolean {
     return try {
         // Parse the date from the string

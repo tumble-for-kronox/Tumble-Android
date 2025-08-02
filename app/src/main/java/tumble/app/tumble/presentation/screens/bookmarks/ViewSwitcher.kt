@@ -34,7 +34,6 @@ import tumble.app.tumble.extensions.presentation.noRippleClickable
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ViewSwitcher(
     viewmodel: BookmarksViewModel = hiltViewModel(),
@@ -91,7 +90,7 @@ fun ViewSwitcher(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.Center),
-                        color = buttonColor
+                        color = buttonColor,
                     )
                 }
             }

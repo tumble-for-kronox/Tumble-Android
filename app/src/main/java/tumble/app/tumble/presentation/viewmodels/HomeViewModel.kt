@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,6 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val kronoxRepository: KronoxRepository,
     private val realmManager: RealmManager,
-    private val networkController: NetworkController
 ) : ViewModel() {
 
     var newsSectionStatus by mutableStateOf(PageState.LOADING)
@@ -46,7 +46,6 @@ class HomeViewModel @Inject constructor(
     var todaysEventsCards = mutableStateOf(listOf<WeekEventCardModel>())
     var nextClass: Event? by mutableStateOf(null)
 
-    private val appController = AppController.shared
     private val _cancellables = mutableListOf<Job>()
     private var initializedSession = false
     var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
@@ -121,6 +120,15 @@ class HomeViewModel @Inject constructor(
             todaysEventsCards.let {
 
             }
+        }
+    }
+
+    fun changeCourseColor(color: String, courseId: String) {
+        viewModelScope.launch {
+            realmManager.updateCourseColors(
+                courseId,
+                color
+            )
         }
     }
 

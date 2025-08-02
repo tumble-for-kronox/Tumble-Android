@@ -5,9 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,94 +29,115 @@ import java.util.Date
 
 @Composable
 fun EventDetailsCard(
-    viewModel: EventDetailsSheetViewModel = hiltViewModel(),
-    openColorPicker: () -> Unit,
     event: Event,
-    color: Color
-){
-    Column(
-        modifier = Modifier
-            .padding(bottom = 15.dp)
-            .background(
-                if (event.isSpecial) Color.Red.copy(alpha = 0.2f) else color.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(15.dp)
-            )
-            .padding(10.dp)
+    color: Color,
+    openColorPicker: () -> Unit,
+    viewModel: EventDetailsSheetViewModel = hiltViewModel(),
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 16.dp),
+        shape = RoundedCornerShape(16.dp),
+        color = if (event.isSpecial) {
+            MaterialTheme.colorScheme.errorContainer
+        } else {
+            color.copy(alpha = 0.12f)
+        },
+        tonalElevation = 1.dp
     ) {
-        Row(
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ){
-            Column(
-                verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(text = event.title,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(top = 5.dp, bottom = 8.dp)
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = event.title,
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
+
+            if (viewModel.notificationsAllowed &&
+                (event.from.isAvailableNotificationDate() || viewModel.isNotificationSetForCourse != NotificationState.NOT_SET)) {
+                ActionPillsRow(
+                    event = event,
+                    viewModel = viewModel,
+                    openColorPicker = openColorPicker
                 )
-                Row(horizontalArrangement = Arrangement.spacedBy(7.5.dp)) {
-                    if(viewModel.notificationsAllowed){
-                        if (event.from.isAvailableNotificationDate()){
-                                NotificationPill(
-                                    state = viewModel.isNotificationSetForEvent,
-                                    title = notificationEventTitle(viewModel),
-                                    onTap = { notificationEventAction(viewModel, event) }
-                                )
-                            }
-                            NotificationPill(
-                                state = viewModel.isNotificationSetForCourse,
-                                title = notificationCourseTitle(viewModel),
-                                onTap = { notificationCourseAction(viewModel) }
-                            )
-                    }
-                    ColorPickerPill(openColorPicker = openColorPicker)
-                }
+            } else {
+                ActionPillsRow(
+                    event = event,
+                    viewModel = viewModel,
+                    openColorPicker = openColorPicker,
+                    showNotifications = false
+                )
             }
         }
     }
-    LaunchedEffect(key1 = true) {
+
+    LaunchedEffect(event) {
         viewModel.setEventSheetView(event, event.course?.color?.toColor())
     }
 }
 
 @Composable
-fun notificationEventTitle(viewModel: EventDetailsSheetViewModel): String{
-    return when (viewModel.isNotificationSetForEvent){
-        NotificationState.SET -> "Remove"
-        NotificationState.NOT_SET -> "Event"
-        else -> ""
+private fun ActionPillsRow(
+    event: Event,
+    viewModel: EventDetailsSheetViewModel,
+    openColorPicker: () -> Unit,
+    showNotifications: Boolean = true
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        if (event.from.isAvailableNotificationDate()) {
+            NotificationPill(
+                state = viewModel.isNotificationSetForEvent,
+                title = getNotificationEventTitle(viewModel.isNotificationSetForEvent),
+                onTap = { handleNotificationEventAction(viewModel, event) }
+            )
+        }
+        NotificationPill(
+            state = viewModel.isNotificationSetForCourse,
+            title = getNotificationCourseTitle(viewModel.isNotificationSetForCourse),
+            onTap = { handleNotificationCourseAction(viewModel) }
+        )
+        ColorPickerPill(onClick = openColorPicker)
     }
 }
 
-@Composable
-fun notificationCourseTitle(viewModel: EventDetailsSheetViewModel): String{
-    return when (viewModel.isNotificationSetForCourse){
-        NotificationState.SET -> "Remove"
-        NotificationState.NOT_SET -> "Course"
-        else -> ""
-    }
+// Helper functions
+private fun getNotificationEventTitle(state: NotificationState): String = when (state) {
+    NotificationState.SET -> "Remove"
+    NotificationState.NOT_SET -> "Event"
+    else -> ""
 }
 
-fun notificationEventAction(viewModel: EventDetailsSheetViewModel, event: Event){
-    when(viewModel.isNotificationSetForEvent) {
+private fun getNotificationCourseTitle(state: NotificationState): String = when (state) {
+    NotificationState.SET -> "Remove"
+    NotificationState.NOT_SET -> "Course"
+    else -> ""
+}
+
+private fun handleNotificationEventAction(viewModel: EventDetailsSheetViewModel, event: Event) {
+    when (viewModel.isNotificationSetForEvent) {
         NotificationState.SET -> viewModel.cancelNotificationForEvent()
         NotificationState.NOT_SET -> viewModel.scheduleNotificationForEvent(event = event)
         else -> {}
     }
 }
 
-fun notificationCourseAction(viewModel: EventDetailsSheetViewModel){
-    when(viewModel.isNotificationSetForCourse) {
+private fun handleNotificationCourseAction(viewModel: EventDetailsSheetViewModel) {
+    when (viewModel.isNotificationSetForCourse) {
         NotificationState.SET -> viewModel.cancelNotificationForCourse()
         NotificationState.NOT_SET -> viewModel.scheduleNotificationForCourse()
         else -> {}
     }
 }
 
-private fun String.isAvailableNotificationDate(): Boolean{
+private fun String.isAvailableNotificationDate(): Boolean {
     val eventDate = isoDateFormatterNoTimeZone.parse(this) ?: return false
     val calendar = Calendar.getInstance()
     calendar.add(Calendar.HOUR, 3)
@@ -122,4 +145,3 @@ private fun String.isAvailableNotificationDate(): Boolean{
     val threeHoursFromNow = calendar.time
     return eventDate > now && eventDate > threeHoursFromNow
 }
-

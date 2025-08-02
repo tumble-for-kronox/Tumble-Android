@@ -76,7 +76,7 @@ object SecureStorageModel{
 
 @Module
 @InstallIn(SingletonComponent::class)
-object PreferenceModule {
+object dataStoreManager {
     @Provides
     @Singleton
     fun providePreferenceService(@ApplicationContext context: Context): DataStoreManager {

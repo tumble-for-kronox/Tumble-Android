@@ -73,6 +73,9 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     implementation "androidx.compose.material3:material3:1.1.2"
 
+    // Color picker
+    implementation 'io.mhssn:colorpicker:1.0.0'
+
     // Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.48"
     kapt "com.google.dagger:hilt-compiler:2.45"

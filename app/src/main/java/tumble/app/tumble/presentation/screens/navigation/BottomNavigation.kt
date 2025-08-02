@@ -2,6 +2,7 @@ package tumble.app.tumble.presentation.screens.navigation
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
@@ -20,26 +21,7 @@ enum class BottomNavItem(val route: String, val icon: ImageVector, val title: St
     HOME(Routes.home, Icons.Rounded.Home, "Home", R.string.home),
     BOOKMARKS(Routes.bookmarks, Icons.Rounded.Bookmark, "Bookmarks", R.string.bookmark),
     SEARCH(Routes.search, Icons.Rounded.Search, "Search", R.string.search),
-    ACCOUNT(Routes.account, Icons.Rounded.Person, "Account", R.string.account),
-}
-
-@Composable
-fun BottomNavigation(
-    currentNavGraph: MutableState<BottomNavItem>,
-    navigateToRootOrSwitchGraph: (BottomNavItem) -> Unit
-) {
-    NavigationBar(
-        containerColor = MaterialTheme.colorScheme.background,
-        contentColor = MaterialTheme.colorScheme.primary
-    ) {
-        BottomNavItem.values().forEach { item ->
-            AddItem(
-                navItem = item,
-                isSelected = currentNavGraph.value == item,
-                onSelected = navigateToRootOrSwitchGraph
-            )
-        }
-    }
+    ACCOUNT(Routes.account, Icons.Rounded.AccountCircle, "Account", R.string.account),
 }
 
 @Composable

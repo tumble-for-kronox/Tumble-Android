@@ -1,7 +1,5 @@
 package tumble.app.tumble.presentation.screens.home
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -15,9 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.rememberNavController
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.HomeStatus
@@ -25,7 +21,6 @@ import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.HomeViewModel
-import tumble.app.tumble.presentation.viewmodels.ParentViewModel
 import tumble.app.tumble.presentation.screens.bookmarks.EventDetails.EventDetailsSheet
 import tumble.app.tumble.presentation.screens.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.screens.general.Info
@@ -34,7 +29,6 @@ import tumble.app.tumble.presentation.screens.home.news.News
 import tumble.app.tumble.presentation.screens.home.news.NewsSheet
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -111,8 +105,14 @@ fun HomeScreen(
         exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
     ) {
         viewModel.eventSheet?.let {
-            EventDetailsSheet(event = it.event, onComposing,
-                {viewModel.eventSheet = null}
+            EventDetailsSheet(
+                event = it.event, onComposing,
+                onClose = {
+                    viewModel.eventSheet = null
+                },
+                onColorChanged = { hexColor, courseId ->
+                    viewModel.changeCourseColor(hexColor, courseId)
+                }
             )
         }
     }

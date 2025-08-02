@@ -29,12 +29,10 @@ import tumble.app.tumble.presentation.screens.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.screens.general.Info
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun Bookmarks(
     viewModel: BookmarksViewModel = hiltViewModel(),
-    parentViewModel: ParentViewModel = hiltViewModel(),
-    navController: NavController,
     setTopNavState: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.bookmark)
@@ -77,7 +75,12 @@ fun Bookmarks(
     ) {
         viewModel.eventSheet?.let {
             EventDetailsSheet(event = it.event, setTopNavState,
-                {viewModel.eventSheet = null}
+                onClose = {
+                    viewModel.eventSheet = null
+                },
+                onColorChanged = { hexColor, courseId ->
+                    viewModel.changeCourseColor(hexColor, courseId)
+                }
             )
         }
     }

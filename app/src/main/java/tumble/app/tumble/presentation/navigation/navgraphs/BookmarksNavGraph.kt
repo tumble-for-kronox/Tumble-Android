@@ -28,7 +28,7 @@ fun BookmarksNavGraph(
 
 private fun NavGraphBuilder.bookmarks(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.bookmarks) {
-        Bookmarks(navController = navController, setTopNavState = setTopNavState)
+        Bookmarks(setTopNavState = setTopNavState)
     }
 }
 
@@ -50,8 +50,16 @@ private fun NavGraphBuilder.bookmarksDetails(navController: NavHostController, s
                     animationSpec = tween(300)
                 )
         }
-    ) { backStackEntry ->
-        val id = backStackEntry.arguments?.getString("id")
-        EventDetailsSheet(event = AppController.shared.eventSheet!!.event, setTopNavState)
+    ) { _ ->
+        AppController.shared.eventSheet?.let {
+            EventDetailsSheet(
+                event = it.event,
+                setTopNavState = setTopNavState,
+                onColorChanged = { hexColor, courseId ->
+
+                }
+            )
+        }
+
     }
 }

@@ -3,6 +3,7 @@ package tumble.app.tumble.presentation.screens.bookmarks.Week
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -62,7 +63,11 @@ fun WeekPage(
             Text(String.format("w. %s", weekOfYear), fontSize = 22.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
         }
         if (weekDays.isEmpty()){
-            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth().padding(top = 42.dp)) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth().padding(top = 42.dp)
+            ) {
                 Text(
                     text = stringResource(id = R.string.no_events_for_week),
                     color = MaterialTheme.colorScheme.onBackground,
@@ -73,7 +78,7 @@ fun WeekPage(
                     painter = painterResource(id = R.drawable.girl_relaxing),
                     contentDescription = "woman_lounging",
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(0.75f)
                         .aspectRatio(1f)
                 )
             }

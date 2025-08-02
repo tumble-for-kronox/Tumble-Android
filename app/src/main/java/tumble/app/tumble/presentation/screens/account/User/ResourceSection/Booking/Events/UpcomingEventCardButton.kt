@@ -16,10 +16,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -27,40 +31,58 @@ import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.network.NetworkResponse
 import tumble.app.tumble.extensions.presentation.convertToHoursAndMinutesISOString
 import tumble.app.tumble.extensions.presentation.formatDate
-import tumble.app.tumble.presentation.screens.account.User.ResourceSection.InformationView
+import tumble.app.tumble.presentation.screens.account.User.ResourceSection.DetailItem
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun UpcomingEventCardButton(
     event: NetworkResponse.UpcomingKronoxUserEvent
 ) {
-    Box(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
+            .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier.fillMaxWidth().padding(15.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            // Title
             Text(
                 text = event.title,
-                fontSize = 17.sp,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface,
-                overflow = TextOverflow.Ellipsis
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                lineHeight = 22.sp
             )
+
+            // Date
             val eventDate = event.eventStart.formatDate()
-            val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
             val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
+            val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
             val eventDateText = if (eventDate != null && eventStart != null && eventEnd != null) {
                 "$eventDate, ${stringResource(id = R.string.from)} $eventStart ${stringResource(id = R.string.to)} $eventEnd"
             } else {
                 stringResource(id = R.string.no_date)
             }
-            InformationView(Icons.Default.CalendarMonth, eventDateText)
-            InformationView(Icons.Default.Edit, "${stringResource(id = R.string.available_at)}: ${event.firstSignupDate.formatDate() ?: stringResource(id = R.string.no_date)}")
+            DetailItem(icon = Icons.Default.CalendarMonth, text = eventDateText)
+
+            // First Signup Date
+            DetailItem(
+                icon = Icons.Default.Edit,
+                text = "${stringResource(id = R.string.available_at)}: ${
+                    event.firstSignupDate.formatDate()
+                        ?: stringResource(id = R.string.no_date)
+                }"
+            )
         }
-        Spacer(modifier = Modifier.width(10.dp))
     }
 }

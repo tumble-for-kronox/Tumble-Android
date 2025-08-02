@@ -1,5 +1,6 @@
 package tumble.app.tumble.presentation.components.buttons
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,14 +11,13 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.models.realm.Event
@@ -33,12 +33,8 @@ fun CompactEventButtonLabel(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(
-                elevation = 3.dp,
-                shape = RoundedCornerShape(12.dp),
-                clip = false
-            )
-            .clip(RoundedCornerShape(12.dp))
+            .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
             .clickable { onEventSelection(event) },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

@@ -1,6 +1,7 @@
 package tumble.app.tumble.presentation.screens.account.User.ResourceSection
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,17 +18,20 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Place
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import tumble.app.tumble.R
-import tumble.app.tumble.extensions.presentation.noRippleClickable
 
 @Composable
 fun ResourceCard(
@@ -38,81 +42,84 @@ fun ResourceCard(
     title: String? = null,
     location: String? = null,
     onClick: () -> Unit
-){
-    Box(
+) {
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .noRippleClickable { onClick() }
-            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(16.dp))
+            .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+            .clickable { onClick() },
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-            horizontalAlignment = Alignment.Start,
-            modifier = Modifier.fillMaxWidth().padding(15.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            TitleView(title = title)
-            if(!type.isNullOrEmpty()){
-                InformationView(icon = Icons.Default.Info, text = type)
+            Text(
+                text = title ?: stringResource(R.string.no_title),
+                color = MaterialTheme.colorScheme.onSurface,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                lineHeight = 22.sp
+            )
+
+            if (!type.isNullOrEmpty()) {
+                DetailItem(
+                    icon = Icons.Default.Info,
+                    text = type
+                )
             }
-            if(!location.isNullOrEmpty()){
-                InformationView(icon = Icons.Default.Place, text = location)
+
+            if (!location.isNullOrEmpty()) {
+                DetailItem(
+                    icon = Icons.Default.Place,
+                    text = location
+                )
             }
-            DataView(date = date, start = eventStart, end = eventEnd)
+
+            DetailItem(
+                icon = Icons.Default.CalendarToday,
+                text = "$date, from $eventStart to $eventEnd"
+            )
         }
     }
 }
 
 @Composable
-fun TitleView(title: String?){
-    Text(
-        text = title?: stringResource(R.string.no_title),
-        fontSize = 17.sp,
-        color = MaterialTheme.colorScheme.onSurface,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
-    )
-}
-
-@Composable
-fun InformationView(icon: ImageVector, text: String){
-    Row (
+fun DetailItem(
+    icon: ImageVector,
+    text: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(17.dp),
-            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            modifier = Modifier.size(14.dp)
         )
-        Spacer(modifier = Modifier.width(9.dp))
+
+        Spacer(modifier = Modifier.width(6.dp))
+
         Text(
             text = text,
-            fontSize = 15.sp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Normal,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            lineHeight = 20.sp
         )
     }
 }
 
-@Composable
-fun DataView(
-    date: String,
-    start: String,
-    end: String
-){
-    Row (
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Icon(
-            imageVector = Icons.Default.CalendarToday,
-            contentDescription = null,
-            modifier = Modifier.size(17.dp),
-            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-        )
-        Spacer(modifier = Modifier.width(9.dp))
-        Text(
-            text = "$date, from $start to $end",
-            fontSize = 15.sp,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-        )
-    }
-}
