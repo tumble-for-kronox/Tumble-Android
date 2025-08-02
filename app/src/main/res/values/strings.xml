@@ -3,7 +3,7 @@
     <string name="recent_news">Recent news</string>
     <string name="search_news">Search news</string>
     <string name="other_news">Other news</string>
-    <string name="news_button">News from us %1$d</string>
+    <string name="news_button">News from us (%1$d)</string>
     <string name="no_other_news">No other news</string>
     <string name="next_class">Next class</string>
     <string name="unknown">Unknown</string>

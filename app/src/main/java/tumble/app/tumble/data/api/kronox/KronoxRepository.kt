@@ -87,51 +87,6 @@ class KronoxRepository @Inject constructor(private val retrofit: Retrofit): Kron
         return kronoxApiService.registerForAllEvents(endpoint.url(), refreshToken).callToApiResponse()
     }
 
-
-//    override suspend fun <T: NetworkResponse> get(
-//        endpoint: Endpoint,
-//        refreshToken: String?,
-//        sessionDetails: String?
-//    ): ApiResponse<T> {
-//        val url = endpoint.url()
-//        return kronoxApiService.get<T>(url, refreshToken, sessionDetails).callToApiResponse()
-//    }
-
-//    suspend fun <T :NetworkResponse> put(
-//        url: String,
-//        token: String?,
-//        body: RequestBody
-//    ): Response<NetworkResponse> {
-//        val request = createPutRequest(url, body, token)
-//        val apiService = retrofit.create(ApiServiceKronox::class.java)
-//        return apiService.put(request.url.toString(), token, body)
-//    }
-
-    private fun createGetRequest(
-        url: String,
-        refreshToken: String?
-    ): Request {
-        return createRequestWithToken(
-            refreshToken,
-            Request.Builder()
-            .url(url)
-            .get()
-        )
-    }
-
-    private fun createPutRequest(
-        url: String,
-        body: RequestBody,
-        refreshToken: String?
-    ): Request {
-        return createRequestWithToken(
-            refreshToken,
-            Request.Builder()
-                .url(url)
-                .put(body)
-        )
-    }
-
     private fun createRequestWithToken(refreshToken: String?, requestBuilder: Request.Builder): Request {
         refreshToken?.let { token ->
             requestBuilder.header("X-auth-token", token)

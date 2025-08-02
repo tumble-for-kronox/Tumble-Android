@@ -95,6 +95,7 @@ class RealmManager {
         realm.write {
             this.copyToRealm(Schedule().apply {
                 scheduleId = schedule.scheduleId
+                title = schedule.title
                 cachedAt = schedule.cachedAt
                 days = schedule.days
                 toggled = schedule.toggled

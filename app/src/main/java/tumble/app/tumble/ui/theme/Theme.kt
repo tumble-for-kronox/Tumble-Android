@@ -1,57 +1,51 @@
 package tumble.app.tumble.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.datastore.preferences.core.Preferences
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.domain.enums.Types.AppearanceType
 
-private val DarkColorPalette = darkColors(
+private val DarkColorScheme = darkColorScheme(
     primary = Primary,
     secondary = SecondaryDark,
     background = BackgroundDark,
     onBackground = OnBackgroundDark,
     onPrimary = OnPrimary,
     surface = SurfaceDark,
-    onSurface = OnSurfaceDark,
-    primaryVariant = Primary
+    onSurface = OnSurfaceDark
 )
 
-private val LightColorPalette = lightColors(
+private val LightColorScheme = lightColorScheme(
     primary = Primary,
     secondary = SecondaryLight,
     background = BackgroundLight,
     onBackground = OnBackgroundLight,
     onPrimary = OnPrimary,
     surface = SurfaceLight,
-    onSurface = OnSurfaceLight,
-    primaryVariant = Primary
+    onSurface = OnSurfaceLight
 )
 
 @Composable
-fun TumbleTheme(darkTheme: Boolean = isSystemInDarkTheme(),userPreferences: AppearanceType , content: @Composable () -> Unit) {
-
-    val colors = when(userPreferences){
-        AppearanceType.DARK -> {DarkColorPalette}
-        AppearanceType.LIGHT -> {LightColorPalette}
-        AppearanceType.AUTOMATIC -> {
-            if (darkTheme) {
-                DarkColorPalette
-            } else {
-                LightColorPalette
-            }
-        }
+fun TumbleTheme(
+    userPreferences: AppearanceType,
+    content: @Composable () -> Unit
+) {
+    val darkTheme = when (userPreferences) {
+        AppearanceType.DARK -> true
+        AppearanceType.LIGHT -> false
+        AppearanceType.AUTOMATIC -> isSystemInDarkTheme()
     }
+
+    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+
     val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(color = Primary)
+    systemUiController.setStatusBarColor(color = colorScheme.primary)
 
     MaterialTheme(
-        colors = colors,
-        typography = Typography,
+        colorScheme = colorScheme,
         shapes = Shapes,
         content = content
     )

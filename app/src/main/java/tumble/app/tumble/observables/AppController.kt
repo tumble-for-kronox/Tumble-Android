@@ -1,5 +1,6 @@
 package tumble.app.tumble.observables
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -9,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.presentation.ResourceSelectionModel
 import tumble.app.tumble.domain.models.presentation.SearchPreviewModel
-import tumble.app.tumble.presentation.views.navigation.BottomNavItem
 import javax.inject.Inject
 
 /**
@@ -17,6 +17,8 @@ import javax.inject.Inject
  * pressing external notifications in order to navigate
  * to certain views with attributes. These values are global
  * and meant to be controllable from anywhere in the app.
+ *
+ * Might not be best practice.. but hey, it works.
  */
 class AppController @Inject constructor() : ViewModel() {
     companion object {
@@ -26,7 +28,11 @@ class AppController @Inject constructor() : ViewModel() {
     var searchPreview by mutableStateOf<SearchPreviewModel?>(null)
     var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
     var resourceModel by mutableStateOf<ResourceSelectionModel?>(null)
-    var selectedAppTab by mutableStateOf(BottomNavItem.HOME)
-    private val _isUpdatingBookmarks = MutableStateFlow(false)
-    var isUpdatingBookmarks = _isUpdatingBookmarks.asStateFlow()
+    private var _isUpdatingBookmarks = MutableStateFlow(false)
+    val isUpdatingBookmarks = _isUpdatingBookmarks.asStateFlow()
+
+    fun setIsUpatingBookmarks(value: Boolean) {
+        Log.d("AppController", "Setting 'isUpdatingBookmarks' to $value")
+        this._isUpdatingBookmarks.value = value
+    }
 }

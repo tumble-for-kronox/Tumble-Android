@@ -74,9 +74,6 @@ class SearchPreviewViewModel @Inject constructor(
             is ApiResponse.Error -> {
                 throw Exception()
             }
-            is ApiResponse.Loading -> {
-                throw Exception()
-            }
             else -> {
                 throw Exception()
             }
@@ -115,12 +112,13 @@ class SearchPreviewViewModel @Inject constructor(
 
     fun bookmark(
         scheduleId: String,
-        schoolId: String
+        schoolId: String,
+        scheduleTitle: String
     ){
         buttonState = ButtonState.LOADING
         viewModelScope.launch {
             if (!isSaved) {
-                schedule?.toRealmSchedule(scheduleRequiresAuth(schoolId), scheduleId, courseColorsForPreview)
+                schedule?.toRealmSchedule(scheduleRequiresAuth(schoolId), schoolId, courseColorsForPreview, scheduleTitle)
                     ?.let { realmSchedule ->
                         realmManager.saveSchedule(realmSchedule)
                         isSaved = true

@@ -184,8 +184,8 @@ sealed class NetworkResponse {
         val locationId: String,
         val showConfirmButton: Boolean,
         val showUnbookButton: Boolean,
-        val confirmationOpen: String,
-        val confirmationClosed: String
+        val confirmationOpen: String?,
+        val confirmationClosed: String?
     ): NetworkResponse()
 
     @JsonClass(generateAdapter = true)

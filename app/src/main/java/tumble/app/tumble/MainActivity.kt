@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
-import tumble.app.tumble.presentation.views.AppParent
+import tumble.app.tumble.presentation.screens.AppParent
 
 @AndroidEntryPoint
 class MainActivity: ComponentActivity() {

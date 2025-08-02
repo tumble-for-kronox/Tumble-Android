@@ -99,6 +99,9 @@ class NotificationManager @Inject constructor(
     }
 
     override fun createNotificationFromBooking(booking: NetworkResponse.KronoxUserBookingElement) {
+
+        if (booking.confirmationOpen == null) return
+
         createNotificationChannel("1", context)
         var description = getString(context, R.string.booking_notification_description_start) + " "
         description += booking.locationId + " " + getString(context, R.string.booking_notification_description_end)

@@ -1,9 +1,7 @@
 package tumble.app.tumble.presentation.viewmodels
 
 import android.icu.util.Calendar
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +40,6 @@ data class BookmarkData(
     val weekStartDates: List<Date>
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
     private val realmManager: RealmManager,
@@ -65,7 +62,6 @@ class BookmarksViewModel @Inject constructor(
         setupFlows()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupFlows(){
 
         val job = viewModelScope.launch {
@@ -81,7 +77,6 @@ class BookmarksViewModel @Inject constructor(
         _cancellables.add(job2)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun setupRealmListener(){
         val schedules = realmManager.getAllLiveSchedules().asFlow()
         schedules.collect{ newSchedules ->
@@ -89,7 +84,6 @@ class BookmarksViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun createDaysAndCalenderEvents(schedules: List<Schedule>){
 
         status = BookmarksStatus.LOADING
@@ -137,7 +131,6 @@ class BookmarksViewModel @Inject constructor(
         return visibleSchedules.all { it.isMissingEvents()}
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun processSchedules(schedules: List<Schedule>, hiddenScheduleIds: List<String>): List<Day> {
         return filterHiddenBookmarks(schedules, hiddenScheduleIds)
             .flattenAndMerge()
@@ -180,18 +173,18 @@ class BookmarksViewModel @Inject constructor(
     @Composable
     fun getColor(date: LocalDate): Color {
         if (date == selectedDate){
-            return MaterialTheme.colors.primary
+            return MaterialTheme.colorScheme.primary
         }
         if (date == todayDate){
-            return MaterialTheme.colors.primary.copy(alpha = 0.5f)
+            return MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
         }
-        return MaterialTheme.colors.background
+        return MaterialTheme.colorScheme.background
     }
 
     fun updateSelectedDate(clickedDate: LocalDate){
         selectedDate = if (selectedDate != clickedDate){
             clickedDate
-        }else{
+        } else{
             null
         }
     }

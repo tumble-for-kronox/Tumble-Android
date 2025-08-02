@@ -16,15 +16,15 @@ suspend fun <T> Call<T>.callToApiResponse(): ApiResponse<T> {
                 ApiResponse.Success(responseBody)
             } else {
                 // If the body is null and empty responses are not allowed, treat it as an error
-                ApiResponse.Error("Empty response body", response.code())
+                ApiResponse.Error("Empty response body")
             }
         } else {
             // If the response is not successful, return Error with the error message
-            ApiResponse.Error(response.errorBody()?.string() ?: "Unknown error", response.code())
+            ApiResponse.Error(response.errorBody()?.string() ?: "Unknown error")
         }
     } catch (e: Exception) {
         // In case of exception, return Error with the exception message
         Log.e("error", "in error catch", e)
-        ApiResponse.Error(e.message ?: "Unknown error", null)
+        ApiResponse.Error(e.message ?: "Unknown error")
     }
 }

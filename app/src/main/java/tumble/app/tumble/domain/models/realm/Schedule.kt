@@ -15,5 +15,5 @@ open class Schedule(
     var toggled: Boolean = true
     var schoolId: String = ""
     var requiresAuth: Boolean = false
-
+    var title: String = ""
 }

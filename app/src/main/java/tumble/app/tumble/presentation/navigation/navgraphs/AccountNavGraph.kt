@@ -1,6 +1,6 @@
 package tumble.app.tumble.presentation.navigation.navgraphs
 
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,16 +8,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.presentation.navigation.Routes
-import tumble.app.tumble.presentation.views.Settings.Preferences.AppearanceSettings.AppearanceSettings
-import tumble.app.tumble.presentation.views.Settings.Bookmarks.BookmarksSettings
-import tumble.app.tumble.presentation.views.Settings.Preferences.Notifications.NotificationOffsetSettings
-import tumble.app.tumble.presentation.views.Settings.Preferences.PreferencesScreen
-import tumble.app.tumble.presentation.views.Settings.SettingsScreen
-import tumble.app.tumble.presentation.views.account.Account
-import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Events.EventBookings
-import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceBookings
-import tumble.app.tumble.presentation.views.account.User.ResourceSection.Booking.Resources.ResourceSelection
-import tumble.app.tumble.presentation.views.navigation.AppBarState
+import tumble.app.tumble.presentation.screens.settings.Preferences.AppearanceSettings.AppearanceSettings
+import tumble.app.tumble.presentation.screens.settings.Bookmarks.BookmarksSettings
+import tumble.app.tumble.presentation.screens.settings.Preferences.Notifications.NotificationOffsetSettings
+import tumble.app.tumble.presentation.screens.settings.Preferences.PreferencesScreen
+import tumble.app.tumble.presentation.screens.settings.SettingsScreen
+import tumble.app.tumble.presentation.screens.account.Account
+import tumble.app.tumble.presentation.screens.account.User.ResourceSection.Booking.Events.EventBookings
+import tumble.app.tumble.presentation.screens.account.User.ResourceSection.Booking.Resources.ResourceBookings
+import tumble.app.tumble.presentation.screens.account.User.ResourceSection.Booking.Resources.ResourceSelection
+import tumble.app.tumble.presentation.screens.navigation.AppBarState
 
 
 @Composable

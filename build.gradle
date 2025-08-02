@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
     ext {
         compose_version = '1.5.4'
@@ -14,6 +16,12 @@ plugins {
     id 'io.realm.kotlin' version '1.10.0' apply false
 }
 
-task clean(type: Delete) {
+tasks.register('clean', Delete) {
     delete rootProject.buildDir
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }

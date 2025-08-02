@@ -1,6 +1,7 @@
 package tumble.app.tumble.data.repository.preferences
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -17,13 +18,24 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import tumble.app.tumble.domain.enums.Types.AppearanceType
 import tumble.app.tumble.domain.enums.ViewType
-import tumble.app.tumble.presentation.views.Settings.Preferences.Notifications.NotificationOffset
+import tumble.app.tumble.domain.models.util.formatInstantToIso
+import tumble.app.tumble.presentation.screens.settings.Preferences.Notifications.NotificationOffset
+import java.time.Instant
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 
-data class CombinedData(val authSchoolId: Int? = null, val autoSignup: Boolean? = null, val viewType: ViewType? = null, val userOnBoarded: Boolean? = null, val appearance: AppearanceType? = null, val notificationOffset: NotificationOffset? = null)
+data class CombinedData(
+    val authSchoolId: Int? = null,
+    val autoSignup: Boolean? = null,
+    val viewType: ViewType? = null,
+    val userOnBoarded: Boolean? = null,
+    val appearance: AppearanceType? = null,
+    val notificationOffset: NotificationOffset? = null,
+    val lastUpdated: String? = null
+)
 
 @Singleton
 class DataStoreManager @Inject constructor(
@@ -40,6 +52,7 @@ class DataStoreManager @Inject constructor(
         val AUTO_SIGNUP = booleanPreferencesKey("auto_signup")
         val APPEARANCE = stringPreferencesKey("appearance")
         val VIEW_TYPE = stringPreferencesKey("view_type")
+        val LAST_UPDATED = stringPreferencesKey("last_updated")
     }
 
     private val _authSchoolId = MutableStateFlow(-1)
@@ -60,6 +73,13 @@ class DataStoreManager @Inject constructor(
     private val _notificationOffset = MutableStateFlow(NotificationOffset.Thirty)
     val notificationOffset: StateFlow<NotificationOffset> = _notificationOffset
 
+    // ISO string
+    private val _lastUpdated = MutableStateFlow(formatInstantToIso(Instant.MIN))
+    val lastUpdated: StateFlow<String> = _lastUpdated
+
+    private val _isInitialized = MutableStateFlow(false)
+    val isInitialized: StateFlow<Boolean> = _isInitialized
+
     init {
         context.dataStore.data
             .map { preferences ->
@@ -69,6 +89,16 @@ class DataStoreManager @Inject constructor(
                 _autoSignup.value = preferences[PreferencesKeys.AUTO_SIGNUP] ?: false
                 _appearance.value = AppearanceType.valueOf(preferences[PreferencesKeys.APPEARANCE] ?: AppearanceType.AUTOMATIC.name)
                 _notificationOffset.value = NotificationOffset.allCases.first {it.value == (preferences[PreferencesKeys.NOTIFICATION_OFFSET]?: NotificationOffset.Thirty.value) }
+
+                // Only update lastUpdated if there's a stored value, otherwise keep current time
+                preferences[PreferencesKeys.LAST_UPDATED]?.let { storedValue ->
+                    _lastUpdated.value = storedValue
+                }
+
+                if (!_isInitialized.value) {
+                    _isInitialized.value = true
+                    Log.d("DataStoreManager", "DataStore initialization complete")
+                }
             }
             .launchIn(scope)
     }
@@ -85,6 +115,16 @@ class DataStoreManager @Inject constructor(
             preferences[PreferencesKeys.USER_ON_BOARDED] = userOnBoarded
         }
         _userOnBoarded.value = userOnBoarded
+    }
+
+    suspend fun setLastUpdated(instant: Instant) {
+        val formattedInstant = formatInstantToIso(instant)
+        Log.d("DataStoreManager", "setLastUpdated called with: $instant -> $formattedInstant")
+        context.dataStore.edit { preferences ->
+            preferences[PreferencesKeys.LAST_UPDATED] = formattedInstant
+        }
+        _lastUpdated.value = formattedInstant
+        Log.d("DataStoreManager", "lastUpdated StateFlow updated to: ${_lastUpdated.value}")
     }
 
     suspend fun setNotificationOffset(offset: NotificationOffset) {

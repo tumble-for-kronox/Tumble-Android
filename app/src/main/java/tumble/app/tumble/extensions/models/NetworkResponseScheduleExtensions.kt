@@ -40,7 +40,12 @@ fun NetworkResponse.Schedule.assignCourseRandomColors(): MutableMap<String, Stri
     return courseColors
 }
 
-fun NetworkResponse.Schedule.toRealmSchedule(scheduleRequiresAuth: Boolean, schoolId:String, existingCourseColors: Map<String, String> = emptyMap()): Schedule {
+fun NetworkResponse.Schedule.toRealmSchedule(
+    scheduleRequiresAuth: Boolean,
+    schoolId: String,
+    existingCourseColors: Map<String, String> = emptyMap(),
+    scheduleTitle: String
+): Schedule {
     val realmDays: MutableList<Day> = mutableListOf()
     val visitedColors = existingCourseColors.toMutableMap()
     for(responseDay in days){
@@ -105,8 +110,9 @@ fun NetworkResponse.Schedule.toRealmSchedule(scheduleRequiresAuth: Boolean, scho
     schedule.scheduleId = id
     schedule.cachedAt = cachedAt
     schedule.days = realmDays.toRealmList()
-    schedule.scheduleId = schoolId
+    schedule.schoolId = schoolId
     schedule.requiresAuth = scheduleRequiresAuth
+    schedule.title = scheduleTitle
 
     return schedule
 }

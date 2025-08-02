@@ -47,7 +47,7 @@ class SearchViewModel @Inject constructor(
         currentSearchJob?.cancel()
         currentSearchJob = viewModelScope.launch {
 
-            try{
+            try {
                 val endpoint = Endpoint.SearchProgramme(query.value, selectedSchoolId.toString())
                 Log.d("search", endpoint.url())
                 val searchResult: ApiResponse<NetworkResponse.Search> = kronoxManager.getProgramme(endpoint)
@@ -76,9 +76,6 @@ class SearchViewModel @Inject constructor(
             }
             is ApiResponse.Error -> {
                 status = SearchStatus.INITIAL
-            }
-            is ApiResponse.Loading -> {
-                status = SearchStatus.LOADING
             }
             else -> {
                 status = SearchStatus.LOADING

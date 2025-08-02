@@ -15,7 +15,7 @@ class NetworkSettings private constructor(val port: Int, val scheme: String, val
             )
 
             val development = NetworkSettings(
-                port = 7036, scheme = "https", tumbleUrl = "10.0.2.2"
+                port = 443, scheme = "https", tumbleUrl = "app.tumbleforkronox.com"
             )
         }
     }

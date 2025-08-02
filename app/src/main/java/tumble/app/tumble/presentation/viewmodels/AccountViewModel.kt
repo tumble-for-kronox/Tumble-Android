@@ -33,7 +33,7 @@ class AccountViewModel @Inject constructor(
     private val schoolManager: SchoolManager,
     private val notificationManager: NotificationManager
 ) : ViewModel() {
-    private val _authStatus = MutableStateFlow(AuthStatus.UNAUTHORIZED)
+    private val _authStatus = MutableStateFlow(AuthStatus.LOADING)
     val authStatus: StateFlow<AuthStatus> = _authStatus
 
     private val _user = MutableStateFlow<TumbleUser?>(null)
@@ -81,10 +81,6 @@ class AccountViewModel @Inject constructor(
     fun unSetBooking(){
         _booking.value = null
     }
-
-    fun autoSignUpEnabled(): Boolean{
-        return dataStoreManager.autoSignup.value
-    }
     var isSigningOut = mutableStateOf(false)
 
     init {
@@ -112,7 +108,7 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun logIn(authSchoolId: Int, username: String, password: String) {
+    fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _attemptingLogin.value = true
@@ -121,7 +117,7 @@ class AccountViewModel @Inject constructor(
                 updateUser(user)
             } catch (e: Exception) {
                 _authStatus.value = AuthStatus.UNAUTHORIZED
-            }finally {
+            } finally {
                 _attemptingLogin.value = false
             }
         }
@@ -223,68 +219,6 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-
-//    fun getUserEventsForSection() {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _registeredEventSectionState.value = PageState.LOADING
-//            val endpoint: Endpoint = Endpoint.UserEvents(combinedData.value.authSchoolId.toString())
-//            if (refreshToken.value != null) {
-//                val response: ApiResponse<NetworkResponse.KronoxCompleteUserEvent> =
-//                    kronoxManager.get(endpoint, refreshToken.value, sessionDetails.value)
-//
-//                when (response) {
-//                    is ApiResponse.Success -> {
-//
-//                        _completeUserEvent.value = response.data
-//                        _registeredEventSectionState.value = PageState.LOADED
-//                    }
-//
-//                    else -> {
-//                        _registeredEventSectionState.value = PageState.ERROR
-//                    }
-//                }
-////                if (response.isSuccessful) {
-////                    response.body()?.let {
-////                        val userEvents = it as NetworkResponse.KronoxCompleteUserEvent
-////                        _completeUserEvent.value = userEvents
-////                        _registeredEventSectionState.value = PageState.LOADED
-////                    } ?: run {
-////                        _registeredEventSectionState.value = PageState.ERROR
-////                    }
-////                } else {
-////                    _registeredEventSectionState.value = PageState.ERROR
-////                }
-////            } else {
-////                _registeredEventSectionState.value = PageState.ERROR
-////            }
-//            }
-//        }
-//    }
-
-
-
-//    fun unregisterForEvent(eventId: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            val endpoint = Endpoint.UnregisterEvent(eventId, combinedData.value.authSchoolId.toString())
-//            if (refreshToken.value != null) {
-//                val response: ApiResponse<NetworkResponse.> = kronoxManager.put(endpoint, refreshToken.value, sessionDetails.value, null)
-//                if (response.isSuccessful) {
-//                    response.body()?.let {
-//                        getUserEventsForSection()
-//                    }
-//                }
-//            } else {
-//                _registeredEventSectionState.value = PageState.ERROR
-//            }
-//        }
-//    }
-
-    fun toggleAutoSignup(value: Boolean) {
-        viewModelScope.launch {
-            dataStoreManager.setAutoSignup(value)
-        }
-    }
-
     private fun scheduleBookingNotifications(userBookings: MutableStateFlow<NetworkResponse.KronoxUserBookings?>) {
         userBookings.let {
             userBookings.value?.bookings?.forEach {
@@ -292,27 +226,6 @@ class AccountViewModel @Inject constructor(
                     notificationManager.createNotificationFromBooking(it)
                 }
             }
-        }
-    }
-
-    private fun registerAutoSignup() {
-        val endpoint = Endpoint.RegisterAllEvents(dataStoreManager.authSchoolId.value.toString())
-        val refreshToken = authManager.getRefreshToken() ?: return
-        viewModelScope.launch {
-            val response = kronoxManager.registerForAllEvents(endpoint, refreshToken)
-            when (response) {
-                is ApiResponse.Success -> {
-                    Log.e("AutoSignup", "Success")
-                }
-                is ApiResponse.Error -> {
-                    Log.e("AutoSignup", "Error")
-                    Log.e("AutoSignup", response.errorMessage)
-                }
-                else -> {
-                    Log.e("AutoSignup", "Error")
-                }
-            }
-            // Implement the logic for automatic event registration
         }
     }
 
@@ -334,6 +247,6 @@ class AccountViewModel @Inject constructor(
     }
 
     enum class AuthStatus {
-        AUTHORIZED, UNAUTHORIZED
+        AUTHORIZED, UNAUTHORIZED, LOADING
     }
 }
