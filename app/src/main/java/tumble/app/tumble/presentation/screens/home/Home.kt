@@ -21,7 +21,7 @@ import tumble.app.tumble.domain.enums.PageState
 import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.HomeViewModel
-import tumble.app.tumble.presentation.screens.bookmarks.EventDetails.EventDetailsSheet
+import tumble.app.tumble.presentation.screens.bookmarks.event.EventDetailsSheet
 import tumble.app.tumble.presentation.screens.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.screens.general.Info
 import tumble.app.tumble.presentation.screens.home.available.HomeAvailable
@@ -106,7 +106,8 @@ fun HomeScreen(
     ) {
         viewModel.eventSheet?.let {
             EventDetailsSheet(
-                event = it.event, onComposing,
+                event = it.event,
+                setTopNavState = onComposing,
                 onClose = {
                     viewModel.eventSheet = null
                 },

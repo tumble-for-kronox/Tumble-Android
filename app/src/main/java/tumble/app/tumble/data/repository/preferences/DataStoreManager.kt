@@ -19,9 +19,8 @@ import kotlinx.coroutines.flow.map
 import tumble.app.tumble.domain.enums.Types.AppearanceType
 import tumble.app.tumble.domain.enums.ViewType
 import tumble.app.tumble.domain.models.util.formatInstantToIso
-import tumble.app.tumble.presentation.screens.settings.Preferences.Notifications.NotificationOffset
+import tumble.app.tumble.presentation.screens.settings.preferences.notifications.NotificationOffset
 import java.time.Instant
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext

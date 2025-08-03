@@ -8,7 +8,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -16,15 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.BookmarksStatus
 import tumble.app.tumble.domain.models.presentation.EventDetailsSheetModel
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
-import tumble.app.tumble.presentation.viewmodels.ParentViewModel
-import tumble.app.tumble.presentation.screens.bookmarks.EventDetails.EventDetailsSheet
+import tumble.app.tumble.presentation.screens.bookmarks.event.EventDetailsSheet
 import tumble.app.tumble.presentation.screens.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.screens.general.Info
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
@@ -74,7 +71,9 @@ fun Bookmarks(
         exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
     ) {
         viewModel.eventSheet?.let {
-            EventDetailsSheet(event = it.event, setTopNavState,
+            EventDetailsSheet(
+                event = it.event,
+                setTopNavState = setTopNavState,
                 onClose = {
                     viewModel.eventSheet = null
                 },

@@ -41,23 +41,4 @@ interface KronoxApiService {
 
     suspend fun registerForAllEvents(endpoint: Endpoint.RegisterAllEvents, refreshToken: String?): ApiResponse<List<NetworkResponse.Registration>>
 
-//    @Headers(
-//        "Content-Type: application/json; charset=utf-8",
-//        "Accept: application/json; charset=utf-8"
-//    )
-//    @PUT
-//    suspend fun <T : NetworkResponse> put(
-//        @Url url: String,
-//        @Header("X-auth-token") token: String?,
-//        @Body body: RequestBody
-//    ): Response<T>
-
-
-//    suspend fun <T : NetworkResponse> get(
-//        endpoint: Endpoint,
-//        refreshToken: String?,
-//        sessionDetails: String?,
-//    ): ApiResponse<T>
-
-
 }

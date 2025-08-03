@@ -8,15 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.presentation.navigation.Routes
-import tumble.app.tumble.presentation.screens.settings.Preferences.AppearanceSettings.AppearanceSettings
-import tumble.app.tumble.presentation.screens.settings.Bookmarks.BookmarksSettings
-import tumble.app.tumble.presentation.screens.settings.Preferences.Notifications.NotificationOffsetSettings
-import tumble.app.tumble.presentation.screens.settings.Preferences.PreferencesScreen
+import tumble.app.tumble.presentation.screens.settings.preferences.appearance.AppearanceSettings
+import tumble.app.tumble.presentation.screens.settings.bookmarks.BookmarksSettings
+import tumble.app.tumble.presentation.screens.settings.preferences.notifications.NotificationOffsetSettings
+import tumble.app.tumble.presentation.screens.settings.preferences.PreferencesScreen
 import tumble.app.tumble.presentation.screens.settings.SettingsScreen
 import tumble.app.tumble.presentation.screens.account.Account
-import tumble.app.tumble.presentation.screens.account.User.ResourceSection.Booking.Events.EventBookings
-import tumble.app.tumble.presentation.screens.account.User.ResourceSection.Booking.Resources.ResourceBookings
-import tumble.app.tumble.presentation.screens.account.User.ResourceSection.Booking.Resources.ResourceSelection
+import tumble.app.tumble.presentation.screens.account.user.resources.booking.events.EventBookings
+import tumble.app.tumble.presentation.screens.account.user.resources.booking.resources.ResourceBookings
+import tumble.app.tumble.presentation.screens.account.user.resources.booking.resources.ResourceSelection
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
 
 

@@ -40,9 +40,9 @@ import tumble.app.tumble.R
 import tumble.app.tumble.presentation.components.buttons.BackButton
 import tumble.app.tumble.presentation.navigation.Routes
 import tumble.app.tumble.presentation.viewmodels.SettingsViewModel
-import tumble.app.tumble.presentation.screens.settings.Buttons.SettingsNavigationButton
-import tumble.app.tumble.presentation.screens.settings.List.SettingsList
-import tumble.app.tumble.presentation.screens.settings.List.SettingsListGroup
+import tumble.app.tumble.presentation.screens.settings.buttons.SettingsNavigationButton
+import tumble.app.tumble.presentation.screens.settings.list.SettingsList
+import tumble.app.tumble.presentation.screens.settings.list.SettingsListGroup
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
 import java.util.Locale
 

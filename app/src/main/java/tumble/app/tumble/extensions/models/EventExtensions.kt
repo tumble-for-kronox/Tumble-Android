@@ -8,7 +8,6 @@ import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun List<Event>.sorted(): List<Event> {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 

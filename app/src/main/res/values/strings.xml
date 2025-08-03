@@ -27,6 +27,9 @@
     <string name="week">Week</string>
     <string name="no_events_for_this_day">No events this day</string>
     <string name="no_events_for_week">No events for this week..</string>
+    <string name="logout">Log Out</string>
+    <string name="logout_confirm_title">Log Out?</string>
+    <string name="logout_confirm_message">You will need to sign in again to access your account.</string>
     <string name="light">Light</string>
     <string name="dark">Dark</string>
     <string name="automatic">Automatic</string>

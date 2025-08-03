@@ -13,7 +13,7 @@ import tumble.app.tumble.data.repository.preferences.DataStoreManager
 import tumble.app.tumble.data.repository.realm.RealmManager
 import tumble.app.tumble.domain.enums.Types.AppearanceType
 import tumble.app.tumble.domain.models.realm.Schedule
-import tumble.app.tumble.presentation.screens.settings.Preferences.Notifications.NotificationOffset
+import tumble.app.tumble.presentation.screens.settings.preferences.notifications.NotificationOffset
 import javax.inject.Inject
 
 @HiltViewModel

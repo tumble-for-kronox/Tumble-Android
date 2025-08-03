@@ -31,9 +31,6 @@ import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.other.GlobalEventBus
 import java.time.Instant
 
-data class CombinedData(val authSchoolId: Int, val userOnBoarded: Boolean)
-
-
 @HiltViewModel
 class ParentViewModel @Inject constructor(
     private val realmManager: RealmManager,

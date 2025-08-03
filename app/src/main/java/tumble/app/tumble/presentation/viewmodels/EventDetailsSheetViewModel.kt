@@ -41,6 +41,8 @@ class EventDetailsSheetViewModel@Inject constructor(
             val allowed = userAllowedNotifications()
             notificationsAllowed = allowed
         }
+        //checkNotificationIsSetForEvent()
+        //checkNotificationIsSetForCourse()
     }
 
     fun setEventSheetView(newEvent: Event, newColor: Color?){
@@ -97,14 +99,6 @@ class EventDetailsSheetViewModel@Inject constructor(
             scheduleNotificationForEvent(event)
         }
         return true
-    }
-
-    suspend fun updateCourseColor(){
-        val oldColor: Color = event.course?.color?.toColor() ?: Color.White
-        if(oldColor == color) return
-        val colorHex = color?.toArgb()?.toHexString() ?:return
-        val courseId = event.course?.courseId ?: return
-        realmManager.updateCourseColors(courseId, colorHex)
     }
 
     private fun userAllowedNotifications(): Boolean{

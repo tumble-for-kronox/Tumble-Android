@@ -7,6 +7,7 @@ import java.util.*
 import androidx.compose.ui.graphics.Color
 import tumble.app.tumble.utils.isoDateFormatterNoTimeZone
 import java.time.LocalDateTime
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
@@ -48,6 +49,18 @@ fun String.toLocalDateTime(): LocalDateTime? {
         LocalDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
     } catch (e: DateTimeParseException) {
         null
+    }
+}
+
+fun String.isAvailableNotificationDate(): Boolean {
+    return try {
+        val eventDate = ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
+        val now = ZonedDateTime.now()
+        val threeHoursFromNow = now.plusHours(3)
+
+        eventDate.isAfter(now) && eventDate.isAfter(threeHoursFromNow)
+    } catch (e: Exception) {
+        false
     }
 }
 

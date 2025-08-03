@@ -11,7 +11,7 @@ suspend fun <T> Call<T>.callToApiResponse(): ApiResponse<T> {
         val response = this.awaitResponse()
         if (response.isSuccessful) {
             val responseBody = response.body()
-            Log.d("response", response.toString())  // Log the response
+            Log.d("CallExtensions", response.toString())  // Log the response
             if (responseBody != null) {
                 ApiResponse.Success(responseBody)
             } else {

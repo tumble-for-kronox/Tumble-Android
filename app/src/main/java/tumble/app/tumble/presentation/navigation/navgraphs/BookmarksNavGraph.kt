@@ -11,7 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navDeepLink
 import tumble.app.tumble.observables.AppController
-import tumble.app.tumble.presentation.screens.bookmarks.EventDetails.EventDetailsSheet
+import tumble.app.tumble.presentation.screens.bookmarks.event.EventDetailsSheet
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
 
 

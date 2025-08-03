@@ -30,7 +30,6 @@ interface ApiServiceKronox {
     @GET()
     fun getSchedule(@Url endpoint: String): Call<NetworkResponse.Schedule>
 
-    fun put(toString: String, token: String?, body: RequestBody): Response<NetworkResponse>
 
     @PUT()
     fun registerForEvent(@Url endpoint: String,

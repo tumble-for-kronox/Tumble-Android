@@ -177,19 +177,19 @@ class AccountViewModel @Inject constructor(
         val endpoint = Endpoint.UnBookResource(dataStoreManager.authSchoolId.value.toString(), bookingId)
         val refreshToken = authManager.getRefreshToken() ?: return
 
+        // This logic is completely cursed and should be fixed in the backend
         viewModelScope.launch {
-            val response = kronoxManager.unBookResource(endpoint, refreshToken)
-            when(response){
+            when(val response = kronoxManager.unBookResource(endpoint, refreshToken)) {
                 is ApiResponse.Error -> {
                     if(response.errorMessage == "Empty response body"){
-                        Log.e("unbooked", "Success")
-                    }else{
-                        Log.e("unbooked", "Error")
-                        Log.e("unbooked", response.errorMessage)
+                        Log.e("AccountViewModel", "Success")
+                    } else{
+                        Log.e("AccountViewModel", "Error")
+                        Log.e("AccountViewModel", response.errorMessage)
                     }
                 }
                 else -> {
-                    Log.e("unbooked", "lmao")
+                    Log.e("AccountViewModel", "We should not be here")
 
                 }
             }
@@ -201,6 +201,7 @@ class AccountViewModel @Inject constructor(
         val resource = NetworkRequest.ConfirmKronoxResource(resourceId, bookingId)
         val refreshToken = authManager.getRefreshToken() ?: return
 
+        // This logic is completely cursed and should be fixed in the backend
         viewModelScope.launch {
             when(val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)){
                 is ApiResponse.Error -> {

@@ -1,7 +1,5 @@
 package tumble.app.tumble.presentation.screens.search
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,16 +19,18 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import tumble.app.tumble.R
 import tumble.app.tumble.domain.enums.SearchStatus
 import tumble.app.tumble.domain.models.presentation.SearchPreviewModel
 import tumble.app.tumble.observables.AppController
 import tumble.app.tumble.presentation.navigation.UriBuilder
+import tumble.app.tumble.presentation.screens.general.CustomProgressIndicator
 import tumble.app.tumble.presentation.viewmodels.SearchViewModel
 import tumble.app.tumble.presentation.screens.general.Info
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
 
-@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun Search(
     viewModel: SearchViewModel = hiltViewModel(),
@@ -79,7 +79,7 @@ fun Search(
 
         when(viewModel.status){
             SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)}
-            SearchStatus.LOADING -> { LinearProgressIndicator(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.primary) }
+            SearchStatus.LOADING -> { CustomProgressIndicator(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.primary) }
             SearchStatus.LOADED -> {
                 Box(modifier = Modifier.weight(1f)) {
                     SearchResults(
@@ -91,8 +91,16 @@ fun Search(
                     )
                 }
             }
-            SearchStatus.ERROR -> { Info(title = stringResource(id = R.string.error_something_wrong), image = null) }
-            SearchStatus.EMPTY -> { Info(title = stringResource(id = R.string.error_empty_schedule), image = null) }
+            SearchStatus.ERROR -> {
+                Box(modifier = Modifier.weight(1f)) {
+                    Info(title = stringResource(id = R.string.error_something_wrong), image = null)
+                }
+            }
+            SearchStatus.EMPTY -> {
+                Box(modifier = Modifier.weight(1f)) {
+                    Info(title = stringResource(id = R.string.error_empty_schedule), image = null)
+                }
+            }
         }
         Row(modifier = Modifier.fillMaxWidth().padding(15.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             SearchField(

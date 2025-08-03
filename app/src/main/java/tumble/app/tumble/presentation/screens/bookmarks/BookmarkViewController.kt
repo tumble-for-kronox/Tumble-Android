@@ -17,9 +17,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import tumble.app.tumble.domain.enums.ViewType
 import tumble.app.tumble.domain.models.realm.Event
 import tumble.app.tumble.presentation.viewmodels.BookmarksViewModel
-import tumble.app.tumble.presentation.screens.bookmarks.Calendar.BookmarkCalendarView
-import tumble.app.tumble.presentation.screens.bookmarks.List.BookmarkListView
-import tumble.app.tumble.presentation.screens.bookmarks.Week.BookmarkWeekView
+import tumble.app.tumble.presentation.screens.bookmarks.calendar.BookmarkCalendarView
+import tumble.app.tumble.presentation.screens.bookmarks.list.BookmarkListView
+import tumble.app.tumble.presentation.screens.bookmarks.week.BookmarkWeekView
 
 @OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.O)

@@ -53,7 +53,7 @@ class SearchViewModel @Inject constructor(
                 val searchResult: ApiResponse<NetworkResponse.Search> = kronoxManager.getProgramme(endpoint)
                 parseSearchResults(searchResult)
             } catch (e: Exception){
-                status = SearchStatus.INITIAL
+                status = SearchStatus.ERROR
                 if (e is CancellationException){
                     Log.e("error", errorMessageSearch.toString())
                     return@launch
@@ -75,7 +75,7 @@ class SearchViewModel @Inject constructor(
                 status = SearchStatus.LOADED
             }
             is ApiResponse.Error -> {
-                status = SearchStatus.INITIAL
+                status = SearchStatus.ERROR
             }
             else -> {
                 status = SearchStatus.LOADING
