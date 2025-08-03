@@ -3,6 +3,7 @@ package tumble.app.tumble.presentation.screens.account.User.ResourceSection.Book
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +36,6 @@ import tumble.app.tumble.presentation.screens.general.Info
 import tumble.app.tumble.presentation.screens.navigation.AppBarState
 import tumble.app.tumble.utils.isoVerboseDateFormatter
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ResourceSelection(
     parentViewModel: ResourceViewModel = hiltViewModel(),
@@ -83,20 +84,28 @@ fun ResourceSelection(
             Spacer(modifier = Modifier.weight(1f))
         }
         if (timeslots != null) {
-            TimeslotDropdown(
-                resource = resource,
-                timeslots = timeslots,
-                selectedIndex = selectedTimeIndex,
-                onIndexChange = { index ->
-                    selectedTimeIndex.intValue = index
-                    availabilityValues.value =
-                        resource.availabilities.getAvailabilityValues(timelotId = index)
-                }
-            )
+            // Center the dropdown with proper margins
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                TimeslotDropdown(
+                    resource = resource,
+                    timeslots = timeslots,
+                    selectedIndex = selectedTimeIndex,
+                    onIndexChange = { index ->
+                        selectedTimeIndex.intValue = index
+                        availabilityValues.value =
+                            resource.availabilities.getAvailabilityValues(timelotId = index)
+                    }
+                )
+            }
             Divider()
             TimeslotSelection(
                 bookResource = { availabilityValue ->
-                     parentViewModel.bookResource(
+                    parentViewModel.bookResource(
                         resourceId = resource.id!!,
                         date = selectedPickerDate,
                         availabilityValue = availabilityValue

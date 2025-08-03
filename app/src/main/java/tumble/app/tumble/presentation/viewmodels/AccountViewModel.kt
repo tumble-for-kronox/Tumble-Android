@@ -202,8 +202,7 @@ class AccountViewModel @Inject constructor(
         val refreshToken = authManager.getRefreshToken() ?: return
 
         viewModelScope.launch {
-            val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)
-            when(response){
+            when(val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)){
                 is ApiResponse.Error -> {
                     if(response.errorMessage == "Empty response body"){
                         Log.e("confirm", "Success")

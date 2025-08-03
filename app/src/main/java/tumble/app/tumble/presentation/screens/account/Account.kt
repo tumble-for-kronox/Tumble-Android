@@ -127,6 +127,9 @@ fun Account(
                     viewModel.unSetBooking()
                 },
                 { viewModel.unBookResource(it.id) },
+                { resourceId, bookingId ->
+                    viewModel.confirmResource(resourceId, bookingId)
+                },
                 setTopNavState
             )
         }

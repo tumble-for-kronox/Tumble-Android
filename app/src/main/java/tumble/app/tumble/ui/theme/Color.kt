@@ -14,3 +14,6 @@ val OnBackgroundLight = Color(0xFF333333)
 val OnBackgroundDark = Color(0xFFFEFEFE)
 val BackgroundDark = Color(0xFF262624)
 val BackgroundLight = Color(0xFFFAF9F5)
+
+val Danger = Color(0xFFD44C47)
+val Info = Color(0xFF4A7C91)

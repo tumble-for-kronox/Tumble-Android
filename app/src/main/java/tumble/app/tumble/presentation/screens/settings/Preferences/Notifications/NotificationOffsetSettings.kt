@@ -26,6 +26,10 @@ enum class NotificationOffset(val value: Int) {
 
     companion object {
         val allCases = listOf(Fifteen, Thirty, Hour, ThreeHours)
+
+        fun fromValue(value: Int): NotificationOffset? {
+            return allCases.find { it.value == value }
+        }
     }
 }
 

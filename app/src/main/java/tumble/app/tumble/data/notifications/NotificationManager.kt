@@ -3,6 +3,7 @@ package tumble.app.tumble.data.notifications
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getString
 import androidx.work.ExistingWorkPolicy
@@ -100,7 +101,10 @@ class NotificationManager @Inject constructor(
 
     override fun createNotificationFromBooking(booking: NetworkResponse.KronoxUserBookingElement) {
 
-        if (booking.confirmationOpen == null) return
+        if (booking.confirmationOpen == null) {
+            Log.d("NotificationManager", "Not scheduling notification. Reason: booking is currently active")
+            return
+        }
 
         createNotificationChannel("1", context)
         var description = getString(context, R.string.booking_notification_description_start) + " "
