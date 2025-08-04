@@ -1,8 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.resources
 
-import android.icu.util.Calendar
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,24 +10,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import java.util.Date
 
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResourceDatePicker(
     onDateChange: (Date) -> Unit
 ) {
     val datePickerState = rememberDatePickerState()
-    val starOfDay = remember {
-        mutableStateOf(Calendar.getInstance().apply { set(Calendar.MILLISECONDS_IN_DAY, 0)})
-    }
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,7 +30,7 @@ fun ResourceDatePicker(
             state = datePickerState,
             showModeToggle = false,
             colors = DatePickerDefaults.colors(
-                selectedDayContentColor = MaterialTheme.colorScheme.onBackground,
+                selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
                 dayContentColor = MaterialTheme.colorScheme.onBackground,
                 selectedDayContainerColor = MaterialTheme.colorScheme.primary,
                 weekdayContentColor = MaterialTheme.colorScheme.primary,
@@ -48,11 +38,11 @@ fun ResourceDatePicker(
                 todayDateBorderColor = MaterialTheme.colorScheme.primary,
                 yearContentColor = MaterialTheme.colorScheme.onBackground,
                 subheadContentColor = Color.Red,
+                containerColor = MaterialTheme.colorScheme.background,
                 selectedYearContainerColor = MaterialTheme.colorScheme.primary,
                 selectedYearContentColor = MaterialTheme.colorScheme.onPrimary,
                 currentYearContentColor = MaterialTheme.colorScheme.onBackground,
             ),
-            dateValidator = { Calendar.getInstance().apply { timeInMillis = it }.after(starOfDay.value) },
             title = null,
             headline = null,
         )

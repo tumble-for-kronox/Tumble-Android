@@ -34,6 +34,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.DetailItem
+import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel
 import com.tumble.kronoxtoapp.utils.isoVerboseDateFormatter
 import java.util.Date
@@ -45,27 +46,36 @@ fun ResourceLocationsList(
     navigateToResourceSelection: (NetworkResponse.KronoxResourceElement, Date) -> Unit
 ) {
     val allResources = parentViewModel.allResources.collectAsState()
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize().padding(15.dp),
-        verticalArrangement = Arrangement.spacedBy(15.dp)
-    ) {
-        items((allResources.value?: emptyList()).size) { resourceIndex ->
-            allResources.value?.get(resourceIndex)?.let {
-                val availableCounts = it.availabilities?.let { it1 -> calcAvailability(it1) }?: 0
+
+    val availableResources = allResources.value?.filter { resource ->
+        val availableCounts = resource.availabilities?.let { calcAvailability(it) } ?: 0
+        availableCounts > 0
+    } ?: emptyList()
+
+    if (availableResources.isEmpty()) {
+        Info("No available resources")
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(15.dp),
+            verticalArrangement = Arrangement.spacedBy(15.dp)
+        ) {
+            items(availableResources.size) { resourceIndex ->
+                val resource = availableResources[resourceIndex]
+                val availableCounts = resource.availabilities?.let { calcAvailability(it) } ?: 0
+
                 ResourceLocationItem(
-                    resource = it,
+                    resource = resource,
                     selectedPickerDate = selectedPickerDate,
                     availableCounts = availableCounts,
                     onClick = {
-                        if (availableCounts > 0) {
-                            navigateToResourceSelection(it, selectedPickerDate)
-                        }
+                        navigateToResourceSelection(resource, selectedPickerDate)
                     }
                 )
             }
+            item { Spacer(modifier = Modifier.height(60.dp)) }
         }
-        item { Spacer(modifier = Modifier.height(60.dp)) }
     }
 }
 

@@ -1,7 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks.week
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalOverscrollConfiguration
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -37,7 +35,6 @@ import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import kotlin.math.abs
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun BookmarkWeekView(
@@ -69,7 +66,7 @@ fun BookmarkWeekView(
             CompositionLocalProvider(LocalOverscrollConfiguration provides null) {
                 HorizontalPager(
                     state = pagerState,
-                    beyondBoundsPageCount = 3,
+                    beyondViewportPageCount = 3,
                     pageSpacing = 0.dp,
                     verticalAlignment = Alignment.Top,
                     userScrollEnabled = userScrollEnabled,

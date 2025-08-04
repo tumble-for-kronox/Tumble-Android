@@ -58,7 +58,9 @@ fun TimeslotSelection(
                 .padding(15.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
-            availabilityValues.value.forEach { availabilityValue ->
+            availabilityValues.value
+                .filter { it.availability == NetworkResponse.AvailabilityEnum.AVAILABLE }
+                .forEach { availabilityValue ->
                 availabilityValue.locationId?.let { locationId ->
                     TimeslotCard(
                         onBook = { handleBooking(

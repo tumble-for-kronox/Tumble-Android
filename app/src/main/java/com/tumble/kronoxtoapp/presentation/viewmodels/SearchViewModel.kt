@@ -15,7 +15,7 @@ import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.api.url
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
 import com.tumble.kronoxtoapp.datasource.SchoolManager
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxRepository
 import com.tumble.kronoxtoapp.domain.enums.SearchStatus
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse

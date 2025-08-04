@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.repository.preferences.CombinedData
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.Types.AppearanceType
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule

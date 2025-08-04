@@ -38,7 +38,7 @@ fun BookmarkViewController(
     Box{
         HorizontalPager(
             state = pagerState,
-            beyondBoundsPageCount = 3,
+            beyondViewportPageCount = 3,
             verticalAlignment = Alignment.Top,
         ) { page ->
             when ( page) {
@@ -66,6 +66,6 @@ fun BookmarkViewController(
     }
 
     LaunchedEffect(key1 = pagerState.currentPage){
-        viewModel.setViewType(ViewType.values()[pagerState.currentPage])
+        viewModel.setViewType(ViewType.entries[pagerState.currentPage])
     }
 }

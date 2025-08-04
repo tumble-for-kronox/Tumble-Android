@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -82,7 +83,6 @@ fun ResourceSelection(
             Spacer(modifier = Modifier.weight(1f))
         }
         if (timeslots != null) {
-            // Center the dropdown with proper margins
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,7 +100,7 @@ fun ResourceSelection(
                     }
                 )
             }
-            Divider()
+            HorizontalDivider()
             TimeslotSelection(
                 bookResource = { availabilityValue ->
                     parentViewModel.bookResource(

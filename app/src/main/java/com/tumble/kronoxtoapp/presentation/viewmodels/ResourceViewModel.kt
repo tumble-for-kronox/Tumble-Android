@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.api.auth.AuthManager
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxRepository
 import com.tumble.kronoxtoapp.domain.enums.PageState
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
@@ -130,19 +130,19 @@ class ResourceViewModel @Inject constructor(
 
                 when(response){
                     is ApiResponse.Success -> {
-                        Log.e("getAllResourcesTest", "Success")
+                        Log.d("ResourceViewModel", "Success")
                         _allResources.value = response.data
                         _resourceBookingPageState.value = PageState.LOADED
                     }
                     is ApiResponse.Error -> {
-                        Log.e("getAllResourcesTest", "Error")
-                        Log.e("getAllResourcesTest", response.errorMessage)
+                        Log.e("ResourceViewModel", "Error")
+                        Log.e("ResourceViewModel", response.errorMessage)
                         _resourceBookingPageState.value = PageState.ERROR
                     }
                     else -> {}
                 }
             }catch (e:Exception){
-                Log.e("getAllResources", "Error")
+                Log.e("ResourceViewModel", "Error")
                 _resourceBookingPageState.value = PageState.ERROR
             }
         }
@@ -157,19 +157,19 @@ class ResourceViewModel @Inject constructor(
         val response: ApiResponse<NetworkResponse.KronoxUserBookingElement> = kronoxManager.bookResource(endpoint, refreshToken, resource)
         when(response){
             is ApiResponse.Success ->{
-                Log.e("BookedResource", "Success")
+                Log.e("ResourceViewModel", "Success")
                 return true
             }
             is ApiResponse.Error -> {
                 if(response.errorMessage == "Empty response body") {
-                    Log.e("BookedResource", "Success")
-                }else{
-                    Log.e("BookedResource", "Error")
+                    Log.e("ResourceViewModel", "Success")
+                } else{
+                    Log.e("ResourceViewModel", "Error: ${response.errorMessage}")
                 }
                 return response.errorMessage == "Empty response body"
             }
             else -> {
-                Log.e("BookedResource", "Error")
+                Log.e("ResourceViewModel", "Error")
                 return false
             }
         }

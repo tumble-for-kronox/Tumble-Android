@@ -61,7 +61,7 @@ fun BookmarkCalendarView(
             Spacer(Modifier.height(15.dp))
             VerticalPager(
                 state = monthTitlePagerState,
-                beyondBoundsPageCount = 3,
+                beyondViewportPageCount = 3,
                 modifier = Modifier
                     .height(50.dp)
                     .fillMaxWidth()
@@ -73,7 +73,7 @@ fun BookmarkCalendarView(
 
             VerticalPager(
                 state = datesPagerState,
-                beyondBoundsPageCount = 1,
+                beyondViewportPageCount = 1,
                 modifier = Modifier
                     .height(370.dp)
                     .fillMaxWidth(),
