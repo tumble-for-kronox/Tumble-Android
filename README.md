@@ -59,7 +59,4 @@ SOFTWARE.
 <br>
 
 > **Note**  
-> You can technically clone Tumble and sell it on Google Play, but we'd appreciate it if you didn't do this. Instead, please make any changes you want to the main repo — all pull requests are welcome!
-
-> **Note**  
 > If you like Tumble, download it from [Google Play](https://play.google.com/store/apps/details?id=com.tumble.kronoxtoapp)!
