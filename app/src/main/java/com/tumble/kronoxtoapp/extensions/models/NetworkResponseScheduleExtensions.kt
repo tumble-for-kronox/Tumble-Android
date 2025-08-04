@@ -12,7 +12,7 @@ import com.tumble.kronoxtoapp.domain.models.realm.Location
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.domain.models.realm.Teacher
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 fun NetworkResponse.Schedule.assignCourseRandomColors(): MutableMap<String, String> {
     val colors = mutableListOf("#f44336","#e91e63","#9c27b0","#673ab7",
         "#3f51b5","#2196f3","#03a9f4","#00bcd4",
@@ -114,7 +114,7 @@ fun NetworkResponse.Schedule.toRealmSchedule(
     return schedule
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 fun NetworkResponse.Schedule.flatten(): List<NetworkResponse.Day> {
     return days.filter { it.isValidDay() }
 }

@@ -8,6 +8,10 @@ plugins {
     id 'kotlin-kapt'
 }
 
+def keystorePropertiesFile = rootProject.file("app/key.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     namespace 'com.tumble.kronoxtoapp'
     compileSdk 35
@@ -16,8 +20,8 @@ android {
         applicationId "com.tumble.kronoxtoapp"
         minSdk 26
         targetSdk 35
-        versionCode 1
-        versionName "1.0"
+        versionCode 41
+        versionName "4.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -25,13 +29,32 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            storeFile file(rootProject.file("app/" + keystoreProperties['storeFile']))
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+        debug {
+            storeFile file(rootProject.file("app/" + keystoreProperties['storeFile']))
+            storePassword keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
             signingConfig signingConfigs.debug
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17

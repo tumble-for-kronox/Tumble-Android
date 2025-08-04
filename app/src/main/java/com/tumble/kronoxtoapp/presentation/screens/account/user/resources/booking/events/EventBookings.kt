@@ -29,6 +29,8 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.PageState
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.UpcomingKronoxUserEvent
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.SectionDivider
@@ -36,7 +38,87 @@ import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicat
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
-@RequiresApi(Build.VERSION_CODES.O)
+// Use fake data temporarily for UI development
+val fakeDummyRegisteredEvents = listOf(
+    AvailableKronoxUserEvent(
+        id = "evt-001",
+        title = "Morning Yoga Session",
+        type = "Fitness",
+        eventStart = "2025-08-05T08:00:00",
+        eventEnd = "2025-08-05T09:00:00",
+        lastSignupDate = "2025-08-04T20:00:00",
+        participatorId = "user123",
+        supportId = null,
+        anonymousCode = "REG123",
+        isRegistered = true,
+        supportAvailable = true,
+        requiresChoosingLocation = false
+    ),
+    AvailableKronoxUserEvent(
+        id = "evt-003",
+        title = "Weekly Team Meeting",
+        type = "Meeting",
+        eventStart = "2025-08-07T09:00:00",
+        eventEnd = "2025-08-07T10:00:00",
+        lastSignupDate = "2025-08-06T17:00:00",
+        participatorId = "user123",
+        supportId = null,
+        anonymousCode = "REG789",
+        isRegistered = true,
+        supportAvailable = false,
+        requiresChoosingLocation = false
+    )
+)
+
+val fakeDummyUnregisteredEvents = listOf(
+    AvailableKronoxUserEvent(
+        id = "evt-002",
+        title = "Introduction to Kotlin Programming",
+        type = "Lecture",
+        eventStart = "2025-08-06T10:00:00",
+        eventEnd = "2025-08-06T11:30:00",
+        lastSignupDate = "2025-08-05T18:00:00",
+        participatorId = null,
+        supportId = "support789",
+        anonymousCode = "UNREG456",
+        isRegistered = false,
+        supportAvailable = false,
+        requiresChoosingLocation = true
+    ),
+    AvailableKronoxUserEvent(
+        id = "evt-004",
+        title = "Advanced Android Development Workshop",
+        type = "Workshop",
+        eventStart = "2025-08-08T13:00:00",
+        eventEnd = "2025-08-08T16:00:00",
+        lastSignupDate = "2025-08-07T12:00:00",
+        participatorId = null,
+        supportId = null,
+        anonymousCode = "UNREG999",
+        isRegistered = false,
+        supportAvailable = true,
+        requiresChoosingLocation = false
+    )
+)
+
+val fakeDummyUpcomingEvents = listOf(
+    UpcomingKronoxUserEvent(
+        title = "Tech Meetup",
+        type = "Networking",
+        eventStart = "2025-08-10T14:00:00",
+        eventEnd = "2025-08-10T17:00:00",
+        firstSignupDate = "2025-08-01T09:00:00"
+    ),
+    UpcomingKronoxUserEvent(
+        title = "Design Thinking Workshop",
+        type = "Workshop",
+        eventStart = "2025-08-12T10:00:00",
+        eventEnd = "2025-08-12T15:00:00",
+        firstSignupDate = "2025-08-03T08:00:00"
+    )
+)
+
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun EventBookings(
@@ -91,7 +173,7 @@ fun EventBookings(
                         image = Icons.Default.PersonAddAlt1,
                         content = {
                             if (completeUserEvent.value?.registeredEvents != null) {
-                                Events(
+                                RegisteredEventsView(
                                     registeredEvents = completeUserEvent.value?.registeredEvents,
                                     onTapEventAction = { eventId, eventType ->
                                         onTapEventAction(viewModel, eventId, eventType)
@@ -110,7 +192,7 @@ fun EventBookings(
                         image = Icons.Default.PersonRemove,
                         content = {
                             if (completeUserEvent.value?.unregisteredEvents != null) {
-                                Events(
+                                UnregisteredEventsView(
                                     unregisteredEvents = completeUserEvent.value?.unregisteredEvents,
                                     onTapEventAction = { eventId, eventType ->
                                         onTapEventAction(viewModel, eventId, eventType)
@@ -129,7 +211,7 @@ fun EventBookings(
                         image = Icons.Default.PersonSearch,
                         content = {
                             if (completeUserEvent.value?.upcomingEvents != null) {
-                                Events(upcomingEvents = completeUserEvent.value?.upcomingEvents)
+                                UpcomingEventsView(upcomingEvents = completeUserEvent.value?.upcomingEvents)
                             } else {
                                 Text(
                                     text = stringResource(R.string.no_upcoming_events),

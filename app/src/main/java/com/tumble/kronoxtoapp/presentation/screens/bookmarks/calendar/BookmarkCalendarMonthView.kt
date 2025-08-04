@@ -8,7 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun BookmarkCalendarMonthView(
     viewModel: BookmarksViewModel = hiltViewModel(),

@@ -23,7 +23,7 @@ import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicat
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
-fun RegisteredEvent(
+fun RegisteredEvents(
     onClickEvent: (NetworkResponse.AvailableKronoxUserEvent) -> Unit,
     state: State<PageState>,
     registeredEvents: List<NetworkResponse.AvailableKronoxUserEvent>?

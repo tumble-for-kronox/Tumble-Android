@@ -633,7 +633,7 @@ private fun ModernColorPickerDialog(
                 Card(
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                        containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
                     )
                 ) {
                     Row(
@@ -644,7 +644,7 @@ private fun ModernColorPickerDialog(
                         // Color preview circle
                         Surface(
                             modifier = Modifier.size(40.dp),
-                            shape = androidx.compose.foundation.shape.CircleShape,
+                            shape = CircleShape,
                             color = selectedColor,
                             shadowElevation = 2.dp
                         ) {}
@@ -655,12 +655,12 @@ private fun ModernColorPickerDialog(
                             Text(
                                 text = "Preview",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                                color = MaterialTheme.colorScheme.onPrimary
                             )
                             Text(
                                 text = formatColorHex(selectedColor),
                                 style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
+                                color = MaterialTheme.colorScheme.onPrimary,
                                 fontWeight = FontWeight.Medium
                             )
                         }

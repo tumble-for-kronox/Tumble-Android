@@ -24,7 +24,7 @@ import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun BottomSheet(
     viewModel: BookmarksViewModel = hiltViewModel(),

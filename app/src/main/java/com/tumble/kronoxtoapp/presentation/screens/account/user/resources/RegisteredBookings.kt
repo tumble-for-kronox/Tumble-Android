@@ -29,7 +29,7 @@ import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicat
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
-fun RegisteredBooking(
+fun RegisteredBookings(
     onClickResource: (NetworkResponse.KronoxUserBookingElement) -> Unit,
     state: State<PageState>,
     bookings: List<NetworkResponse.KronoxUserBookingElement>?,
@@ -97,7 +97,7 @@ fun RegisteredBooking(
                             }
                         }
                     }
-                }else{
+                } else{
                     Text(text = stringResource(R.string.no_booked_resource))
                 }
             }
