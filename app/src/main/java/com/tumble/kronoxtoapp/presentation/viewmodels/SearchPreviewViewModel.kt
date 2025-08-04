@@ -16,7 +16,7 @@ import kotlinx.coroutines.withContext
 import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
 import com.tumble.kronoxtoapp.datasource.SchoolManager
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.ButtonState
 import com.tumble.kronoxtoapp.domain.enums.SchedulePreviewStatus
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse

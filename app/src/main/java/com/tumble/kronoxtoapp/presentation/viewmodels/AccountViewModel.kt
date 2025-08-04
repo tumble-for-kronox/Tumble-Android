@@ -14,7 +14,7 @@ import com.tumble.kronoxtoapp.data.api.auth.AuthManager
 import com.tumble.kronoxtoapp.data.notifications.NotificationManager
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
 import com.tumble.kronoxtoapp.datasource.SchoolManager
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxRepository
 import com.tumble.kronoxtoapp.domain.models.TumbleUser
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest

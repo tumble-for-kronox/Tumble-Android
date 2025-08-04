@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @Composable
 fun TimeslotCard(
@@ -89,6 +90,7 @@ fun TimeslotCard(
     }
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 private fun AnimatedBookingButton(
     bookingButtonState: BookingButtonState,

@@ -3,7 +3,7 @@ package com.tumble.kronoxtoapp.datasource.network.extensions
 import android.util.Log
 import retrofit2.Call
 import retrofit2.awaitResponse
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 
 
 suspend fun <T> Call<T>.callToApiResponse(): ApiResponse<T> {

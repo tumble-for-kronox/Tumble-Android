@@ -1,7 +1,7 @@
 package com.tumble.kronoxtoapp.datasource.network.kronox
 
 import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
@@ -20,9 +20,9 @@ interface KronoxApiService {
 
     suspend fun getAllResources(endpoint: Endpoint.AllResources, refreshToken: String?, sessionDetails: String?): ApiResponse<List<NetworkResponse.KronoxResourceElement>>
 
-    suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?):  ApiResponse<Void>
+    suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?): ApiResponse<Void>
 
-    suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<NetworkResponse.KronoxUserBookingElement>
+    suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<KronoxUserBookingElement>
 
     suspend fun confirmResource(endpoint: Endpoint.ConfirmResource, refreshToken: String?, resource: NetworkRequest.ConfirmKronoxResource): ApiResponse<Void>
 

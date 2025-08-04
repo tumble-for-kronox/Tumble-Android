@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
-import com.tumble.kronoxtoapp.datasource.network.ApiResponse
+import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxRepository
 import com.tumble.kronoxtoapp.domain.enums.HomeStatus
 import com.tumble.kronoxtoapp.domain.enums.PageState

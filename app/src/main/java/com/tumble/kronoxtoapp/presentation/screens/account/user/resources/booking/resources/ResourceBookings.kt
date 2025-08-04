@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -67,7 +68,7 @@ fun ResourceBookings(
                 viewModel.setBookingDate(date)
             }
         )
-        Divider()
+        HorizontalDivider()
 
         when (resourceBookingPageState.value) {
             PageState.LOADING -> {
