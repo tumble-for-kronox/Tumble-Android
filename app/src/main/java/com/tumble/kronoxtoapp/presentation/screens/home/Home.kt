@@ -13,13 +13,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.HomeStatus
 import com.tumble.kronoxtoapp.domain.enums.PageState
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
+import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
+import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.viewmodels.HomeViewModel
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.event.EventDetailsSheet
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
@@ -29,7 +33,7 @@ import com.tumble.kronoxtoapp.presentation.screens.home.news.News
 import com.tumble.kronoxtoapp.presentation.screens.home.news.NewsSheet
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -40,8 +44,6 @@ fun HomeScreen(
     val newsStatus = viewModel.newsSectionStatus
     val homeStatus = viewModel.status
     val news = viewModel.news
-    val showSheet = remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     LaunchedEffect(viewModel.eventSheet) {
         onComposing(AppBarState(title = pageTitle))
@@ -51,6 +53,10 @@ fun HomeScreen(
         viewModel.eventSheet = EventDetailsSheetModel(event = event)
     }
 
+    val toggleNewsOverlay = { value: Boolean ->
+        viewModel.showNewsSheet = value
+    }
+
     Column(
         modifier = Modifier
             .padding(horizontal = 15.dp, vertical = 10.dp)
@@ -58,7 +64,7 @@ fun HomeScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         if (newsStatus == PageState.LOADED) {
-            News(news = news, showOverlay = showSheet)
+            News(news = news, toggleNewsOverlay = toggleNewsOverlay)
         }
 
         Spacer(Modifier.weight(1f))
@@ -89,16 +95,27 @@ fun HomeScreen(
         Spacer(Modifier.weight(1f))
     }
 
-    if (showSheet.value) {
-        ModalBottomSheet(
-            onDismissRequest = { showSheet.value = false },
-            sheetState = sheetState,
-            containerColor = MaterialTheme.colorScheme.surface
-        ) {
-            NewsSheet(news = news, sheetState = sheetState, showSheet = showSheet)
-        }
+    // News Sheet with built-in navigation
+    AnimatedVisibility(
+        visible = viewModel.showNewsSheet,
+        enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+        exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
+    ) {
+        NewsSheet(
+            news = news,
+            setTopNavState = onComposing,
+            onClose = {
+                toggleNewsOverlay(false)
+                onComposing(
+                    AppBarState(
+                        title = pageTitle
+                    )
+                )
+            }
+        )
     }
 
+    // Event Details Sheet
     AnimatedVisibility(
         visible = viewModel.eventSheet != null,
         enter = fadeIn() + slideInVertically(initialOffsetY = { it }),

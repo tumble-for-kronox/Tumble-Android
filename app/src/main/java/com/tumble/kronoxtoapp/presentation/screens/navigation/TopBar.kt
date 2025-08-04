@@ -74,8 +74,8 @@ fun TopBar(
                 containerColor = Color.Transparent,
                 scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
                 titleContentColor = MaterialTheme.colorScheme.onSurface,
-                navigationIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                navigationIconContentColor = MaterialTheme.colorScheme.primary,
+                actionIconContentColor = MaterialTheme.colorScheme.primary
             ),
             scrollBehavior = scrollBehavior
         )
@@ -103,7 +103,7 @@ private fun AnimatedTitleContent(title: String) {
             style = MaterialTheme.typography.titleLarge.copy(
                 fontWeight = FontWeight.Medium
             ),
-            color = MaterialTheme.colorScheme.onSurface,
+            color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )

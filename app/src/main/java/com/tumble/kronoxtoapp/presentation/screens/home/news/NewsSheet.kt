@@ -1,65 +1,157 @@
 package com.tumble.kronoxtoapp.presentation.screens.home.news
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
+import com.tumble.kronoxtoapp.presentation.screens.general.Info
+import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsSheet(
     news: NewsItems?,
-    sheetState: SheetState,
-    showSheet: MutableState<Boolean>
+    onClose: () -> Unit,
+    setTopNavState: (AppBarState) -> Unit,
 ) {
-    val scope = rememberCoroutineScope()
     var searchText by remember { mutableStateOf("") }
+    var selectedNewsItem by remember { mutableStateOf<NetworkResponse.NotificationContent?>(null) }
 
     val filteredNews = remember(news, searchText) {
         news?.filter {
-            it.title.contains(searchText, ignoreCase = true)
+            it.title.contains(searchText, ignoreCase = true) || it.body.contains(searchText, ignoreCase = true)
         } ?: emptyList()
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.Start
+    val title = stringResource(R.string.news_title)
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        OutlinedTextField(
-            value = searchText,
-            onValueChange = { searchText = it },
-            placeholder = { Text(stringResource(id = R.string.search_news)) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-            textStyle = TextStyle(fontSize = 16.sp)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        filteredNews.forEach { newsItem ->
-            NewsItemCard(newsItem = newsItem) {
-                // TODO: Handle onClick
+        if (selectedNewsItem != null) {
+            NewsDetails(
+                newsItem = selectedNewsItem!!,
+                onBackToList = { selectedNewsItem = null },
+                onClose = onClose,
+                setTopNavState = setTopNavState,
+            )
+        } else {
+            LaunchedEffect(key1 = true) {
+                setTopNavState(
+                    AppBarState(
+                        title = title,
+                        actions = {
+                            CloseCoverButton {
+                                onClose()
+                            }
+                        }
+                    )
+                )
             }
-        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                NewsSearchBar(
+                    query = searchText,
+                    onQueryChange = { searchText = it }
+                )
 
-        CloseCoverButton {
-            scope.launch {
-                sheetState.hide()
-                showSheet.value = false
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    if (filteredNews.isEmpty() && searchText.isNotEmpty()) {
+                        item {
+                            Info("No news found")
+                        }
+                    } else {
+                        items(filteredNews) { newsItem ->
+                            NewsItemCard(
+                                newsItem = newsItem,
+                                onClick = {
+                                    selectedNewsItem = newsItem
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NewsSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val searching = remember { mutableStateOf(false) }
+
+    DockedSearchBar(
+        query = query,
+        onQueryChange = onQueryChange,
+        onSearch = { searching.value = false },
+        active = false,
+        onActiveChange = { },
+        placeholder = {
+            Text(
+                text = stringResource(id = R.string.search_news),
+                color = MaterialTheme.colorScheme.onSurface.copy(0.25f),
+                fontWeight = FontWeight.Normal
+            )
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        },
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        },
+        modifier = modifier
+            .fillMaxWidth(),
+        colors = SearchBarDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.075f),
+            dividerColor = MaterialTheme.colorScheme.primary,
+            inputFieldColors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                cursorColor = MaterialTheme.colorScheme.primary
+            ),
+        ),
+    ) {}
 }

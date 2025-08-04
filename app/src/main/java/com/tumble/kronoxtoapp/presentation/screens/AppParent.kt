@@ -43,7 +43,7 @@ fun AppParent() {
     val homeNavController = rememberNavController()
     val searchNavController = rememberNavController()
 
-    val currentNavGraph = remember { mutableStateOf(BottomNavItem.BOOKMARKS) }
+    val currentNavGraph = remember { mutableStateOf(BottomNavItem.HOME) }
     when (currentNavGraph.value) {
         BottomNavItem.HOME -> homeNavController
         BottomNavItem.BOOKMARKS -> bookmarksNavController
@@ -81,10 +81,18 @@ fun AppParent() {
                     modifier = Modifier.padding(innerPadding).fillMaxSize()
                 ) {
                     when (currentNavGraph.value) {
-                        BottomNavItem.HOME -> HomeNavGraph(homeNavController, { appBarState = it })
-                        BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController, { appBarState = it })
-                        BottomNavItem.SEARCH -> SearchNavGraph(searchNavController, { appBarState = it })
-                        BottomNavItem.ACCOUNT -> AccountNavGraph(accountNavController, { appBarState = it })
+                        BottomNavItem.HOME -> HomeNavGraph(homeNavController) { appBarState = it }
+                        BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController) {
+                            appBarState = it
+                        }
+
+                        BottomNavItem.SEARCH -> SearchNavGraph(searchNavController) {
+                            appBarState = it
+                        }
+
+                        BottomNavItem.ACCOUNT -> AccountNavGraph(accountNavController) {
+                            appBarState = it
+                        }
                     }
                 }
             }

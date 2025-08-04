@@ -5,6 +5,8 @@
     <string name="other_news">Other news</string>
     <string name="news_button">News from us (%1$d)</string>
     <string name="no_other_news">No other news</string>
+    <string name="no_news">No news found</string>
+    <string name="news_title">News from us</string>
     <string name="next_class">Next class</string>
     <string name="unknown">Unknown</string>
     <string name="no_teachers_listed">No teachers listed</string>
