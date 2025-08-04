@@ -111,9 +111,6 @@ fun HomeScreen(
                         title = pageTitle
                     )
                 )
-            },
-            onNavigateToItem = { newsItem ->
-                // Navigation is now handled internally by NewsSheet
             }
         )
     }

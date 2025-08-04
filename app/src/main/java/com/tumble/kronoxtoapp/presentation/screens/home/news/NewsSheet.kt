@@ -27,7 +27,6 @@ import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 fun NewsSheet(
     news: NewsItems?,
     onClose: () -> Unit,
-    onNavigateToItem: (newsItem: NetworkResponse.NotificationContent) -> Unit,
     setTopNavState: (AppBarState) -> Unit,
 ) {
     var searchText by remember { mutableStateOf("") }
