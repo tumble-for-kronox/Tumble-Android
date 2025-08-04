@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.datasource.network.kronox
+package com.tumble.kronoxtoapp.data.api.kronox
 
 import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.api.ApiResponse

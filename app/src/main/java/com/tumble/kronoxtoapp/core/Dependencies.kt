@@ -20,7 +20,7 @@ import com.tumble.kronoxtoapp.data.notifications.NotificationManager
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
 import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
 import com.tumble.kronoxtoapp.data.repository.securestorage.SecureStorageManager
-import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxApiService
+import com.tumble.kronoxtoapp.data.api.kronox.KronoxApiService
 import javax.inject.Singleton
 
 

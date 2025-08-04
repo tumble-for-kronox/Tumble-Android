@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.datasource.network.extensions
+package com.tumble.kronoxtoapp.data.api.extensions
 
 import android.util.Log
 import retrofit2.Call

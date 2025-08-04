@@ -69,14 +69,13 @@ class AuthManager @Inject constructor(
     private fun clearSecureStorageData() {
         secureStorageManager.delete(TokenType.REFRESH_TOKEN.name, secureStorageAccount)
         secureStorageManager.delete(TokenType.SESSION_DETAILS.name, secureStorageAccount)
-        secureStorageManager.delete("kronoxtoapp-user", secureStorageAccount)
     }
 
     sealed class AuthError(message: String) : Exception(message) {
-        object HttpResponseError : AuthError("HTTP Response Error")
-        object TokenError : AuthError("Token Error")
-        object DecodingError : AuthError("Decoding Error")
-        object RequestError : AuthError("Request Error")
+        data object HttpResponseError : AuthError("HTTP Response Error")
+        data object TokenError : AuthError("Token Error")
+        data object DecodingError : AuthError("Decoding Error")
+        data object RequestError : AuthError("Request Error")
     }
 
 }

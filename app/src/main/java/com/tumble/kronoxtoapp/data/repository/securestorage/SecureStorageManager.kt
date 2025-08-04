@@ -13,7 +13,7 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Singleton
 
 @Singleton
-class SecureStorageManager(private val context: Context) {
+class SecureStorageManager(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("tumble_secure_prefs", Context.MODE_PRIVATE)
     private val keyAlias = "TumbleSecureStorageKey"
 
