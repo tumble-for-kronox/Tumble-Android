@@ -61,13 +61,13 @@ fun PreferencesScreen(
     ) {
         SettingsList {
             SettingsListGroup {
-                SettingsNavigationButton(
-                    title = stringResource(R.string.app_language),
-                    current = currentLocale,
-                    leadingIcon = Icons.Default.Language,
-                    trailingIcon = Icons.Default.ArrowOutward,
-                    action = {  startActivity(context, Intent(Settings.ACTION_LOCALE_SETTINGS), null) }
-                )
+//                SettingsNavigationButton(
+//                    title = stringResource(R.string.app_language),
+//                    current = currentLocale,
+//                    leadingIcon = Icons.Default.Language,
+//                    trailingIcon = Icons.Default.ArrowOutward,
+//                    action = {  startActivity(context, Intent(Settings.ACTION_LOCALE_SETTINGS), null) }
+//                )
                 SettingsNavigationButton(
                     title = stringResource(R.string.appearance),
                     current = stringResource(appearance.value.id),

@@ -79,7 +79,7 @@ fun Search(
         when(viewModel.status){
             SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)
             }
-            SearchStatus.LOADING -> { CustomProgressIndicator(modifier = Modifier.fillMaxWidth(), color = MaterialTheme.colorScheme.primary) }
+            SearchStatus.LOADING -> { CustomProgressIndicator(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), color = MaterialTheme.colorScheme.primary) }
             SearchStatus.LOADED -> {
                 Box(modifier = Modifier.weight(1f)) {
                     SearchResults(
@@ -102,7 +102,7 @@ fun Search(
                 }
             }
         }
-        Row(modifier = Modifier.fillMaxWidth().padding(15.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
             SearchField(
                 search = { search() },
                 clearSearch = { viewModel.resetSearchResults() },
