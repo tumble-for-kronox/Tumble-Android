@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Share
@@ -34,17 +35,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.tumble.kronoxtoapp.BuildConfig
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
-import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
 import com.tumble.kronoxtoapp.presentation.screens.settings.buttons.SettingsNavigationButton
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsList
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsListGroup
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
-import java.util.Locale
 
 @Composable
 fun SettingsScreen(
@@ -55,8 +54,12 @@ fun SettingsScreen(
     val backTitle = stringResource(R.string.account)
     var showShareSheet by remember { mutableStateOf(false) }
 
-    val appVersion = "1.0.0"
     val context = LocalContext.current
+    val appVersion = try {
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName
+    } catch (e: Exception) {
+        BuildConfig.VERSION_NAME
+    }
 
     val externalNav = {uri:String ->
         startActivity(
@@ -112,6 +115,12 @@ fun SettingsScreen(
                     leadingIcon = Icons.Default.Share,
                     trailingIcon = Icons.Default.ArrowOutward,
                     action = { showShareSheet = true }
+                )
+                SettingsNavigationButton(
+                    title = "Buy Me a Coffee",
+                    leadingIcon = Icons.Default.Coffee,
+                    trailingIcon = Icons.Default.ArrowOutward,
+                    action = { externalNav("https://buymeacoffee.com/defaultdino") }
                 )
             }
             SettingsListGroup {
