@@ -46,7 +46,11 @@ fun TumbleTheme(
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
     val systemUiController = rememberSystemUiController()
-    systemUiController.setStatusBarColor(color = colorScheme.primary)
+    systemUiController.setStatusBarColor(
+        color = colorScheme.primary,
+        darkIcons = !darkTheme
+    )
+
 
     MaterialTheme(
         colorScheme = colorScheme,
