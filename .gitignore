@@ -16,3 +16,4 @@
 local.properties
 .vscode
 .idea/
+app/google-services.json
