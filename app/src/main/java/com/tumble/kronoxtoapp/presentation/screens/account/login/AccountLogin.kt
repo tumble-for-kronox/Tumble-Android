@@ -1,5 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.screens.account.login
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +45,7 @@ import com.tumble.kronoxtoapp.presentation.viewmodels.LoginViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun AccountLogin(
@@ -72,7 +74,7 @@ fun AccountLogin(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 32.dp)
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
     ) {
         Column(
             modifier = Modifier
@@ -166,7 +168,7 @@ fun SchoolSelectionMenu(
                         color = if (selectedSchool != null) {
                             MaterialTheme.colorScheme.onSurface
                         } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
+                            MaterialTheme.colorScheme.onSurface
                         },
                         fontWeight = if (selectedSchool != null) {
                             FontWeight.Medium
