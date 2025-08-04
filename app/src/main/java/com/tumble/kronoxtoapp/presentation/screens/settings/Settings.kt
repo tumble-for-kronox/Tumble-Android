@@ -48,7 +48,6 @@ import java.util.Locale
 
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel(),
     navController: NavController,
     setTopNavState: (AppBarState) -> Unit
 ) {
@@ -56,8 +55,7 @@ fun SettingsScreen(
     val backTitle = stringResource(R.string.account)
     var showShareSheet by remember { mutableStateOf(false) }
 
-    val currentLocale = Locale.getDefault().displayLanguage
-    val appVersion = "1.0.0" // Replace with actual version retrieval logic
+    val appVersion = "1.0.0"
     val context = LocalContext.current
 
     val externalNav = {uri:String ->
@@ -70,15 +68,11 @@ fun SettingsScreen(
             null)
     }
     LaunchedEffect(key1 = true) {
-        setTopNavState(
-            AppBarState(
-                title = pageTitle,
-                navigationAction = {
-                    BackButton(label = backTitle) {
-                        navController.popBackStack()
-                    }
-                }
-            )
+        resetNavState(
+            setTopNavState,
+            pageTitle,
+            backTitle,
+            navController
         )
     }
 
@@ -133,15 +127,13 @@ fun SettingsScreen(
                 )
             }
 
-            if (appVersion != null) {
-                SettingsListGroup {
-                    Text(
-                        text = "Tumble, Android v.$appVersion",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Normal,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-                    )
-                }
+            SettingsListGroup {
+                Text(
+                    text = "Tumble, Android v.$appVersion",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                )
             }
         }
     }
@@ -151,8 +143,36 @@ fun SettingsScreen(
         enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
         exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
     ) {
-        ShareSheet(context = LocalContext.current) {
-            showShareSheet = false
-        }
+        ShareSheet(
+            context = LocalContext.current,
+            onDismiss = {
+                showShareSheet = false
+                resetNavState(
+                    setTopNavState,
+                    pageTitle,
+                    backTitle,
+                    navController
+                )
+            },
+            setTopNavState = setTopNavState
+        )
     }
+}
+
+private fun resetNavState(
+    setTopNavState: (AppBarState) -> Unit,
+    pageTitle: String,
+    backTitle: String,
+    navController: NavController,
+) {
+    setTopNavState(
+        AppBarState(
+            title = pageTitle,
+            navigationAction = {
+                BackButton(label = backTitle) {
+                    navController.popBackStack()
+                }
+            }
+        )
+    )
 }

@@ -1,5 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.screens.account.login
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,6 +18,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -42,7 +44,11 @@ fun UsernameField(username: MutableState<String>) {
                 color = MaterialTheme.colorScheme.onSurface
             )
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+        ,
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
         keyboardOptions = KeyboardOptions(
@@ -94,7 +100,11 @@ fun PasswordField(
                 color = MaterialTheme.colorScheme.onSurface
             )
         },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
+        ,
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
         keyboardOptions = KeyboardOptions(

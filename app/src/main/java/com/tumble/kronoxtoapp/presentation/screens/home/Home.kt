@@ -59,7 +59,7 @@ fun HomeScreen(
 
     Column(
         modifier = Modifier
-            .padding(horizontal = 15.dp, vertical = 10.dp)
+            .padding(horizontal = 15.dp, vertical = 15.dp)
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {

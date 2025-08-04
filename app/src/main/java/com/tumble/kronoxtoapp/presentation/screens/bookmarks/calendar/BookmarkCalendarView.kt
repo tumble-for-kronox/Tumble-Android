@@ -39,11 +39,9 @@ import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicat
 import com.tumble.kronoxtoapp.utils.month_date
 import kotlin.math.abs
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun BookmarkCalendarView(
-    viewModel: BookmarksViewModel = hiltViewModel(),
     onEventSelection: (Event) -> Unit
 ){
     val monthTitlePagerState = rememberPagerState(
@@ -165,7 +163,7 @@ fun DaysOfTheWeek(){
                 Text(
                     text = it.name,
                     color = MaterialTheme.colorScheme.onBackground,
-                    fontSize = 20.sp
+                    fontSize = 18.sp
                 )
             }
         }

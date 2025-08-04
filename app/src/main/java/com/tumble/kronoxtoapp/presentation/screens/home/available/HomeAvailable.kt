@@ -23,10 +23,10 @@ fun HomeAvailable(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-        TodaysEvents(
-            eventsForToday = eventsForToday.value,
-            swipedCards = swipedCards.value
-        )
+//        TodaysEvents(
+//            eventsForToday = eventsForToday.value,
+//            swipedCards = swipedCards.value
+//        )
         NextClass(nextClass = nextClass, onEventSelection)
         Spacer(modifier = Modifier.weight(1f))
     }
