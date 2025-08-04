@@ -51,12 +51,12 @@
   {
     "id" : 5,
     "kronoxUrl" : "https://schema.sh.se",
-    "name" : "Södertörns Högskola",
+    "name" : "Södertörn University",
     "logoName" : "sh_logo",
     "loginRq" : false,
     "color": "yellow",
     "schoolUrl": "https://www.sh.se/",
-    "domain": "sh"
+    "domain": "su"
   },
   {
     "id" : 6,
@@ -84,6 +84,6 @@
   "loginRq" : false,
   "color": "orange",
   "schoolUrl": "https://www.mdu.se",
-  "domain": "mdh"
+  "domain": "mdu"
 }
 ]
