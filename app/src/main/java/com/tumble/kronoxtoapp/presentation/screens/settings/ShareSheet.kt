@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FileCopy
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,95 +53,86 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.extensions.presentation.borderRadius
+import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
-fun ShareSheet(context: Context, onDismiss: () -> Unit) {
+fun ShareSheet(
+    context: Context,
+    onDismiss: () -> Unit,
+    setTopNavState: (AppBarState) -> Unit
+) {
     var qrCodeImage by remember { mutableStateOf<Bitmap?>(null) }
     val websiteLink = "app.tumbleforkronox.com"
-    val appStoreLink = "https://apps.apple.com/se/app/tumble-for-kronox/id1617642864?l=en"
+    val appStoreLink = "https://play.google.com/store/apps/details?id=com.tumble.kronoxtoapp"
+    val title = stringResource(R.string.share_app)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = true) {
+        setTopNavState(
+            AppBarState(
+                title = title,
+                actions = {
+                    CloseCoverButton {
+                        onDismiss()
+                    }
+                }
+            )
+        )
         val qrImage = generateQRCode(appStoreLink)
         qrCodeImage = qrImage
     }
-    val scrollState = rememberScrollState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(scrollState)
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Surface (
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                text = stringResource(R.string.share_app),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                shape = RoundedCornerShape(15.dp),
-                elevation = null,
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Image(
-            painter = painterResource(id = R.mipmap.ic_launcher),
-            contentDescription = null,
-            modifier = Modifier
-                .size(200.dp)
-                .background(Color.Transparent)
-        )
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        CopyButton(websiteLink, context)
-
-        Spacer(modifier = Modifier.height(20.dp))
-
-        Column(
-            modifier = Modifier
-                //.fillMaxWidth()
-                //.padding(horizontal = 50.dp)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.onBackground,
-                    shape = RoundedCornerShape(10.dp)
-                )
-                .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(10.dp)),
+        Column (
+            verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.qr_code),
-                fontSize = 16.sp,
-                modifier = Modifier.padding(top = 8.dp)
+
+            Image(
+                painter = painterResource(id = R.drawable.notification_icon),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp)
+                    .background(Color.Transparent)
             )
 
-            qrCodeImage?.let {
-                Image(
-                    bitmap = it.asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .size(250.dp)
-                        .background(Color.Transparent)
+            CopyButton(websiteLink, context)
+
+            Column(
+                modifier = Modifier
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(12.dp)),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.qr_code),
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(top = 8.dp)
                 )
-            } ?: CustomProgressIndicator()
+
+                qrCodeImage?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .size(250.dp)
+                            .background(Color.Transparent)
+                    )
+                } ?: CustomProgressIndicator()
+            }
         }
     }
 }
@@ -155,22 +147,26 @@ fun CopyButton(link: String, context: Context) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 25.dp, horizontal = 30.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = null,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surface)
+            ,
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
-                Text(text = stringResource(R.string.copy_tumble_link) , fontSize = 16.sp)
-                Text(text = link, fontSize = 12.sp, color = Color.Gray)
+                Text(text = stringResource(R.string.copy_tumble_link) , fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = link, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurface)
             }
             Icon(
                 imageVector = Icons.Default.FileCopy,
-                contentDescription = null
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
     }
