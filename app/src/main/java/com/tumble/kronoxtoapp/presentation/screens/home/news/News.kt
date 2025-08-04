@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Newspaper
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,7 +24,7 @@ import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 
 @Composable
-fun News(news: NewsItems?, showOverlay: MutableState<Boolean>) {
+fun News(news: NewsItems?, toggleNewsOverlay: (Boolean) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,7 +32,7 @@ fun News(news: NewsItems?, showOverlay: MutableState<Boolean>) {
     ) {
         Button(
             onClick = {
-                showOverlay.value = true
+                toggleNewsOverlay(true)
             },
             modifier = Modifier.fillMaxWidth().height(50.dp)
         ) {

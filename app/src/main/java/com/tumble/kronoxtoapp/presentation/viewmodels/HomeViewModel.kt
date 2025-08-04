@@ -41,6 +41,7 @@ class HomeViewModel @Inject constructor(
     private val _cancellables = mutableListOf<Job>()
     private var initializedSession = false
     var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
+    var showNewsSheet by mutableStateOf(false)
 
     init {
         fetchNews()

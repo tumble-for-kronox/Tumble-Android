@@ -45,23 +45,11 @@ object Routes {
 }
 
 object UriBuilder {
-    fun buildHomeNewsDetailsUri(articleId: String): String {
-        return Routes.HomeNewsDetailsUri.replace("{id}", articleId)
-    }
-
-    fun buildBookmarksDetailsUri(eventId: String): String {
-        return Routes.BookmarksDetailsUri.replace("{id}", eventId)
-    }
-
     fun buildSearchDetailsUri(scheduleId: String): String {
         return Routes.SearchDetailsUri.replace("{id}", scheduleId)
     }
 
     fun buildAccountResourceDetailsUri(resourceId: String): String {
         return Routes.AccountResourceDetailsUri.replace("{id}", resourceId)
-    }
-
-    fun buildAccountEventDetailsUri(eventId: String): String {
-        return Routes.AccountEventDetailsUri.replace("{id}", eventId)
     }
 }

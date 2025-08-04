@@ -54,7 +54,6 @@ fun SettingsScreen(
 ) {
     val pageTitle = stringResource(R.string.accountSettings)
     val backTitle = stringResource(R.string.account)
-    val appearance = viewModel.appearance.collectAsState()
     var showShareSheet by remember { mutableStateOf(false) }
 
     val currentLocale = Locale.getDefault().displayLanguage
