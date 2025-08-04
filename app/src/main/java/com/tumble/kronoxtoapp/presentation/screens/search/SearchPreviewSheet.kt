@@ -24,7 +24,7 @@ import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun SearchPreviewSheet(

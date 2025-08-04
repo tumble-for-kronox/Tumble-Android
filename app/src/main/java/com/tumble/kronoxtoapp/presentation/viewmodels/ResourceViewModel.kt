@@ -30,7 +30,7 @@ class ResourceViewModel @Inject constructor(
 ): ViewModel(){
 
     private val _selectedPickerDate = MutableStateFlow<Date>(Date())
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     val selectedPickerDate: StateFlow<Date> = _selectedPickerDate
 
     private val _completeUserEvent = MutableStateFlow<NetworkResponse.KronoxCompleteUserEvent?>(null)

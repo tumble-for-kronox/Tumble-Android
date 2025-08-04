@@ -10,7 +10,10 @@ import com.tumble.kronoxtoapp.domain.enums.Types.AppearanceType
 
 private val DarkColorScheme = darkColorScheme(
     primary = Primary,
-    secondary = SecondaryDark,
+    secondary = Secondary,
+    surfaceVariant = Success,
+    onSurfaceVariant = OnSuccess,
+    onSecondary = OnSecondary,
     background = BackgroundDark,
     onBackground = OnBackgroundDark,
     onPrimary = OnPrimary,
@@ -22,7 +25,10 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = Primary,
-    secondary = SecondaryLight,
+    secondary = Secondary,
+    surfaceVariant = Success,
+    onSurfaceVariant = OnSuccess,
+    onSecondary = OnSecondary,
     background = BackgroundLight,
     onBackground = OnBackgroundLight,
     onPrimary = OnPrimary,

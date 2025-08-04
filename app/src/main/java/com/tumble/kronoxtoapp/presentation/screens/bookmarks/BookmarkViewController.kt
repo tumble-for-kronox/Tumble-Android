@@ -22,7 +22,7 @@ import com.tumble.kronoxtoapp.presentation.screens.bookmarks.list.BookmarkListVi
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.week.BookmarkWeekView
 
 @OptIn(ExperimentalFoundationApi::class)
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun BookmarkViewController(
     viewModel: BookmarksViewModel = hiltViewModel(),

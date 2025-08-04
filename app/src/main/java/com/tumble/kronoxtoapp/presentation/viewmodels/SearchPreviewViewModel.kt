@@ -41,7 +41,7 @@ class SearchPreviewViewModel @Inject constructor(
     private val schools by lazy { schoolManager.getSchools() }
     private var currentSchedules: List<Schedule> = realmManager.getAllSchedules()
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     fun getSchedule(programmeId: String, schoolId: String){
         val isScheduleSaved = checkSavedSchedule(programmeId = programmeId, schedules = currentSchedules)
 
@@ -80,7 +80,7 @@ class SearchPreviewViewModel @Inject constructor(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     private fun updateUIWithFetchedSchedule(fetchedSchedule: NetworkResponse.Schedule, existingSchedule: List<Schedule>){
         viewModelScope.launch(Dispatchers.Main) {
             if (!fetchedSchedule.days.any { it.events.isNotEmpty() }){

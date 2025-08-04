@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun dateRow(
     inMonth: (Int) -> Float,

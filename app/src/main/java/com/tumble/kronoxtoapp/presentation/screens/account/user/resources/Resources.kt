@@ -53,7 +53,7 @@ fun Resources(
             resourceType = ResourceType.RESOURCE,
             destination = { navController.navigate(Routes.accountResources) }
         ) {
-            RegisteredBooking(
+            RegisteredBookings(
                 onClickResource = { parentViewModel.setBooking(it) },
                 state = registeredBookingsState,
                 bookings = userBookings.value?.bookings?: emptyList(),
@@ -66,7 +66,7 @@ fun Resources(
             resourceType = ResourceType.EVENT,
             destination = { navController.navigate(Routes.accountEvents) }
         ) {
-            RegisteredEvent(
+            RegisteredEvents(
                 onClickEvent = { parentViewModel.setEvent(it) },
                 state = parentViewModel.registeredEventSectionState.collectAsState(),
                 registeredEvents = userEvents.value?.registeredEvents?: emptyList()

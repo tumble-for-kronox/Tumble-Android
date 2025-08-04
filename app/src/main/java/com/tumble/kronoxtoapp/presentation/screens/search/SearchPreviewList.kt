@@ -19,7 +19,7 @@ import com.tumble.kronoxtoapp.extensions.models.toRealmEvent
 import com.tumble.kronoxtoapp.presentation.components.buttons.VerboseEventButtonLabel
 import com.tumble.kronoxtoapp.presentation.viewmodels.SearchPreviewViewModel
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun SearchPreviewList(
     viewModel: SearchPreviewViewModel

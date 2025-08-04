@@ -17,3 +17,9 @@ local.properties
 .vscode
 .idea/
 app/google-services.json
+app/key.properties
+
+# Keystore files
+*.jks
+*.keystore
+key.properties

@@ -14,21 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.UpcomingKronoxUserEvent
+import java.util.UUID
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun Events(
-    registeredEvents: List<AvailableKronoxUserEvent>? = null,
-    unregisteredEvents: List<AvailableKronoxUserEvent>? = null,
-    upcomingEvents: List<UpcomingKronoxUserEvent>? = null,
-    onTapEventAction: ((String, EventType) -> Unit)? = null
-) {
-    UnregisteredEventsView(unregisteredEvents, onTapEventAction)
-    RegisteredEventsView(registeredEvents, onTapEventAction)
-    UpcomingEventsView(upcomingEvents)
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RegisteredEventsView(
     registeredEvents: List<AvailableKronoxUserEvent>?,
@@ -63,7 +50,7 @@ fun RegisteredEventsView(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun UnregisteredEventsView(
     unregisteredEvents: List<AvailableKronoxUserEvent>?,
@@ -96,21 +83,21 @@ fun UnregisteredEventsView(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 @Composable
 fun UpcomingEventsView(
     upcomingEvents: List<UpcomingKronoxUserEvent>?
 ) {
     Column {
         upcomingEvents?.let { events ->
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(15.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    upcomingEvents.forEach { event ->
-                        UpcomingEventCardButton(event = event)
-                    }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                upcomingEvents.forEach { event ->
+                    UpcomingEventCardButton(event = event)
                 }
+            }
             if (events.isEmpty()) {
                 Text(
                     text = stringResource(id = R.string.no_upcoming_events),

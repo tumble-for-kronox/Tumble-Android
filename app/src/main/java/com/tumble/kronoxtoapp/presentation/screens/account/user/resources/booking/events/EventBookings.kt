@@ -29,6 +29,8 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.PageState
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.UpcomingKronoxUserEvent
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.SectionDivider
@@ -36,7 +38,6 @@ import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicat
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun EventBookings(
@@ -91,7 +92,7 @@ fun EventBookings(
                         image = Icons.Default.PersonAddAlt1,
                         content = {
                             if (completeUserEvent.value?.registeredEvents != null) {
-                                Events(
+                                RegisteredEventsView(
                                     registeredEvents = completeUserEvent.value?.registeredEvents,
                                     onTapEventAction = { eventId, eventType ->
                                         onTapEventAction(viewModel, eventId, eventType)
@@ -110,7 +111,7 @@ fun EventBookings(
                         image = Icons.Default.PersonRemove,
                         content = {
                             if (completeUserEvent.value?.unregisteredEvents != null) {
-                                Events(
+                                UnregisteredEventsView(
                                     unregisteredEvents = completeUserEvent.value?.unregisteredEvents,
                                     onTapEventAction = { eventId, eventType ->
                                         onTapEventAction(viewModel, eventId, eventType)
@@ -129,7 +130,7 @@ fun EventBookings(
                         image = Icons.Default.PersonSearch,
                         content = {
                             if (completeUserEvent.value?.upcomingEvents != null) {
-                                Events(upcomingEvents = completeUserEvent.value?.upcomingEvents)
+                                UpcomingEventsView(upcomingEvents = completeUserEvent.value?.upcomingEvents)
                             } else {
                                 Text(
                                     text = stringResource(R.string.no_upcoming_events),

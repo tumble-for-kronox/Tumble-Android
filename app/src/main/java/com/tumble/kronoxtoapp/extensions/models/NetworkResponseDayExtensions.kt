@@ -7,7 +7,7 @@ import com.tumble.kronoxtoapp.utils.isoDateFormatter
 import com.tumble.kronoxtoapp.utils.preprocessDateString
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
+
 fun NetworkResponse.Day.isValidDay(): Boolean{
 
 //    LocalDate.parse(this.isoString)
