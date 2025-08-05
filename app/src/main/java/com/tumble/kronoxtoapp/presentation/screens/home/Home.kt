@@ -27,7 +27,6 @@ import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.viewmodels.HomeViewModel
-import com.tumble.kronoxtoapp.presentation.screens.bookmarks.event.EventDetailsSheet
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.home.available.HomeAvailable
@@ -39,7 +38,7 @@ import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    navController: NavHostController,
+    navController: NavController = rememberNavController(),
     onComposing: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.home)
@@ -53,7 +52,7 @@ fun HomeScreen(
     }
 
     val onEventSelection = { event: Event ->
-        navController.navigate(UriBuilder.buildBookmarksDetailsUri(event.eventId))
+        navController.navigate(UriBuilder.buildHomeEventDetailsUri(event.eventId).toUri())
     }
 
     val toggleNewsOverlay = { value: Boolean ->

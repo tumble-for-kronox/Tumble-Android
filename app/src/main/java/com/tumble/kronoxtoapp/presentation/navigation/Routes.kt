@@ -6,8 +6,9 @@ object Routes {
     const val home = "home"
     const val homeNews = "home/news"
     const val homeNewsDetails = "home/news?articleId={id}"
+    const val homeEventDetails = "home/event?eventId={event_id}"
     const val bookmarks = "bookmarks"
-    const val bookmarksDetails = "bookmarks?eventId={event_id}"
+    const val bookmarksDetails = "bookmarks_details?eventId={event_id}"
     const val search = "search"
     const val searchDetails = "search?scheduleId={schedule_id}&schoolId={school_id}&scheduleTitle={schedule_title}"
     const val account = "account"
@@ -29,6 +30,7 @@ object Routes {
     var HomeUri = "https://${shared.tumbleUrl}/$home"
     var HomeNewsUri = "https://${shared.tumbleUrl}/$homeNews"
     var HomeNewsDetailsUri = "https://${shared.tumbleUrl}/$homeNewsDetails"
+    var HomeEventDetailsUri = "https://${shared.tumbleUrl}/$homeEventDetails"
     var BookmarksUri = "https://${shared.tumbleUrl}/$bookmarks"
     var BookmarksDetailsUri = "https://${shared.tumbleUrl}/$bookmarksDetails"
     var SearchUri = "https://${shared.tumbleUrl}/$search"
@@ -54,6 +56,11 @@ object UriBuilder {
 
     fun buildBookmarksDetailsUri(eventId: String): String {
         return Routes.BookmarksDetailsUri
+            .replace("{event_id}", eventId)
+    }
+
+    fun buildHomeEventDetailsUri(eventId: String): String {
+        return Routes.HomeEventDetailsUri
             .replace("{event_id}", eventId)
     }
 

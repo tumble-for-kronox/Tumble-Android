@@ -1,5 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -14,8 +15,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.BookmarksStatus
@@ -30,13 +34,13 @@ import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 @Composable
 fun Bookmarks(
     viewModel: BookmarksViewModel = hiltViewModel(),
-    navController: NavHostController,
+    navController: NavController = rememberNavController(),
     setTopNavState: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.bookmark)
 
     val onEventSelection = { event: Event ->
-        navController.navigate(UriBuilder.buildBookmarksDetailsUri(eventId = event.eventId))
+        navController.navigate(UriBuilder.buildBookmarksDetailsUri(eventId = event.eventId).toUri())
     }
 
     val bookmarksStatus = viewModel.status
@@ -49,6 +53,8 @@ fun Bookmarks(
             )
         )
     }
+
+    Log.d("Bookmarks", "Showing Bookmarks")
 
     Column (
         modifier = Modifier
