@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.HomeStatus
@@ -25,7 +27,6 @@ import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.viewmodels.HomeViewModel
-import com.tumble.kronoxtoapp.presentation.screens.bookmarks.event.EventDetailsSheet
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.home.available.HomeAvailable
@@ -37,6 +38,7 @@ import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    navController: NavController = rememberNavController(),
     onComposing: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.home)
@@ -50,7 +52,7 @@ fun HomeScreen(
     }
 
     val onEventSelection = { event: Event ->
-        viewModel.eventSheet = EventDetailsSheetModel(event = event)
+        navController.navigate(UriBuilder.buildHomeEventDetailsUri(event.eventId).toUri())
     }
 
     val toggleNewsOverlay = { value: Boolean ->
@@ -113,25 +115,5 @@ fun HomeScreen(
                 )
             }
         )
-    }
-
-    // Event Details Sheet
-    AnimatedVisibility(
-        visible = viewModel.eventSheet != null,
-        enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-        exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
-    ) {
-        viewModel.eventSheet?.let {
-            EventDetailsSheet(
-                event = it.event,
-                setTopNavState = onComposing,
-                onClose = {
-                    viewModel.eventSheet = null
-                },
-                onColorChanged = { hexColor, courseId ->
-                    viewModel.changeCourseColor(hexColor, courseId)
-                }
-            )
-        }
     }
 }

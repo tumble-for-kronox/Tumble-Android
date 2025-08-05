@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,8 +27,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
-import com.tumble.kronoxtoapp.extensions.presentation.toColor
+import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 
 @Composable
 fun WeekEvent(

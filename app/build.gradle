@@ -20,8 +20,8 @@ android {
         applicationId "com.tumble.kronoxtoapp"
         minSdk 26
         targetSdk 35
-        versionCode 45
-        versionName "4.0.1"
+        versionCode 47
+        versionName "4.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -47,12 +47,14 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
+            //minifyEnabled true
+            //shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             signingConfig signingConfigs.debug
+            minifyEnabled false
+            shrinkResources false
         }
     }
 

@@ -7,11 +7,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.data.api.auth.AuthManager
-import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.data.api.ApiResponse
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
 import com.tumble.kronoxtoapp.domain.enums.PageState
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
@@ -22,9 +22,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ResourceViewModel @Inject constructor(
-    val authManager: AuthManager,
-    val dataStoreManager: DataStoreManager,
-    val kronoxManager: KronoxRepository
+    val authenticationService: AuthenticationService,
+    val dataStoreService: DataStoreService,
+    val kronoxManager: KronoxService
 ): ViewModel(){
 
     private val _selectedPickerDate = MutableStateFlow<Date>(Date())
@@ -52,8 +52,8 @@ class ResourceViewModel @Inject constructor(
         viewModelScope.launch {
             _eventBookingPageState.value = PageState.LOADING
             try {
-                val endpoint = Endpoint.UserEvents(dataStoreManager.authSchoolId.value.toString())
-                val refreshToken = authManager.getRefreshToken() ?: return@launch
+                val endpoint = Endpoint.UserEvents(dataStoreService.authSchoolId.value.toString())
+                val refreshToken = authenticationService.getRefreshToken() ?: return@launch
 
                 val response: ApiResponse<NetworkResponse.KronoxCompleteUserEvent> =
                     kronoxManager.getKronoxCompleteUserEvent(endpoint, refreshToken, sessionDetails = null)
@@ -73,8 +73,8 @@ class ResourceViewModel @Inject constructor(
 
     fun registerForEvent(eventId: String){
         viewModelScope.launch() {
-            val refreshToken = authManager.getRefreshToken() ?: return@launch
-            val schoolID = dataStoreManager.authSchoolId.value.toString()
+            val refreshToken = authenticationService.getRefreshToken() ?: return@launch
+            val schoolID = dataStoreService.authSchoolId.value.toString()
             val endpoint = Endpoint.RegisterEvent(eventId = eventId, schoolId = schoolID)
             when(val response = kronoxManager.registerForEvent(endpoint, refreshToken)){
                 is ApiResponse.Error -> {
@@ -95,8 +95,8 @@ class ResourceViewModel @Inject constructor(
     fun unregisterForEvent(eventId: String){
         viewModelScope.launch {
 
-            val endpoint = Endpoint.UnregisterEvent(eventId, dataStoreManager.authSchoolId.value.toString())
-            val refreshToken = authManager.getRefreshToken() ?: return@launch
+            val endpoint = Endpoint.UnregisterEvent(eventId, dataStoreService.authSchoolId.value.toString())
+            val refreshToken = authenticationService.getRefreshToken() ?: return@launch
             when(val response = kronoxManager.unRegisterForEvent(endpoint, refreshToken)){
                 is ApiResponse.Error -> {
                     if(response.errorMessage == "Empty response body"){
@@ -118,8 +118,8 @@ class ResourceViewModel @Inject constructor(
         _resourceBookingPageState.value = PageState.LOADING
         viewModelScope.launch {
             try {
-                val endpoint = Endpoint.AllResources(dataStoreManager.authSchoolId.value.toString(), dateString)
-                val refreshToken = authManager.getRefreshToken() ?: return@launch
+                val endpoint = Endpoint.AllResources(dataStoreService.authSchoolId.value.toString(), dateString)
+                val refreshToken = authenticationService.getRefreshToken() ?: return@launch
                 val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>> = kronoxManager.getAllResources(endpoint, refreshToken, null)
 
                 when(response){
@@ -143,9 +143,9 @@ class ResourceViewModel @Inject constructor(
     }
 
     suspend fun bookResource(resourceId: String, date: Date, availabilityValue: NetworkResponse.AvailabilityValue): Boolean{
-        val endpoint = Endpoint.BookResource(dataStoreManager.authSchoolId.value.toString())
+        val endpoint = Endpoint.BookResource(dataStoreService.authSchoolId.value.toString())
         val resource = NetworkRequest.BookKronoxResource(resourceId, isoDateFormatterDate.format(date), availabilityValue)
-        val refreshToken = authManager.getRefreshToken() ?: return false
+        val refreshToken = authenticationService.getRefreshToken() ?: return false
 
 
         val response: ApiResponse<NetworkResponse.KronoxUserBookingElement> = kronoxManager.bookResource(endpoint, refreshToken, resource)

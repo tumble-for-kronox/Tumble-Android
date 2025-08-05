@@ -6,45 +6,45 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
-import com.tumble.kronoxtoapp.data.repository.SchoolManager
-import com.tumble.kronoxtoapp.data.api.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.ButtonState
-import com.tumble.kronoxtoapp.domain.enums.SchedulePreviewStatus
+import com.tumble.kronoxtoapp.domain.enums.SheetStatus
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.extensions.models.assignCourseRandomColors
-import com.tumble.kronoxtoapp.extensions.models.toRealmSchedule
+import com.tumble.kronoxtoapp.other.extensions.models.assignCourseRandomColors
+import com.tumble.kronoxtoapp.other.extensions.models.toRealmSchedule
 
 @HiltViewModel
 class SearchPreviewViewModel @Inject constructor(
-    private val kronoxManager: KronoxRepository,
-    private val realmManager: RealmManager,
-    private val schoolManager: SchoolManager
+    private val kronoxManager: KronoxService,
+    private val realmService: RealmService,
+    private val schoolService: SchoolService
 ): ViewModel() {
-    var isSaved by mutableStateOf(false)
-    var status by mutableStateOf<SchedulePreviewStatus>(SchedulePreviewStatus.LOADING)
-    var errorMessage by mutableStateOf("")
+    private var isSaved by mutableStateOf(false)
+    var status by mutableStateOf<SheetStatus>(SheetStatus.LOADING)
+    private var errorMessage by mutableStateOf("")
     var buttonState by mutableStateOf<ButtonState>(ButtonState.LOADING)
     var courseColorsForPreview by mutableStateOf<Map<String,String>>(emptyMap())
 
     var schedule by mutableStateOf<NetworkResponse.Schedule?>(null)
 
-    private val schools by lazy { schoolManager.getSchools() }
-    private var currentSchedules: List<Schedule> = realmManager.getAllSchedules()
+    private val schools by lazy { schoolService.getSchools() }
+    private var currentSchedules: List<Schedule> = realmService.getAllSchedules()
 
     
     fun getSchedule(programmeId: String, schoolId: String){
         val isScheduleSaved = checkSavedSchedule(programmeId = programmeId, schedules = currentSchedules)
 
         with(Dispatchers.Main){
-            status = SchedulePreviewStatus.LOADING
+            status = SheetStatus.LOADING
             isSaved = isScheduleSaved
         }
 
@@ -55,9 +55,9 @@ class SearchPreviewViewModel @Inject constructor(
                 val fetchedSchedule: ApiResponse<NetworkResponse.Schedule> = kronoxManager.getSchedule(endpoint)
                 parsedSchedule = parseFetchedSchedules(fetchedSchedule)
                 updateUIWithFetchedSchedule(parsedSchedule, existingSchedule = currentSchedules)
-            }catch (e: Exception){
+            } catch (e: Exception){
                 withContext(Dispatchers.Main){
-                    status = SchedulePreviewStatus.ERROR
+                    status = SheetStatus.ERROR
                     errorMessage = "An unexpected error occurred. Please try again later."
                 }
             }
@@ -82,14 +82,14 @@ class SearchPreviewViewModel @Inject constructor(
     private fun updateUIWithFetchedSchedule(fetchedSchedule: NetworkResponse.Schedule, existingSchedule: List<Schedule>){
         viewModelScope.launch(Dispatchers.Main) {
             if (!fetchedSchedule.days.any { it.events.isNotEmpty() }){
-                status = SchedulePreviewStatus.EMPTY
+                status = SheetStatus.EMPTY
                 buttonState = ButtonState.DISABLED
             }else if (existingSchedule.map { it.scheduleId }.contains(fetchedSchedule.id)){
                 isSaved = true
                 buttonState = ButtonState.SAVED
                 schedule = fetchedSchedule
-                courseColorsForPreview = realmManager.getCourseColors()
-                status = SchedulePreviewStatus.LOADED
+                courseColorsForPreview = realmService.getCourseColors()
+                status = SheetStatus.LOADED
             } else{
                 withContext(Dispatchers.Default){
                     val randomCourseColor = fetchedSchedule.assignCourseRandomColors()
@@ -97,7 +97,7 @@ class SearchPreviewViewModel @Inject constructor(
                         courseColorsForPreview = randomCourseColor
                         schedule = fetchedSchedule
                         buttonState = ButtonState.NOT_SAVED
-                        status = SchedulePreviewStatus.LOADED
+                        status = SheetStatus.LOADED
                     }
                 }
             }
@@ -118,14 +118,14 @@ class SearchPreviewViewModel @Inject constructor(
             if (!isSaved) {
                 schedule?.toRealmSchedule(scheduleRequiresAuth(schoolId), schoolId, courseColorsForPreview, scheduleTitle)
                     ?.let { realmSchedule ->
-                        realmManager.saveSchedule(realmSchedule)
+                        realmService.saveSchedule(realmSchedule)
                         isSaved = true
                         buttonState = ButtonState.SAVED
                     }
             } else {
-                val realmSchedule = realmManager.getScheduleByScheduleId(scheduleId)
+                val realmSchedule = realmService.getScheduleByScheduleId(scheduleId)
                 realmSchedule?.let {
-                    realmManager.deleteSchedule(it)
+                    realmService.deleteSchedule(it)
                     isSaved = false
                     buttonState = ButtonState.NOT_SAVED
                 }

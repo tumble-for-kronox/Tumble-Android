@@ -24,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.extensions.models.sorted
+import com.tumble.kronoxtoapp.other.extensions.models.sorted
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

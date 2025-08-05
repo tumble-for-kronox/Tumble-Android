@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.components.buttons.VerboseEventButtonLabel
-import com.tumble.kronoxtoapp.extensions.presentation.wiggle
+import com.tumble.kronoxtoapp.other.extensions.presentation.wiggle
 import com.tumble.kronoxtoapp.presentation.models.WeekEventCardModel
 
 @Composable

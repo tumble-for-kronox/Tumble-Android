@@ -10,29 +10,19 @@ import androidx.compose.runtime.MutableState
 
 @Composable
 fun BottomBar(
-    homeNavController: NavHostController,
-    bookmarksNavController: NavHostController,
-    searchNavController: NavHostController,
-    accountNavController: NavHostController,
     currentNavGraph: MutableState<BottomNavItem>,
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground
     ) {
-        BottomNavItem.values().forEach { item ->
+        BottomNavItem.entries.forEach { item ->
             NavigationBarItem(
                 icon = { Icon(item.icon, contentDescription = null) },
                 selected = currentNavGraph.value == item,
                 onClick = {
                     if (currentNavGraph.value != item) {
                         currentNavGraph.value = item
-                        when (item) {
-                            BottomNavItem.HOME -> navigateTo(homeNavController, item)
-                            BottomNavItem.BOOKMARKS -> navigateTo(bookmarksNavController, item)
-                            BottomNavItem.SEARCH -> navigateTo(searchNavController, item)
-                            BottomNavItem.ACCOUNT -> navigateTo(accountNavController, item)
-                        }
                     }
                 },
                 colors = androidx.compose.material3.NavigationBarItemDefaults.colors(
@@ -43,19 +33,6 @@ fun BottomBar(
                     unselectedTextColor = MaterialTheme.colorScheme.onBackground
                 )
             )
-        }
-    }
-}
-
-private fun navigateTo(navController: NavHostController, item: BottomNavItem) {
-    item.route.let { route ->
-        val currentGraph = navController.currentBackStackEntry?.destination?.parent
-        if (currentGraph != null) {
-            navController.navigate(route) {
-                popUpTo(currentGraph.startDestinationId)
-                launchSingleTop = true
-                restoreState = true
-            }
         }
     }
 }

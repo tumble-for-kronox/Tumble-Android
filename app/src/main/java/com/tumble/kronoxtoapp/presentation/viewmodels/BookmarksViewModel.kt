@@ -14,20 +14,20 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.RealmService
 import com.tumble.kronoxtoapp.domain.enums.BookmarksStatus
 import com.tumble.kronoxtoapp.domain.enums.ViewType
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.extensions.models.filterEmptyDays
-import com.tumble.kronoxtoapp.extensions.models.filterValidDays
-import com.tumble.kronoxtoapp.extensions.models.flattenAndMerge
-import com.tumble.kronoxtoapp.extensions.models.groupByWeek
-import com.tumble.kronoxtoapp.extensions.models.isMissingEvents
-import com.tumble.kronoxtoapp.extensions.models.ordered
+import com.tumble.kronoxtoapp.other.extensions.models.filterEmptyDays
+import com.tumble.kronoxtoapp.other.extensions.models.filterValidDays
+import com.tumble.kronoxtoapp.other.extensions.models.flattenAndMerge
+import com.tumble.kronoxtoapp.other.extensions.models.groupByWeek
+import com.tumble.kronoxtoapp.other.extensions.models.isMissingEvents
+import com.tumble.kronoxtoapp.other.extensions.models.ordered
 import com.tumble.kronoxtoapp.utils.preprocessDateString
 import java.time.LocalDate
 import java.util.Date
@@ -42,8 +42,8 @@ data class BookmarkData(
 
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
-    private val realmManager: RealmManager,
-    private val dataStoreManager: DataStoreManager,
+    private val realmService: RealmService,
+    private val dataStoreService: DataStoreService,
 ): ViewModel(){
 
     private val _cancellables = mutableListOf<Job>()
@@ -68,7 +68,7 @@ class BookmarksViewModel @Inject constructor(
             setupRealmListener()
         }
         val job2 = viewModelScope.launch {
-            dataStoreManager.viewType.collect { viewType ->
+            dataStoreService.viewType.collect { viewType ->
                 _defaultViewType.value = viewType
             }
         }
@@ -78,7 +78,7 @@ class BookmarksViewModel @Inject constructor(
     }
 
     private suspend fun setupRealmListener(){
-        val schedules = realmManager.getAllLiveSchedules().asFlow()
+        val schedules = realmService.getAllLiveSchedules().asFlow()
         schedules.collect{ newSchedules ->
             createDaysAndCalenderEvents(newSchedules.list)
         }
@@ -113,7 +113,7 @@ class BookmarksViewModel @Inject constructor(
     fun setViewType(viewType: ViewType){
         _defaultViewType.value = viewType
         viewModelScope.launch {
-            dataStoreManager.setBookmarksViewType(viewType)
+            dataStoreService.setBookmarksViewType(viewType)
         }
     }
 
@@ -186,7 +186,7 @@ class BookmarksViewModel @Inject constructor(
 
     fun changeCourseColor(color: String, courseId: String) {
         viewModelScope.launch {
-            realmManager.updateCourseColors(
+            realmService.updateCourseColors(
                 courseId,
                 color
             )

@@ -32,8 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.extensions.models.timeslotHasAvailable
-import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
+import com.tumble.kronoxtoapp.other.extensions.models.timeslotHasAvailable
+import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.ui.unit.DpOffset

@@ -12,14 +12,14 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import com.tumble.kronoxtoapp.data.repository.SchoolManager
-import com.tumble.kronoxtoapp.data.api.auth.AuthApiService
-import com.tumble.kronoxtoapp.data.api.auth.AuthManager
-import com.tumble.kronoxtoapp.data.notifications.NotificationManager
-import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
-import com.tumble.kronoxtoapp.data.repository.securestorage.SecureStorageManager
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxApiService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationServiceProtocol
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
+import com.tumble.kronoxtoapp.services.notifications.NotificationService
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.SecureStorageService
+import com.tumble.kronoxtoapp.services.kronox.KronoxServiceProtocol
 import javax.inject.Singleton
 
 
@@ -28,8 +28,8 @@ import javax.inject.Singleton
 object KronoxModule {
     @Provides
     @Singleton
-    fun provideKronoxApiService(retrofit: Retrofit): KronoxApiService {
-        return retrofit.create(KronoxApiService::class.java)
+    fun provideKronoxApiService(retrofit: Retrofit): KronoxServiceProtocol {
+        return retrofit.create(KronoxServiceProtocol::class.java)
     }
 }
 
@@ -38,8 +38,8 @@ object KronoxModule {
 object NotificationModule {
     @Provides
     @Singleton
-    fun provideNotificationManager(@ApplicationContext context: Context, realmManager: RealmManager): NotificationManager {
-        return NotificationManager(context, realmManager)
+    fun provideNotificationManager(@ApplicationContext context: Context, realmService: RealmService): NotificationService {
+        return NotificationService(context, realmService)
     }
 }
 
@@ -48,18 +48,18 @@ object NotificationModule {
 object AuthModule {
     @Provides
     @Singleton
-    fun provideAuthApiService(retrofit: Retrofit): AuthApiService {
-        return retrofit.create(AuthApiService::class.java)
+    fun provideAuthApiService(retrofit: Retrofit): AuthenticationServiceProtocol {
+        return retrofit.create(AuthenticationServiceProtocol::class.java)
     }
 
     @Provides
     @Singleton
     fun provideAuthManager(
-        authApiService: AuthApiService,
-        secureStorageManager: SecureStorageManager,
-        dataStoreManager: DataStoreManager
-    ): AuthManager {
-        return AuthManager(authApiService, secureStorageManager, dataStoreManager)
+        authenticationServiceProtocol: AuthenticationServiceProtocol,
+        secureStorageService: SecureStorageService,
+        dataStoreService: DataStoreService
+    ): AuthenticationService {
+        return AuthenticationService(authenticationServiceProtocol, secureStorageService, dataStoreService)
     }
 }
 
@@ -68,8 +68,8 @@ object AuthModule {
 object SecureStorageModel{
     @Provides
     @Singleton
-    fun provideSecureStorageManager(@ApplicationContext context: Context): SecureStorageManager {
-        return SecureStorageManager(context)
+    fun provideSecureStorageManager(@ApplicationContext context: Context): SecureStorageService {
+        return SecureStorageService(context)
     }
 }
 
@@ -78,8 +78,8 @@ object SecureStorageModel{
 object dataStoreManager {
     @Provides
     @Singleton
-    fun providePreferenceService(@ApplicationContext context: Context): DataStoreManager {
-        return DataStoreManager(context)
+    fun providePreferenceService(@ApplicationContext context: Context): DataStoreService {
+        return DataStoreService(context)
     }
 }
 
@@ -88,8 +88,8 @@ object dataStoreManager {
 object SchoolManager{
     @Provides
     @Singleton
-    fun provideSchoolManager(@ApplicationContext context: Context): SchoolManager {
-        return SchoolManager(context)
+    fun provideSchoolManager(@ApplicationContext context: Context): SchoolService {
+        return SchoolService(context)
     }
 }
 
@@ -98,8 +98,8 @@ object SchoolManager{
 object RealmModule {
     @Provides
     @Singleton
-    fun provideRealmManager(): RealmManager {
-        return RealmManager()
+    fun provideRealmManager(): RealmService {
+        return RealmService()
     }
 }
 

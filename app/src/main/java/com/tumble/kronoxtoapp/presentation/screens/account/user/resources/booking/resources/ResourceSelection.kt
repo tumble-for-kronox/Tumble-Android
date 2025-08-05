@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,8 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.extensions.models.getAvailabilityValues
-import com.tumble.kronoxtoapp.extensions.models.getFirstTimeSlotWithAvailability
+import com.tumble.kronoxtoapp.other.extensions.models.getAvailabilityValues
+import com.tumble.kronoxtoapp.other.extensions.models.getFirstTimeSlotWithAvailability
 import com.tumble.kronoxtoapp.observables.AppController
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel

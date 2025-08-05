@@ -1,6 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.settings.bookmarks
 
-
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -43,10 +42,10 @@ fun BookmarksSettings(
             schedules.value.forEach{ schedule ->
                 BookmarkSettingsRow(
                     schedule = schedule,
-                    onDelete = { offsets ->
+                    onDelete = {
                         parentViewModel.deleteBookmark(schedule)
                     },
-                    onToggle = {visibility ->
+                    onToggle = { visibility ->
                         parentViewModel.updateBookmarkVisibility(visibility, schedule)
                     }
                 )

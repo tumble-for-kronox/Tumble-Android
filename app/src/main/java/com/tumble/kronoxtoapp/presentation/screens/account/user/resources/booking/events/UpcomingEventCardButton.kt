@@ -8,10 +8,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -29,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
-import com.tumble.kronoxtoapp.extensions.presentation.formatDate
+import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
+import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

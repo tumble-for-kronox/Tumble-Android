@@ -59,25 +59,26 @@ import io.mhssn.colorpicker.ext.toHex
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.extensions.presentation.isAvailableNotificationDate
-import com.tumble.kronoxtoapp.extensions.presentation.toColor
+import com.tumble.kronoxtoapp.other.extensions.presentation.isAvailableNotificationDate
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.viewmodels.EventDetailsSheetViewModel
+import com.tumble.kronoxtoapp.presentation.viewmodels.EventDetailsState
 import com.tumble.kronoxtoapp.presentation.viewmodels.NotificationState
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun EventDetailsSheet(
     viewModel: EventDetailsSheetViewModel = hiltViewModel(),
-    event: Event,
+    eventId: String,
     setTopNavState: (AppBarState) -> Unit,
     onClose: () -> Unit = {},
-    onColorChanged: (String, String) -> Unit
 ) {
     var showColorPicker by remember { mutableStateOf(false) }
     var selectedColor by remember {
-        mutableStateOf(event.course?.color?.toColor() ?: Color.Gray)
+        mutableStateOf(Color.Gray)
     }
 
     val title = stringResource(R.string.event_details)
@@ -95,6 +96,50 @@ fun EventDetailsSheet(
         )
     }
 
+    when (viewModel.eventDetailsState) {
+        is EventDetailsState.Loading -> {
+            CustomProgressIndicator()
+        }
+        is EventDetailsState.Loaded -> {
+            val event = (viewModel.eventDetailsState as EventDetailsState.Loaded).event
+
+            EventInfo(
+                event = event,
+                selectedColor = selectedColor,
+                showColorPicker = showColorPicker,
+                onColorSelected = { color ->
+                    selectedColor = color
+                    event.course?.courseId?.let { courseId ->
+                        val hexColor = color.toHex()
+                        val rgbOnly = "#${hexColor.takeLast(6)}"
+                        viewModel.changeCourseColor(rgbOnly, courseId)
+                    }
+                    showColorPicker = false
+                },
+                setShowColorPicker = { value ->
+                    showColorPicker = value
+                }
+            )
+        }
+        is EventDetailsState.Error -> {
+            val errorMessage = (viewModel.eventDetailsState as EventDetailsState.Error).message
+            Info(errorMessage)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getEvent(eventId)
+    }
+}
+
+@Composable
+private fun EventInfo(
+    event: Event,
+    selectedColor: Color,
+    showColorPicker: Boolean,
+    onColorSelected: (Color) -> Unit,
+    setShowColorPicker: (Boolean) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -104,7 +149,6 @@ fun EventDetailsSheet(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         EventHeaderCard(
-            viewModel = viewModel,
             event = event,
             eventColor = selectedColor
         )
@@ -253,7 +297,7 @@ fun EventDetailsSheet(
 
         // Color picker button
         ActionButtonsSection(
-            onChangeColor = { showColorPicker = true }
+            onChangeColor = { setShowColorPicker(true) }
         )
     }
 
@@ -261,16 +305,8 @@ fun EventDetailsSheet(
     if (showColorPicker) {
         ModernColorPickerDialog(
             currentColor = selectedColor,
-            onColorSelected = { color ->
-                selectedColor = color
-                event.course?.courseId?.let { courseId ->
-                    val hexColor = color.toHex()
-                    val rgbOnly = "#${hexColor.takeLast(6)}"
-                    onColorChanged(rgbOnly, courseId)
-                }
-                showColorPicker = false
-            },
-            onDismiss = { showColorPicker = false }
+            onColorSelected = onColorSelected,
+            onDismiss = { setShowColorPicker(false) }
         )
     }
 }
@@ -279,7 +315,6 @@ fun EventDetailsSheet(
 private fun EventHeaderCard(
     event: Event,
     eventColor: Color,
-    viewModel: EventDetailsSheetViewModel
 ) {
     Card(
         modifier = Modifier
@@ -368,7 +403,7 @@ private fun NotificationControls(
                 state = viewModel.isNotificationSetForEvent,
                 onToggle = {
                     when (viewModel.isNotificationSetForEvent) {
-                        NotificationState.SET -> viewModel.cancelNotificationForEvent()
+                        NotificationState.SET -> viewModel.cancelNotificationForEvent(event)
                         NotificationState.NOT_SET -> viewModel.scheduleNotificationForEvent(event)
                         else -> {}
                     }
@@ -384,8 +419,8 @@ private fun NotificationControls(
                 state = viewModel.isNotificationSetForCourse,
                 onToggle = {
                     when (viewModel.isNotificationSetForCourse) {
-                        NotificationState.SET -> viewModel.cancelNotificationForCourse()
-                        NotificationState.NOT_SET -> viewModel.scheduleNotificationForCourse()
+                        NotificationState.SET -> viewModel.cancelNotificationForCourse(event)
+                        NotificationState.NOT_SET -> viewModel.scheduleNotificationForCourse(event)
                         else -> {}
                     }
                 }

@@ -10,25 +10,25 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
-import com.tumble.kronoxtoapp.data.api.ApiResponse
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
 import com.tumble.kronoxtoapp.domain.enums.HomeStatus
 import com.tumble.kronoxtoapp.domain.enums.PageState
 import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.extensions.models.filterEventsMatchingToday
-import com.tumble.kronoxtoapp.extensions.models.findNextUpcomingEvent
+import com.tumble.kronoxtoapp.other.extensions.models.filterEventsMatchingToday
+import com.tumble.kronoxtoapp.other.extensions.models.findNextUpcomingEvent
 import com.tumble.kronoxtoapp.presentation.models.WeekEventCardModel
 import com.tumble.kronoxtoapp.utils.sortedEventOrder
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val kronoxRepository: KronoxRepository,
-    private val realmManager: RealmManager,
+    private val kronoxRepository: KronoxService,
+    private val realmService: RealmService,
 ) : ViewModel() {
 
     var newsSectionStatus by mutableStateOf(PageState.LOADING)
@@ -51,7 +51,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun setupRealmListener() {
-        val schedules = realmManager.getAllLiveSchedules().asFlow()
+        val schedules = realmService.getAllLiveSchedules().asFlow()
         schedules.collect { newSchedules ->
             createCarouselCards(newSchedules.list)
             findNextUpcomingEvent(newSchedules.list)
@@ -73,11 +73,6 @@ class HomeViewModel @Inject constructor(
                     news = null
                     newsSectionStatus = PageState.ERROR
                     Log.e("HomeViewModel", "Failed when fetching news items: ${result.errorMessage}")
-                }
-                else -> {
-                    news = null
-                    newsSectionStatus = PageState.ERROR
-                    Log.e("HomeViewModel", "Failed when fetching news items: 'else' branch.")
                 }
             }
 
@@ -118,7 +113,7 @@ class HomeViewModel @Inject constructor(
 
     fun changeCourseColor(color: String, courseId: String) {
         viewModelScope.launch {
-            realmManager.updateCourseColors(
+            realmService.updateCourseColors(
                 courseId,
                 color
             )

@@ -41,8 +41,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
-import com.tumble.kronoxtoapp.extensions.presentation.formatDate
+import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
+import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 

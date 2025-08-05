@@ -2,6 +2,7 @@ package com.tumble.kronoxtoapp.presentation.viewmodels
 
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
@@ -9,84 +10,108 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.data.notifications.NotificationManager
-import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
+import com.tumble.kronoxtoapp.services.notifications.NotificationService
+import com.tumble.kronoxtoapp.services.RealmService
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import java.util.Calendar
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 enum class NotificationState{
     SET, LOADING, NOT_SET
 }
 
+sealed class EventDetailsState {
+    data object Loading : EventDetailsState()
+    data class Loaded(val event: Event, val color: Color) : EventDetailsState()
+    data class Error(val message: String) : EventDetailsState()
+}
+
 @HiltViewModel
-class EventDetailsSheetViewModel@Inject constructor(
-    private val preferenceService: DataStoreManager,
-    private val realmManager: RealmManager,
-    private val notificationManager: NotificationManager
+class EventDetailsSheetViewModel @Inject constructor(
+    private val realmService: RealmService,
+    private val notificationService: NotificationService
 ): ViewModel() {
-    lateinit var event: Event// = AppController.shared.eventSheet!!.event
-    var color: Color? = null // = event.course?.color?.toColor() ?: Color.Gray
+
+    var eventDetailsState by mutableStateOf<EventDetailsState>(EventDetailsState.Loading)
+
     var isNotificationSetForEvent by mutableStateOf<NotificationState>(NotificationState.LOADING)
     var isNotificationSetForCourse by mutableStateOf<NotificationState>(NotificationState.LOADING)
-    val notificationOffset by mutableStateOf<Int>(60)
     var notificationsAllowed by mutableStateOf<Boolean>(false)
+    private val notificationOffset by mutableIntStateOf(60)
 
-    init {
-        viewModelScope.launch {
-            val allowed = userAllowedNotifications()
-            notificationsAllowed = allowed
+    fun getEvent(eventId: String) {
+        with (Dispatchers.Main) {
+            eventDetailsState = EventDetailsState.Loading
         }
-        //checkNotificationIsSetForEvent()
-        //checkNotificationIsSetForCourse()
+
+        viewModelScope.launch {
+            val realmEvent = realmService.getEvent(eventId)
+            if (realmEvent == null) {
+                with (Dispatchers.Main) {
+                    eventDetailsState = EventDetailsState.Error("Failed to find event with id $eventId in local database")
+                }
+            }
+            realmEvent?.let {
+                with (Dispatchers.Main) {
+                    val color = realmEvent.course?.color?.toColor() ?: Color.Gray
+                    eventDetailsState = EventDetailsState.Loaded(realmEvent, color)
+                }
+            }
+        }
     }
 
-    fun setEventSheetView(newEvent: Event, newColor: Color?){
-        event = newEvent
-        color = newColor
-        checkNotificationIsSetForEvent()
-        checkNotificationIsSetForCourse()
+    fun changeCourseColor(colorString: String, courseId: String) {
+        val event = (eventDetailsState as EventDetailsState.Loaded).event
+        eventDetailsState = EventDetailsState.Loading
+
+        viewModelScope.launch {
+            realmService.updateCourseColors(courseId, colorString)
+            with (Dispatchers.Main) {
+                val newColor = colorString.toColor()
+                eventDetailsState = EventDetailsState.Loaded(event, newColor)
+            }
+        }
     }
 
-    fun cancelNotificationForEvent(){
-        notificationManager.cancelNotification(event.eventId)
+    fun cancelNotificationForEvent(event: Event){
+        notificationService.cancelNotification(event.eventId)
         isNotificationSetForEvent = NotificationState.NOT_SET
     }
 
-    fun cancelNotificationForCourse(){
+    fun cancelNotificationForCourse(event: Event){
         isNotificationSetForCourse = NotificationState.NOT_SET
         isNotificationSetForEvent = NotificationState.NOT_SET
         event.course?.courseId?.let {
-            notificationManager.cancelNotificationsWithCategory(it)
+            notificationService.cancelNotificationsWithCategory(it)
         }
     }
 
     fun scheduleNotificationForEvent(event: Event){
         isNotificationSetForEvent = NotificationState.LOADING
-        notificationManager.createNotificationFromEvent(event, notificationOffset)
+        notificationService.createNotificationFromEvent(event, notificationOffset)
         isNotificationSetForEvent = NotificationState.SET
     }
 
-    fun scheduleNotificationForCourse(){
+    fun scheduleNotificationForCourse(event: Event){
         isNotificationSetForCourse = NotificationState.LOADING
         isNotificationSetForEvent = NotificationState.LOADING
 
-        val events = realmManager.getAllSchedules()
-            .flatMap { it.days?: listOf() }
-            .flatMap { it.events?: listOf() }
-            .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
-            .filter { it.course?.courseId == event.course?.courseId }
+        event.course?.let { course ->
+            val events = course.courseId?.let { realmService.getEventsByCourseId(it) }
 
-        viewModelScope.launch {
-            try {
-                val result = applyNotificationForScheduleEventsInCourse(events)
-                if(result){
-                    isNotificationSetForCourse = NotificationState.SET
-                    isNotificationSetForEvent = NotificationState.SET
+            viewModelScope.launch {
+                try {
+                    if (events != null) {
+                        val result = applyNotificationForScheduleEventsInCourse(events)
+                        if (result) {
+                            isNotificationSetForCourse = NotificationState.SET
+                            isNotificationSetForEvent = NotificationState.SET
+                        }
+                    }
+                } catch (e: Exception){
+                    Log.e("e", "Could not set notifications for course: $e")
                 }
-            } catch (e: Exception){
-                Log.e("e", "Could not set notifications for course: $e")
             }
         }
     }
@@ -99,12 +124,12 @@ class EventDetailsSheetViewModel@Inject constructor(
     }
 
     private fun userAllowedNotifications(): Boolean{
-        return notificationManager.areNotificationsAllowed()
+        return notificationService.areNotificationsAllowed()
     }
 
-    private fun checkNotificationIsSetForCourse(){
+    private fun checkNotificationIsSetForCourse(event: Event){
         isNotificationSetForCourse = event.course?.courseId?.let {
-            if (notificationManager.isNotificationScheduledUsingCategory(it)){
+            if (notificationService.isNotificationScheduledUsingCategory(it)){
                 NotificationState.SET
             }else{
                 NotificationState.NOT_SET
@@ -112,11 +137,11 @@ class EventDetailsSheetViewModel@Inject constructor(
         }?: NotificationState.NOT_SET
     }
 
-    private fun checkNotificationIsSetForEvent(){
-        if (notificationManager.isNotificationScheduled(event.eventId)){
-            isNotificationSetForEvent = NotificationState.SET
-        }else{
-            isNotificationSetForEvent = NotificationState.NOT_SET
+    private fun checkNotificationIsSetForEvent(event: Event) {
+        isNotificationSetForEvent = if (notificationService.isNotificationScheduled(event.eventId)){
+            NotificationState.SET
+        } else {
+            NotificationState.NOT_SET
         }
     }
 }

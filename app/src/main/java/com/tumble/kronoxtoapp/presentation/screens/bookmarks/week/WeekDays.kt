@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.extensions.presentation.noRippleClickable
+import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 import com.tumble.kronoxtoapp.utils.sortedEventOrder
 import java.util.Date
 import java.util.Locale
