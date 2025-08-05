@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.*
@@ -38,7 +39,9 @@ fun BookmarkSettingsRow(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
             .height(IntrinsicSize.Min)
             .borderRadius(12.dp)
             .clipToBounds(),
