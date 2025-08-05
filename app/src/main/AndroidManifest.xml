@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <service
-            android:name="com.tumble.kronoxtoapp.data.notifications.TumbleFirebaseMessagingService"
+            android:name="com.tumble.kronoxtoapp.services.TumbleFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

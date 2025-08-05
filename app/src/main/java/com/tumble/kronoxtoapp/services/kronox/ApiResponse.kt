@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.api
+package com.tumble.kronoxtoapp.services.kronox
 
 sealed class ApiResponse<T> {
     class Success<T>(val data: T) : ApiResponse<T>()

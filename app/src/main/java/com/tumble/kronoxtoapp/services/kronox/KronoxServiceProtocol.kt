@@ -1,13 +1,11 @@
-package com.tumble.kronoxtoapp.data.api.kronox
+package com.tumble.kronoxtoapp.services.kronox
 
-import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
 import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 
-interface KronoxApiService {
+interface KronoxServiceProtocol {
     suspend fun getNews(): ApiResponse<NewsItems>
 
     suspend fun getProgramme(endpoint: Endpoint.SearchProgramme): ApiResponse<NetworkResponse.Search>

@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.repository.securestorage
+package com.tumble.kronoxtoapp.services
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -13,7 +13,7 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.inject.Singleton
 
 @Singleton
-class SecureStorageManager(context: Context) {
+class SecureStorageService(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("tumble_secure_prefs", Context.MODE_PRIVATE)
     private val keyAlias = "TumbleSecureStorageKey"
 

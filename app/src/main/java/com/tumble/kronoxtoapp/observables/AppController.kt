@@ -25,13 +25,12 @@ class AppController @Inject constructor() : ViewModel() {
         val shared: AppController by lazy { AppController() }
     }
 
-    var searchPreview by mutableStateOf<SearchPreviewModel?>(null)
     var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
     var resourceModel by mutableStateOf<ResourceSelectionModel?>(null)
     private var _isUpdatingBookmarks = MutableStateFlow(false)
     val isUpdatingBookmarks = _isUpdatingBookmarks.asStateFlow()
 
-    fun setIsUpatingBookmarks(value: Boolean) {
+    fun setIsUpdatingBookmarks(value: Boolean) {
         Log.d("AppController", "Setting 'isUpdatingBookmarks' to $value")
         this._isUpdatingBookmarks.value = value
     }

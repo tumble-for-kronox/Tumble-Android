@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.notifications
+package com.tumble.kronoxtoapp.services
 
 import android.Manifest
 import android.app.NotificationChannel

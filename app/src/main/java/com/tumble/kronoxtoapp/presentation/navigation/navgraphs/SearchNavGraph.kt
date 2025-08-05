@@ -50,9 +50,18 @@ private fun NavGraphBuilder.searchDetails(navController: NavHostController, setT
             )
         }
     ) { backStackEntry ->
+        val scheduleId = backStackEntry.arguments?.getString("schedule_id")
+        val schoolId = backStackEntry.arguments?.getString("school_id")
+        val scheduleTitle = backStackEntry.arguments?.getString("schedule_title")
 
-        SearchPreviewSheet(searchPreviewModel = AppController.shared.searchPreview!!, navController = navController, setTopNavState = setTopNavState)
-
-        val id = backStackEntry.arguments?.getString("id")
+        if (scheduleId != null && schoolId != null && scheduleTitle != null) {
+            SearchPreviewSheet(
+                scheduleId = scheduleId,
+                schoolId = schoolId,
+                scheduleTitle = scheduleTitle,
+                navController = navController,
+                setTopNavState = setTopNavState
+            )
+        }
     }
 }

@@ -1,9 +1,9 @@
-package com.tumble.kronoxtoapp.data.notifications
+package com.tumble.kronoxtoapp.services.notifications
 
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 
-interface NotificationApiService {
+interface NotificationServiceProtocol {
     fun cancelNotification(id: String)
     fun isNotificationScheduled(notificationId: String): Boolean
     fun isNotificationScheduledUsingCategory(categoryIdentifier: String): Boolean
@@ -14,4 +14,5 @@ interface NotificationApiService {
     fun createNotificationFromBooking(booking: NetworkResponse.KronoxUserBookingElement)
     fun areNotificationsAllowed(): Boolean
     fun rescheduleEventNotifications(newUserOffset: Int)
+    fun verifyBookingNotifications()
 }

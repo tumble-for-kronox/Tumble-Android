@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.repository.realm
+package com.tumble.kronoxtoapp.services
 
 import io.realm.kotlin.Realm
 import io.realm.kotlin.RealmConfiguration
@@ -13,7 +13,7 @@ import com.tumble.kronoxtoapp.domain.models.realm.Teacher
 import javax.inject.Singleton
 
 @Singleton
-class RealmManager {
+class RealmService {
 
     private var config = RealmConfiguration.create(
         schema = setOf(

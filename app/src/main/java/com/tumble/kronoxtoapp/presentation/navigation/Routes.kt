@@ -9,7 +9,7 @@ object Routes {
     const val bookmarks = "bookmarks"
     const val bookmarksDetails = "bookmarks?eventId={id}"
     const val search = "search"
-    const val searchDetails = "search?scheduleId={id}"
+    const val searchDetails = "search?scheduleId={schedule_id}&schoolId={school_id}&scheduleTitle={schedule_title}"
     const val account = "account"
     const val accountLogin = "account/login"
     const val accountSettings = "account/settings"
@@ -45,8 +45,11 @@ object Routes {
 }
 
 object UriBuilder {
-    fun buildSearchDetailsUri(scheduleId: String): String {
-        return Routes.SearchDetailsUri.replace("{id}", scheduleId)
+    fun buildSearchDetailsUri(scheduleId: String, schoolId: String, scheduleTitle: String): String {
+        return Routes.SearchDetailsUri
+            .replace("{schedule_id}", scheduleId)
+            .replace("{school_id}", schoolId)
+            .replace("{schedule_title}", scheduleTitle.trim())
     }
 
     fun buildAccountResourceDetailsUri(resourceId: String): String {

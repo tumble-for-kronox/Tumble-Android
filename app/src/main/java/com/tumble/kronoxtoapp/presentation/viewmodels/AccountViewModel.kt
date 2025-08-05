@@ -9,13 +9,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.data.api.auth.AuthManager
-import com.tumble.kronoxtoapp.data.notifications.NotificationManager
-import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.data.repository.SchoolManager
-import com.tumble.kronoxtoapp.data.api.ApiResponse
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
+import com.tumble.kronoxtoapp.services.notifications.NotificationService
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
 import com.tumble.kronoxtoapp.domain.models.TumbleUser
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
@@ -27,11 +27,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
-    private val authManager: AuthManager,
-    private val kronoxManager: KronoxRepository,
-    private val dataStoreManager: DataStoreManager,
-    private val schoolManager: SchoolManager,
-    private val notificationManager: NotificationManager
+    private val authenticationService: AuthenticationService,
+    private val kronoxManager: KronoxService,
+    private val dataStoreService: DataStoreService,
+    private val schoolService: SchoolService,
+    private val notificationService: NotificationService
 ) : ViewModel() {
     private val _authStatus = MutableStateFlow(AuthStatus.LOADING)
     val authStatus: StateFlow<AuthStatus> = _authStatus
@@ -100,7 +100,7 @@ class AccountViewModel @Inject constructor(
     fun logOut() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                authManager.logOutUser()
+                authenticationService.logOutUser()
                 _authStatus.value = AuthStatus.UNAUTHORIZED
             } catch (e: Exception) {
                 // TODO: Handle logout error with toast
@@ -113,7 +113,7 @@ class AccountViewModel @Inject constructor(
             try {
                 _attemptingLogin.value = true
                 val userRequest = NetworkRequest.KronoxUserLogin(username, password)
-                val user = authManager.loginUser(userRequest)
+                val user = authenticationService.loginUser(userRequest)
                 updateUser(user)
             } catch (e: Exception) {
                 _authStatus.value = AuthStatus.UNAUTHORIZED
@@ -124,13 +124,13 @@ class AccountViewModel @Inject constructor(
     }
 
     fun getSchoolName(): School?{
-        return schoolManager.getSchoolById(dataStoreManager.authSchoolId.value)
+        return schoolService.getSchoolById(dataStoreService.authSchoolId.value)
     }
 
     fun getUserEventsForSection() {
         viewModelScope.launch(Dispatchers.IO) {
             _registeredEventSectionState.value = PageState.LOADING
-            val endpoint = Endpoint.UserEvents(dataStoreManager.authSchoolId.value.toString())
+            val endpoint = Endpoint.UserEvents(dataStoreService.authSchoolId.value.toString())
             if (refreshToken.value != null) {
                 val response: ApiResponse<NetworkResponse.KronoxCompleteUserEvent> =
                     kronoxManager.getKronoxCompleteUserEvent(endpoint, refreshToken.value, sessionDetails.value)
@@ -150,7 +150,7 @@ class AccountViewModel @Inject constructor(
     fun getUserBookingsForSection() {
         viewModelScope.launch(Dispatchers.IO) {
             _registeredBookingsSectionState.value = PageState.LOADING
-            val endpoint = Endpoint.UserBookings(dataStoreManager.authSchoolId.value.toString())
+            val endpoint = Endpoint.UserBookings(dataStoreService.authSchoolId.value.toString())
             if (refreshToken.value != null) {
 
                 val response: ApiResponse<List<KronoxUserBookingElement>> =
@@ -174,8 +174,8 @@ class AccountViewModel @Inject constructor(
     }
 
     fun unBookResource(bookingId: String){
-        val endpoint = Endpoint.UnBookResource(dataStoreManager.authSchoolId.value.toString(), bookingId)
-        val refreshToken = authManager.getRefreshToken() ?: return
+        val endpoint = Endpoint.UnBookResource(dataStoreService.authSchoolId.value.toString(), bookingId)
+        val refreshToken = authenticationService.getRefreshToken() ?: return
 
         // This logic is completely cursed and should be fixed in the backend
         viewModelScope.launch {
@@ -197,9 +197,9 @@ class AccountViewModel @Inject constructor(
     }
 
     fun confirmResource(resourceId: String, bookingId: String){
-        val endpoint = Endpoint.ConfirmResource(dataStoreManager.authSchoolId.value.toString())
+        val endpoint = Endpoint.ConfirmResource(dataStoreService.authSchoolId.value.toString())
         val resource = NetworkRequest.ConfirmKronoxResource(resourceId, bookingId)
-        val refreshToken = authManager.getRefreshToken() ?: return
+        val refreshToken = authenticationService.getRefreshToken() ?: return
 
         // This logic is completely cursed and should be fixed in the backend
         viewModelScope.launch {
@@ -222,8 +222,8 @@ class AccountViewModel @Inject constructor(
     private fun scheduleBookingNotifications(userBookings: MutableStateFlow<NetworkResponse.KronoxUserBookings?>) {
         userBookings.let {
             userBookings.value?.bookings?.forEach {
-                if (!notificationManager.isNotificationScheduled(it.id)) {
-                    notificationManager.createNotificationFromBooking(it)
+                if (!notificationService.isNotificationScheduled(it.id)) {
+                    notificationService.createNotificationFromBooking(it)
                 }
             }
         }
@@ -231,14 +231,14 @@ class AccountViewModel @Inject constructor(
 
     private fun updateUser(user: TumbleUser) {
         _user.value = user
-        _refreshToken.value = authManager.getRefreshToken()
+        _refreshToken.value = authenticationService.getRefreshToken()
         _authStatus.value = AuthStatus.AUTHORIZED
     }
 
     private fun autoLogin() {
         viewModelScope.launch {
             try {
-                val user = authManager.autoLoginUser()
+                val user = authenticationService.autoLoginUser()
                 updateUser(user)
             } catch (e: Exception) {
                 _authStatus.value = AuthStatus.UNAUTHORIZED

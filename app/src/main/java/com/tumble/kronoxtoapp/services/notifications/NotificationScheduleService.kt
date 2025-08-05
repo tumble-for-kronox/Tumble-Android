@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.notifications
+package com.tumble.kronoxtoapp.services.notifications
 
 import android.Manifest
 import android.app.PendingIntent
@@ -13,7 +13,7 @@ import androidx.work.WorkerParameters
 import com.tumble.kronoxtoapp.MainActivity
 import com.tumble.kronoxtoapp.R
 
-class NotificationScheduler(
+class NotificationScheduleService(
     context: Context,
     workerParams: WorkerParameters,
 ) : CoroutineWorker(context, workerParams) {

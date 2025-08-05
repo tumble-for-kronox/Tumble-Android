@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.api
+package com.tumble.kronoxtoapp.services.kronox
 
 import retrofit2.Call
 import retrofit2.http.Body
@@ -12,7 +12,7 @@ import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
 import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 
-interface ApiServiceKronox {
+interface KronoxApiServiceProtocol {
 
     @Headers(
         "Content-Type: application/json; charset=utf-8",
@@ -21,74 +21,74 @@ interface ApiServiceKronox {
     @GET("/api/misc/news")
     fun getNews(): Call<NewsItems>
 
-    @GET()
+    @GET
     fun getProgramme(@Url endpoint: String): Call<NetworkResponse.Search>
 
-    @GET()
+    @GET
     fun getSchedule(@Url endpoint: String): Call<NetworkResponse.Schedule>
 
 
-    @PUT()
+    @PUT
     fun registerForEvent(@Url endpoint: String,
                          @Header("X-auth-token") refreshToken: String?): Call<Void>
 
-    @PUT()
+    @PUT
     fun registerForAllEvents(@Url endpoint: String,
                          @Header("X-auth-token") refreshToken: String?): Call<List<NetworkResponse.Registration>>
 
-    @PUT()
+    @PUT
     fun unRegisterForEvent(@Url endpoint: String,
                            @Header("X-auth-token") refreshToken: String?): Call<Void>
 
-    @PUT()
+    @PUT
     fun bookResource(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Body resource: NetworkRequest.BookKronoxResource
     ): Call<KronoxUserBookingElement>
 
-    @PUT()
+    @PUT
     fun confirmResource(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Body resource: NetworkRequest.ConfirmKronoxResource
     ): Call<Void>
 
-    @PUT()
+    @PUT
     fun unBookResource(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
     ): Call<Void>
 
-    @GET()
+    @GET
     fun getKronoxCompleteUserEvent(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Header("X-session-token") sessionDetails: String?
     ): Call<NetworkResponse.KronoxCompleteUserEvent>
 
-    @GET()
+    @GET
     fun getKronoxUserBookings(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Header("X-session-token") sessionDetails: String?
     ): Call<List<KronoxUserBookingElement>>
 
-    @GET()
+    @GET
     fun getAllResources(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Header("X-session-token") sessionDetails: String?
     ): Call<List<NetworkResponse.KronoxResourceElement>>
 
-    @GET()
+    @GET
     fun getAllResourceData(
         @Url endpoint: String,
         @Header("X-auth-token") refreshToken: String?,
         @Header("X-session-token") sessionDetails: String?,
     ): Call<NetworkResponse.KronoxResourceElement>
 
-    @GET()
+    @GET
     suspend fun <T> get(
         @Url url: String,
         @Header("X-auth-token") refreshToken: String?,

@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.repository.preferences
+package com.tumble.kronoxtoapp.services
 
 import android.content.Context
 import android.util.Log
@@ -36,7 +36,7 @@ data class CombinedData(
 )
 
 @Singleton
-class DataStoreManager @Inject constructor(
+class DataStoreService @Inject constructor(
     @ApplicationContext private val context: Context,
     coroutineContext: CoroutineContext = Dispatchers.IO
 ) {

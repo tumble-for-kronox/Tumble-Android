@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.api
+package com.tumble.kronoxtoapp.services.kronox
 
 import android.net.Uri
 import com.tumble.kronoxtoapp.core.NetworkSettings

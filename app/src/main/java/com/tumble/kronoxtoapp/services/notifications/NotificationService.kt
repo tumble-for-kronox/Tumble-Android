@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.notifications
+package com.tumble.kronoxtoapp.services.notifications
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -17,12 +17,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.extensions.models.findEventsByCategory
 import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
 import com.tumble.kronoxtoapp.extensions.presentation.toLocalDateTime
+import com.tumble.kronoxtoapp.services.RealmService
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -30,13 +30,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NotificationManager @Inject constructor(
+class NotificationService @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val realmManager: RealmManager,
-): NotificationApiService {
+    private val realmService: RealmService,
+): NotificationServiceProtocol {
 
     override fun cancelNotification(id: String) {
         WorkManager.getInstance(context).cancelUniqueWork(id)
+    }
+
+    override fun verifyBookingNotifications() {
+        TODO("Not yet implemented")
     }
 
     override fun isNotificationScheduled(notificationId: String): Boolean {
@@ -44,13 +48,13 @@ class NotificationManager @Inject constructor(
     }
 
     override fun isNotificationScheduledUsingCategory(categoryIdentifier: String): Boolean {
-        val events = realmManager.getAllSchedules().findEventsByCategory(categoryIdentifier)
+        val events = realmService.getAllSchedules().findEventsByCategory(categoryIdentifier)
 
         return events.all { isNotificationScheduled(it.eventId) }
     }
 
     override fun createNotificationUsingCategory(categoryIdentifier: String, userOffset: Int) {
-        val events = realmManager.getAllSchedules().findEventsByCategory(categoryIdentifier)
+        val events = realmService.getAllSchedules().findEventsByCategory(categoryIdentifier)
         
         for (event in events){
             if (!isNotificationScheduled(event.eventId)){
@@ -60,7 +64,7 @@ class NotificationManager @Inject constructor(
     }
 
     override fun cancelNotificationsWithCategory(categoryIdentifier: String) {
-        val events = realmManager.getAllSchedules().findEventsByCategory(categoryIdentifier)
+        val events = realmService.getAllSchedules().findEventsByCategory(categoryIdentifier)
 
         events.forEach { cancelNotification(it.eventId) }
     }
@@ -130,7 +134,7 @@ class NotificationManager @Inject constructor(
     }
 
     override fun rescheduleEventNotifications(newUserOffset: Int) {
-        val events = realmManager.getAllSchedules()
+        val events = realmService.getAllSchedules()
             .flatMap { it.days ?: listOf() }
             .flatMap { it.events ?: listOf() }
             .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
@@ -165,7 +169,7 @@ class NotificationManager @Inject constructor(
             tag = "event-notification"
         }
 
-        val workRequest = OneTimeWorkRequestBuilder<NotificationScheduler>()
+        val workRequest = OneTimeWorkRequestBuilder<NotificationScheduleService>()
             .setInitialDelay(delay, TimeUnit.SECONDS)
             .setInputData(notificationData)
             .addTag(tag)

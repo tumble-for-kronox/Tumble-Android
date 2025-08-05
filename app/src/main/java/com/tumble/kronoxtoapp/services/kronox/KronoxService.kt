@@ -1,12 +1,8 @@
-package com.tumble.kronoxtoapp.data.api.kronox
+package com.tumble.kronoxtoapp.services.kronox
 
 import okhttp3.Request
 import retrofit2.Retrofit
-import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.data.api.url
-import com.tumble.kronoxtoapp.data.api.ApiResponse
-import com.tumble.kronoxtoapp.data.api.ApiServiceKronox
-import com.tumble.kronoxtoapp.data.api.extensions.callToApiResponse
+import com.tumble.kronoxtoapp.extensions.models.callToApiResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
@@ -15,9 +11,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class KronoxRepository @Inject constructor(private val retrofit: Retrofit): KronoxApiService {
+class KronoxService @Inject constructor(private val retrofit: Retrofit): KronoxServiceProtocol {
     private val kronoxApiService by lazy {
-        retrofit.create(ApiServiceKronox::class.java)
+        retrofit.create(KronoxApiServiceProtocol::class.java)
     }
 
     override suspend fun getNews(): ApiResponse<NewsItems> {

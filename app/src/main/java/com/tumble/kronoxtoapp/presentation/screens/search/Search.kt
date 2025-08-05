@@ -56,12 +56,8 @@ fun Search(
 
     val openProgramme: (String, String) -> Unit = { programmeId, scheduleTitle ->
         viewModel.selectedSchool.value?.id?.let { selectedSchoolId ->
-            AppController.shared.searchPreview = SearchPreviewModel(
-                scheduleId = programmeId,
-                scheduleTitle = scheduleTitle.trim(),
-                schoolId = selectedSchoolId.toString()
-            )
-            navController.navigate(UriBuilder.buildSearchDetailsUri(programmeId).toUri())
+            navController.navigate(UriBuilder.buildSearchDetailsUri(programmeId,
+                selectedSchoolId.toString(), scheduleTitle).toUri())
         }
     }
 

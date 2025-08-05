@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.repository
+package com.tumble.kronoxtoapp.services
 
 import android.content.Context
 import androidx.collection.LruCache
@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken
 import com.tumble.kronoxtoapp.domain.models.presentation.School
 import java.io.InputStreamReader
 
-class SchoolManager(private val context: Context) {
+class SchoolService(private val context: Context) {
     private var schools: List<School> = listOf()
     private val cache = LruCache<String, List<School>>(1)
 

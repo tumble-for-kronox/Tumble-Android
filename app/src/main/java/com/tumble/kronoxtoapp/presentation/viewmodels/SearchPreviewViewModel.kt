@@ -6,15 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
-import com.tumble.kronoxtoapp.data.repository.SchoolManager
-import com.tumble.kronoxtoapp.data.api.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.ButtonState
 import com.tumble.kronoxtoapp.domain.enums.SchedulePreviewStatus
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
@@ -24,9 +24,9 @@ import com.tumble.kronoxtoapp.extensions.models.toRealmSchedule
 
 @HiltViewModel
 class SearchPreviewViewModel @Inject constructor(
-    private val kronoxManager: KronoxRepository,
-    private val realmManager: RealmManager,
-    private val schoolManager: SchoolManager
+    private val kronoxManager: KronoxService,
+    private val realmService: RealmService,
+    private val schoolService: SchoolService
 ): ViewModel() {
     var isSaved by mutableStateOf(false)
     var status by mutableStateOf<SchedulePreviewStatus>(SchedulePreviewStatus.LOADING)
@@ -36,8 +36,8 @@ class SearchPreviewViewModel @Inject constructor(
 
     var schedule by mutableStateOf<NetworkResponse.Schedule?>(null)
 
-    private val schools by lazy { schoolManager.getSchools() }
-    private var currentSchedules: List<Schedule> = realmManager.getAllSchedules()
+    private val schools by lazy { schoolService.getSchools() }
+    private var currentSchedules: List<Schedule> = realmService.getAllSchedules()
 
     
     fun getSchedule(programmeId: String, schoolId: String){
@@ -88,7 +88,7 @@ class SearchPreviewViewModel @Inject constructor(
                 isSaved = true
                 buttonState = ButtonState.SAVED
                 schedule = fetchedSchedule
-                courseColorsForPreview = realmManager.getCourseColors()
+                courseColorsForPreview = realmService.getCourseColors()
                 status = SchedulePreviewStatus.LOADED
             } else{
                 withContext(Dispatchers.Default){
@@ -118,14 +118,14 @@ class SearchPreviewViewModel @Inject constructor(
             if (!isSaved) {
                 schedule?.toRealmSchedule(scheduleRequiresAuth(schoolId), schoolId, courseColorsForPreview, scheduleTitle)
                     ?.let { realmSchedule ->
-                        realmManager.saveSchedule(realmSchedule)
+                        realmService.saveSchedule(realmSchedule)
                         isSaved = true
                         buttonState = ButtonState.SAVED
                     }
             } else {
-                val realmSchedule = realmManager.getScheduleByScheduleId(scheduleId)
+                val realmSchedule = realmService.getScheduleByScheduleId(scheduleId)
                 realmSchedule?.let {
-                    realmManager.deleteSchedule(it)
+                    realmService.deleteSchedule(it)
                     isSaved = false
                     buttonState = ButtonState.NOT_SAVED
                 }

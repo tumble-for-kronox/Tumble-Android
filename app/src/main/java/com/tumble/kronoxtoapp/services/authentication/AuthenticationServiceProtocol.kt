@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.data.api.auth
+package com.tumble.kronoxtoapp.services.authentication
 
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
@@ -9,7 +9,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface AuthApiService {
+interface AuthenticationServiceProtocol {
     @POST("/api/users/login")
     suspend fun loginUser(
         @Query("schoolId") schoolId: String,

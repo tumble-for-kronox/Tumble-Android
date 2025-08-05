@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -36,7 +35,6 @@ import com.tumble.kronoxtoapp.theme.TumbleTheme
 @Composable
 fun AppParent() {
     val viewModel: ParentViewModel = viewModel()
-
     val appearance = viewModel.appearance.collectAsState()
 
     val accountNavController = rememberNavController()
@@ -44,13 +42,7 @@ fun AppParent() {
     val homeNavController = rememberNavController()
     val searchNavController = rememberNavController()
 
-    val currentNavGraph = remember { mutableStateOf(BottomNavItem.HOME) }
-    when (currentNavGraph.value) {
-        BottomNavItem.HOME -> homeNavController
-        BottomNavItem.BOOKMARKS -> bookmarksNavController
-        BottomNavItem.SEARCH -> searchNavController
-        BottomNavItem.ACCOUNT -> accountNavController
-    }
+    val currentTab = remember { mutableStateOf(BottomNavItem.HOME) }
 
     TumbleTheme(userPreferences =  appearance.value) {
         Surface(
@@ -73,7 +65,7 @@ fun AppParent() {
                             bookmarksNavController,
                             searchNavController,
                             accountNavController,
-                            currentNavGraph,
+                            currentTab,
                         )
                     }
                 }
@@ -81,7 +73,7 @@ fun AppParent() {
                 Box(
                     modifier = Modifier.padding(innerPadding).fillMaxSize()
                 ) {
-                    when (currentNavGraph.value) {
+                    when (currentTab.value) {
                         BottomNavItem.HOME -> HomeNavGraph(homeNavController) { appBarState = it }
                         BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController) {
                             appBarState = it

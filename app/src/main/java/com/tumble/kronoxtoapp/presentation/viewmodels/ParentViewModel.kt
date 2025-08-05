@@ -7,17 +7,17 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.ext.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
-import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.RealmService
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
-import com.tumble.kronoxtoapp.data.api.Endpoint
-import com.tumble.kronoxtoapp.data.repository.preferences.CombinedData
-import com.tumble.kronoxtoapp.data.api.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.CombinedData
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
@@ -29,9 +29,9 @@ import java.time.Instant
 
 @HiltViewModel
 class ParentViewModel @Inject constructor(
-    private val realmManager: RealmManager,
-    private val kronoxRepository: KronoxRepository,
-    private val dataStoreManager: DataStoreManager,
+    private val realmService: RealmService,
+    private val kronoxRepository: KronoxService,
+    private val dataStoreService: DataStoreService,
 ): ViewModel() {
 
     private val _combinedData = MutableStateFlow(CombinedData(-1))
@@ -58,9 +58,9 @@ class ParentViewModel @Inject constructor(
             return
         }
 
-        AppController.shared.setIsUpatingBookmarks(true)
+        AppController.shared.setIsUpdatingBookmarks(true)
 
-        val schedules = realmManager.getAllLiveSchedules()
+        val schedules = realmService.getAllLiveSchedules()
 
         if (schedules.isNotEmpty()) {
             val scheduleIds = schedules
@@ -72,28 +72,28 @@ class ParentViewModel @Inject constructor(
                     try {
                         updateBookmarks(scheduleIds)
                         withContext(Dispatchers.Main) {
-                            AppController.shared.setIsUpatingBookmarks(false)
-                            dataStoreManager.setLastUpdated(Instant.now())
+                            AppController.shared.setIsUpdatingBookmarks(false)
+                            dataStoreService.setLastUpdated(Instant.now())
                             updateAttempted = true
                         }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            AppController.shared.setIsUpatingBookmarks(false)
+                            AppController.shared.setIsUpdatingBookmarks(false)
                             Log.e("updateRealmSchedules", "Failed to update schedules: ${e.localizedMessage}")
                         }
                     }
                 }
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
-                    AppController.shared.setIsUpatingBookmarks(false)
-                    dataStoreManager.setLastUpdated(Instant.now())
+                    AppController.shared.setIsUpdatingBookmarks(false)
+                    dataStoreService.setLastUpdated(Instant.now())
                     updateAttempted = true
                 }
             }
         } else {
             viewModelScope.launch(Dispatchers.Main) {
-                AppController.shared.setIsUpatingBookmarks(false)
-                dataStoreManager.setLastUpdated(Instant.now())
+                AppController.shared.setIsUpdatingBookmarks(false)
+                dataStoreService.setLastUpdated(Instant.now())
                 updateAttempted = true
             }
         }
@@ -120,7 +120,7 @@ class ParentViewModel @Inject constructor(
     }
 
     private suspend fun fetchAndUpdateSchedule(scheduleId: String) {
-        val schedule = realmManager.getScheduleByScheduleId(scheduleId)
+        val schedule = realmService.getScheduleByScheduleId(scheduleId)
             ?: throw Exception("Schedule not found: $scheduleId")
 
         if (!schedule.isValid()) {
@@ -164,10 +164,10 @@ class ParentViewModel @Inject constructor(
             val realmSchedule: Schedule = schedule.toRealmSchedule(
                 scheduleRequiresAuth,
                 schoolId,
-                existingCourseColors = realmManager.getCourseColors(),
+                existingCourseColors = realmService.getCourseColors(),
                 scheduleTitle
             )
-            realmManager.updateSchedule(scheduleId = schedule.id, newSchedule = realmSchedule)
+            realmService.updateSchedule(scheduleId = schedule.id, newSchedule = realmSchedule)
         }
     }
 
@@ -200,7 +200,7 @@ class ParentViewModel @Inject constructor(
     }
 
     private fun updateShouldOccur(): Boolean {
-        val lastUpdated = dataStoreManager.lastUpdated.value
+        val lastUpdated = dataStoreService.lastUpdated.value
         val isoLastUpdated = parseIsoToInstant(lastUpdated)
         Log.d("updateShouldOccur", "Schedules were last updated at $isoLastUpdated")
         val threeHoursAgo = Instant.now().minusSeconds(3 * 60 * 60)
@@ -209,7 +209,7 @@ class ParentViewModel @Inject constructor(
 
     private fun observeDataStoreChanges() {
         viewModelScope.launch {
-            dataStoreManager.authSchoolId.combine(dataStoreManager.userOnBoarded) { authSchoolId, userOnBoarded ->
+            dataStoreService.authSchoolId.combine(dataStoreService.userOnBoarded) { authSchoolId, userOnBoarded ->
                 CombinedData(authSchoolId = authSchoolId, userOnBoarded = userOnBoarded)
             }.collect { combinedData ->
                 _combinedData.value = combinedData
@@ -217,7 +217,7 @@ class ParentViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            dataStoreManager.isInitialized.collect { isInitialized ->
+            dataStoreService.isInitialized.collect { isInitialized ->
                 if (isInitialized && updateShouldOccur() && !updateAttempted) {
                     Log.d("ParentViewModel", "DataStore initialized - checking for updates...")
                     updateRealmSchedules()
@@ -226,7 +226,7 @@ class ParentViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            dataStoreManager.appearance.collect {
+            dataStoreService.appearance.collect {
                 _appearance.value = it
             }
         }
