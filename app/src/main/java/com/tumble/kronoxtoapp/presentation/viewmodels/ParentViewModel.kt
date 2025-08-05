@@ -34,7 +34,7 @@ class ParentViewModel @Inject constructor(
     private val dataStoreManager: DataStoreManager,
 ): ViewModel() {
 
-    private val _combinedData = MutableStateFlow(CombinedData(-1, false))
+    private val _combinedData = MutableStateFlow(CombinedData(-1))
     private val _appearance = MutableStateFlow<AppearanceType>(AppearanceType.AUTOMATIC)
     val appearance: StateFlow<AppearanceType> = _appearance
     private var updateAttempted = false
@@ -47,7 +47,7 @@ class ParentViewModel @Inject constructor(
     private fun observeGlobalEventBus() {
         viewModelScope.launch {
             GlobalEventBus.scheduleUpdateFlow.collect {
-                updateRealmSchedules()
+                updateRealmSchedules() // called on migration
             }
         }
     }

@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +36,8 @@ fun EmptyEvent(){
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(10.dp))
+                .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
+                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)),
         ){
             Spacer(modifier = Modifier.width(15.dp))
             Box(modifier = Modifier

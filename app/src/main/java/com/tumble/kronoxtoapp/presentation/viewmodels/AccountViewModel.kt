@@ -103,7 +103,7 @@ class AccountViewModel @Inject constructor(
                 authManager.logOutUser()
                 _authStatus.value = AuthStatus.UNAUTHORIZED
             } catch (e: Exception) {
-                // TODO: Handle logout error
+                // TODO: Handle logout error with toast
             }
         }
     }

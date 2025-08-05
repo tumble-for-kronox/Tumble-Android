@@ -11,7 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -32,9 +32,9 @@ fun Resources(
     navController: NavHostController
 ){
     val scrollState = rememberScrollState()
-    val coroutinScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
     var scrollOffset by remember {
-        mutableStateOf(0f)
+        mutableFloatStateOf(0f)
     }
     LaunchedEffect(key1 = Unit) {
         getResourcesAndEvents()
@@ -76,11 +76,11 @@ fun Resources(
     LaunchedEffect(key1 = scrollState.value) {
         scrollOffset = scrollState.value.toFloat()
         if(scrollOffset >= 80){
-            coroutinScope.launch {
+            coroutineScope.launch {
                 collapsedHeader.value = true
             }
         } else if (scrollOffset == 0f){
-            coroutinScope.launch {
+            coroutineScope.launch {
                 collapsedHeader.value = false
             }
         }

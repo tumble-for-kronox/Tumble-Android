@@ -28,7 +28,6 @@ import kotlin.coroutines.CoroutineContext
 
 data class CombinedData(
     val authSchoolId: Int? = null,
-    val autoSignup: Boolean? = null,
     val viewType: ViewType? = null,
     val userOnBoarded: Boolean? = null,
     val appearance: AppearanceType? = null,
@@ -39,7 +38,7 @@ data class CombinedData(
 @Singleton
 class DataStoreManager @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val coroutineContext: CoroutineContext = Dispatchers.IO
+    coroutineContext: CoroutineContext = Dispatchers.IO
 ) {
     private val scope = CoroutineScope(coroutineContext)
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -48,7 +47,6 @@ class DataStoreManager @Inject constructor(
         val AUTH_SCHOOL_ID = intPreferencesKey("auth_school_id")
         val USER_ON_BOARDED = booleanPreferencesKey("user_on_boarded")
         val NOTIFICATION_OFFSET = intPreferencesKey("notification_offset")
-        val AUTO_SIGNUP = booleanPreferencesKey("auto_signup")
         val APPEARANCE = stringPreferencesKey("appearance")
         val VIEW_TYPE = stringPreferencesKey("view_type")
         val LAST_UPDATED = stringPreferencesKey("last_updated")
@@ -131,12 +129,6 @@ class DataStoreManager @Inject constructor(
     suspend fun setAppearance(appearance: AppearanceType) {
         context.dataStore.edit { preferences ->
             preferences[PreferencesKeys.APPEARANCE] = appearance.name
-        }
-    }
-
-    suspend fun setAutoSignup(value: Boolean) {
-        context.dataStore.edit { preferences ->
-            preferences[PreferencesKeys.AUTO_SIGNUP] = value
         }
     }
 

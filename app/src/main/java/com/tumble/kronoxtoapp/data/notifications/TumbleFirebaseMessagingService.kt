@@ -1,11 +1,15 @@
 package com.tumble.kronoxtoapp.data.notifications
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.RingtoneManager
+import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -16,6 +20,12 @@ import com.tumble.kronoxtoapp.R
 class TumbleFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED) {
+            return // Cannot display push notification
+        }
         remoteMessage.notification?.let {
             sendNotification(it.title, it.body)
         }
@@ -27,15 +37,16 @@ class TumbleFirebaseMessagingService : FirebaseMessagingService() {
         FirebaseMessaging.getInstance().subscribeToTopic("updates")
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    println("Subscribed to updates topic")
+                    Log.d("TumbleFirebaseMessagingService", "Subscribed to updates topic")
                 } else {
-                    println("Failed to subscribe to updates topic")
+                    Log.d("TumbleFirebaseMessagingService", "Failed to subscribe to updates topic")
                 }
             }
     }
 
 
     private fun sendNotification(title: String?, messageBody: String?) {
+
         val intent = Intent(this, MainActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }

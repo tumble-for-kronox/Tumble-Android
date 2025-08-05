@@ -64,9 +64,8 @@ fun NotificationOffsetSettings(
                     title = getOffsetDisplayName(type),
                     isSelected = currentOffset.value.value == type.value,
                     onValueChange = {
-                        val previousOffset = currentOffset
                         viewModel.rescheduleNotifications(
-                            previousOffset.value.value,
+                            currentOffset.value.value,
                             type
                         )
                     }
