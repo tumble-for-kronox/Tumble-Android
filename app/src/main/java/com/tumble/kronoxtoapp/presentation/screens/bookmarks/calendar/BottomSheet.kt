@@ -1,7 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks.calendar
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tumble.kronoxtoapp.extensions.presentation.toColor
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 import com.tumble.kronoxtoapp.presentation.components.buttons.CompactEventButtonLabel
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.R

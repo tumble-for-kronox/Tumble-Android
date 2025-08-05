@@ -14,7 +14,6 @@ import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.SearchBarDefaults.colors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -30,7 +29,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.domain.models.presentation.School
-import com.tumble.kronoxtoapp.extensions.presentation.view.hideKeyboard
+import com.tumble.kronoxtoapp.other.extensions.presentation.view.hideKeyboard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -16,6 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.HomeStatus
@@ -37,6 +39,7 @@ import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    navController: NavHostController,
     onComposing: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.home)
@@ -50,7 +53,7 @@ fun HomeScreen(
     }
 
     val onEventSelection = { event: Event ->
-        viewModel.eventSheet = EventDetailsSheetModel(event = event)
+        navController.navigate(UriBuilder.buildBookmarksDetailsUri(event.eventId))
     }
 
     val toggleNewsOverlay = { value: Boolean ->
@@ -113,25 +116,5 @@ fun HomeScreen(
                 )
             }
         )
-    }
-
-    // Event Details Sheet
-    AnimatedVisibility(
-        visible = viewModel.eventSheet != null,
-        enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-        exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
-    ) {
-        viewModel.eventSheet?.let {
-            EventDetailsSheet(
-                event = it.event,
-                setTopNavState = onComposing,
-                onClose = {
-                    viewModel.eventSheet = null
-                },
-                onColorChanged = { hexColor, courseId ->
-                    viewModel.changeCourseColor(hexColor, courseId)
-                }
-            )
-        }
     }
 }

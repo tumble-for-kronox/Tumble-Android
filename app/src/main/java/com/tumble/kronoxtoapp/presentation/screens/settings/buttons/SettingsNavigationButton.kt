@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tumble.kronoxtoapp.extensions.presentation.noRippleClickable
+import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 
 @Composable
 fun SettingsNavigationButton(

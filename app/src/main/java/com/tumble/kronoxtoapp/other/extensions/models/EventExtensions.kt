@@ -1,8 +1,7 @@
-package com.tumble.kronoxtoapp.extensions.models
+package com.tumble.kronoxtoapp.other.extensions.models
 
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.utils.isoDateFormatterNoTimeZone
-import java.time.format.DateTimeFormatter
 
 fun List<Event>.sorted(): List<Event> {
     return this.sortedWith(compareBy { event ->

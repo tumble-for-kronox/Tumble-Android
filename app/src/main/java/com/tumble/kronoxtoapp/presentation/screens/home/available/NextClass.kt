@@ -13,8 +13,8 @@ import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.components.buttons.CompactEventButtonLabel
-import com.tumble.kronoxtoapp.extensions.presentation.formatDate
-import com.tumble.kronoxtoapp.extensions.presentation.toColor
+import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 
 @Composable
 fun NextClass(nextClass: Event?, onEventSelection: (Event) -> Unit) {

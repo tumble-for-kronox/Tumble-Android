@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.extensions.presentation.view
+package com.tumble.kronoxtoapp.other.extensions.presentation.view
 
 import android.app.Activity
 import android.content.Context

@@ -1,5 +1,5 @@
 package com.tumble.kronoxtoapp.domain.enums
 
-enum class SchedulePreviewStatus{
+enum class SheetStatus{
     LOADING, ERROR, EMPTY, LOADED
 }

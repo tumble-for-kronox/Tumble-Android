@@ -19,9 +19,9 @@ import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.extensions.models.findEventsByCategory
-import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
-import com.tumble.kronoxtoapp.extensions.presentation.toLocalDateTime
+import com.tumble.kronoxtoapp.other.extensions.models.findEventsByCategory
+import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
+import com.tumble.kronoxtoapp.other.extensions.presentation.toLocalDateTime
 import com.tumble.kronoxtoapp.services.RealmService
 import java.time.ZoneId
 import java.util.Calendar

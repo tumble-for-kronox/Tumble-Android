@@ -1,7 +1,5 @@
-package com.tumble.kronoxtoapp.extensions.models
+package com.tumble.kronoxtoapp.other.extensions.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.utils.isoDateFormatter
 import com.tumble.kronoxtoapp.utils.preprocessDateString

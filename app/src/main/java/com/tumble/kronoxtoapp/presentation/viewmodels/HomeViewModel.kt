@@ -19,8 +19,8 @@ import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.extensions.models.filterEventsMatchingToday
-import com.tumble.kronoxtoapp.extensions.models.findNextUpcomingEvent
+import com.tumble.kronoxtoapp.other.extensions.models.filterEventsMatchingToday
+import com.tumble.kronoxtoapp.other.extensions.models.findNextUpcomingEvent
 import com.tumble.kronoxtoapp.presentation.models.WeekEventCardModel
 import com.tumble.kronoxtoapp.utils.sortedEventOrder
 import javax.inject.Inject

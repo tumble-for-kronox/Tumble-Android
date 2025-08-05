@@ -16,11 +16,11 @@ import com.tumble.kronoxtoapp.services.RealmService
 import com.tumble.kronoxtoapp.services.SchoolService
 import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.ButtonState
-import com.tumble.kronoxtoapp.domain.enums.SchedulePreviewStatus
+import com.tumble.kronoxtoapp.domain.enums.SheetStatus
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.extensions.models.assignCourseRandomColors
-import com.tumble.kronoxtoapp.extensions.models.toRealmSchedule
+import com.tumble.kronoxtoapp.other.extensions.models.assignCourseRandomColors
+import com.tumble.kronoxtoapp.other.extensions.models.toRealmSchedule
 
 @HiltViewModel
 class SearchPreviewViewModel @Inject constructor(
@@ -28,9 +28,9 @@ class SearchPreviewViewModel @Inject constructor(
     private val realmService: RealmService,
     private val schoolService: SchoolService
 ): ViewModel() {
-    var isSaved by mutableStateOf(false)
-    var status by mutableStateOf<SchedulePreviewStatus>(SchedulePreviewStatus.LOADING)
-    var errorMessage by mutableStateOf("")
+    private var isSaved by mutableStateOf(false)
+    var status by mutableStateOf<SheetStatus>(SheetStatus.LOADING)
+    private var errorMessage by mutableStateOf("")
     var buttonState by mutableStateOf<ButtonState>(ButtonState.LOADING)
     var courseColorsForPreview by mutableStateOf<Map<String,String>>(emptyMap())
 
@@ -44,7 +44,7 @@ class SearchPreviewViewModel @Inject constructor(
         val isScheduleSaved = checkSavedSchedule(programmeId = programmeId, schedules = currentSchedules)
 
         with(Dispatchers.Main){
-            status = SchedulePreviewStatus.LOADING
+            status = SheetStatus.LOADING
             isSaved = isScheduleSaved
         }
 
@@ -55,9 +55,9 @@ class SearchPreviewViewModel @Inject constructor(
                 val fetchedSchedule: ApiResponse<NetworkResponse.Schedule> = kronoxManager.getSchedule(endpoint)
                 parsedSchedule = parseFetchedSchedules(fetchedSchedule)
                 updateUIWithFetchedSchedule(parsedSchedule, existingSchedule = currentSchedules)
-            }catch (e: Exception){
+            } catch (e: Exception){
                 withContext(Dispatchers.Main){
-                    status = SchedulePreviewStatus.ERROR
+                    status = SheetStatus.ERROR
                     errorMessage = "An unexpected error occurred. Please try again later."
                 }
             }
@@ -82,14 +82,14 @@ class SearchPreviewViewModel @Inject constructor(
     private fun updateUIWithFetchedSchedule(fetchedSchedule: NetworkResponse.Schedule, existingSchedule: List<Schedule>){
         viewModelScope.launch(Dispatchers.Main) {
             if (!fetchedSchedule.days.any { it.events.isNotEmpty() }){
-                status = SchedulePreviewStatus.EMPTY
+                status = SheetStatus.EMPTY
                 buttonState = ButtonState.DISABLED
             }else if (existingSchedule.map { it.scheduleId }.contains(fetchedSchedule.id)){
                 isSaved = true
                 buttonState = ButtonState.SAVED
                 schedule = fetchedSchedule
                 courseColorsForPreview = realmService.getCourseColors()
-                status = SchedulePreviewStatus.LOADED
+                status = SheetStatus.LOADED
             } else{
                 withContext(Dispatchers.Default){
                     val randomCourseColor = fetchedSchedule.assignCourseRandomColors()
@@ -97,7 +97,7 @@ class SearchPreviewViewModel @Inject constructor(
                         courseColorsForPreview = randomCourseColor
                         schedule = fetchedSchedule
                         buttonState = ButtonState.NOT_SAVED
-                        status = SchedulePreviewStatus.LOADED
+                        status = SheetStatus.LOADED
                     }
                 }
             }

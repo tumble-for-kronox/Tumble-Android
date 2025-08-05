@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tumble.kronoxtoapp.extensions.presentation.noRippleClickable
+import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 
 
 @Composable

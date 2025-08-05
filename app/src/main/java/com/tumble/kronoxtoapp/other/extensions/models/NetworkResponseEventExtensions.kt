@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.extensions.models
+package com.tumble.kronoxtoapp.other.extensions.models
 
 import androidx.core.text.HtmlCompat
 import io.realm.kotlin.ext.toRealmList

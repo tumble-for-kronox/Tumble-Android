@@ -12,7 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.tumble.kronoxtoapp.domain.enums.SchedulePreviewStatus
+import com.tumble.kronoxtoapp.domain.enums.SheetStatus
 import com.tumble.kronoxtoapp.presentation.components.buttons.BookmarkButton
 import com.tumble.kronoxtoapp.presentation.viewmodels.SearchPreviewViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
@@ -41,7 +41,7 @@ fun SearchPreviewSheet(
             AppBarState(
                 title = scheduleId,
                 actions = {
-                    if (viewModel.status == SchedulePreviewStatus.LOADED)
+                    if (viewModel.status == SheetStatus.LOADED)
                         BookmarkButton(bookmark = { bookmark() }, buttonState = viewModel.buttonState)
                 },
                 navigationAction = {
@@ -60,16 +60,16 @@ fun SearchPreviewSheet(
         contentAlignment = Alignment.Center
     ){
         when(viewModel.status){
-            SchedulePreviewStatus.LOADED -> {
+            SheetStatus.LOADED -> {
                 SearchPreviewList(viewModel = viewModel)
             }
-            SchedulePreviewStatus.LOADING -> {
+            SheetStatus.LOADING -> {
                 CustomProgressIndicator()
             }
-            SchedulePreviewStatus.ERROR -> {
+            SheetStatus.ERROR -> {
                 Info(title = stringResource(id = R.string.error_something_wrong), image = null)
             }
-            SchedulePreviewStatus.EMPTY -> {
+            SheetStatus.EMPTY -> {
                 Info(title = stringResource(id = R.string.error_empty_schedule), image = null)
             }
         }

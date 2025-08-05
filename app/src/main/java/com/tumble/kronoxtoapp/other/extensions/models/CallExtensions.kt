@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.extensions.models
+package com.tumble.kronoxtoapp.other.extensions.models
 
 import android.util.Log
 import retrofit2.Call

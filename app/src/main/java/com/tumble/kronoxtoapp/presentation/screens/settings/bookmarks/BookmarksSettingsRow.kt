@@ -13,12 +13,11 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.zIndex
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.extensions.presentation.borderRadius
+import com.tumble.kronoxtoapp.other.extensions.presentation.borderRadius
 
 @Composable
 fun BookmarkSettingsRow(

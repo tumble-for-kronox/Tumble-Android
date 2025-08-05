@@ -17,15 +17,18 @@ fun HomeNavGraph(
     onComposing: (AppBarState) -> Unit
 ) {
     NavHost(navController, Routes.home) {
-        home(onComposing)
+        home(navController, onComposing)
         homeNews(navController)
         homeNewsDetails(navController)
     }
 }
 
-private fun NavGraphBuilder.home(onComposing: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.home(navController: NavHostController, onComposing: (AppBarState) -> Unit) {
     composable(Routes.home) {
-        HomeScreen(onComposing = onComposing)
+        HomeScreen(
+            navController = navController,
+            onComposing = onComposing
+        )
     }
 }
 

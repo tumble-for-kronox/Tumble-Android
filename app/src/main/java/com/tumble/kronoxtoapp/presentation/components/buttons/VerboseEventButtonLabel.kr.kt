@@ -25,8 +25,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
-import com.tumble.kronoxtoapp.extensions.presentation.toColor
+import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 import java.util.Locale
 
 @Composable

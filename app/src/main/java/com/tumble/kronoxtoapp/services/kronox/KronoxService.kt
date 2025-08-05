@@ -2,7 +2,7 @@ package com.tumble.kronoxtoapp.services.kronox
 
 import okhttp3.Request
 import retrofit2.Retrofit
-import com.tumble.kronoxtoapp.extensions.models.callToApiResponse
+import com.tumble.kronoxtoapp.other.extensions.models.callToApiResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement

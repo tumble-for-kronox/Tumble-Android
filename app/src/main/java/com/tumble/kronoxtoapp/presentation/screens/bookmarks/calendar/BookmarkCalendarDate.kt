@@ -18,8 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tumble.kronoxtoapp.extensions.presentation.noRippleClickable
-import com.tumble.kronoxtoapp.extensions.presentation.toColor
+import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import java.time.LocalDate
 

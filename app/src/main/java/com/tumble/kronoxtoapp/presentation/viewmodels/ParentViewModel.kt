@@ -22,9 +22,8 @@ import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.domain.models.util.parseIsoToInstant
-import com.tumble.kronoxtoapp.extensions.models.toRealmSchedule
+import com.tumble.kronoxtoapp.other.extensions.models.toRealmSchedule
 import com.tumble.kronoxtoapp.observables.AppController
-import com.tumble.kronoxtoapp.other.GlobalEventBus
 import java.time.Instant
 
 @HiltViewModel
@@ -41,15 +40,6 @@ class ParentViewModel @Inject constructor(
 
     init {
         observeDataStoreChanges()
-        observeGlobalEventBus()
-    }
-
-    private fun observeGlobalEventBus() {
-        viewModelScope.launch {
-            GlobalEventBus.scheduleUpdateFlow.collect {
-                updateRealmSchedules() // called on migration
-            }
-        }
     }
 
     private fun updateRealmSchedules() {

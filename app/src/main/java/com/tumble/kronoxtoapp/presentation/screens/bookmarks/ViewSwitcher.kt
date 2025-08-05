@@ -28,7 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.domain.enums.ViewType
 import com.tumble.kronoxtoapp.domain.enums.viewTypeToStringResource
-import com.tumble.kronoxtoapp.extensions.presentation.noRippleClickable
+import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 
 @OptIn(ExperimentalFoundationApi::class)

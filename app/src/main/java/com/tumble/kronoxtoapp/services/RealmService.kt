@@ -76,6 +76,25 @@ class RealmService {
         }
     }
 
+    fun getEventsByCourseId(courseId: String): List<Event> {
+        val matchingEvents = mutableListOf<Event>()
+
+        val schedules = getAllSchedules()
+        for (schedule in schedules) {
+            val days = schedule.days ?: continue
+            for (day in days) {
+                val events = day.events ?: continue
+                for (event in events) {
+                    if (event.course?.courseId == courseId) {
+                        matchingEvents.add(event)
+                    }
+                }
+            }
+        }
+
+        return matchingEvents
+    }
+
     fun getCourseColors(): MutableMap<String, String> {
         val courses: RealmResults<Course> = realm.query<Course>().find()
         val courseColors = mutableMapOf<String, String>()
@@ -100,6 +119,24 @@ class RealmService {
             })
         }
     }
+
+    fun getEvent(eventId: String): Event? {
+        val schedules = getAllSchedules()
+        for (schedule in schedules) {
+            val days = schedule.days ?: continue
+            for (day in days) {
+                val events = day.events ?: continue
+                for (event in events) {
+                    if (event.eventId == eventId) {
+                        return event
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+
 
     suspend fun deleteSchedule(schedule: Schedule) {
         realm.write {

@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tumble.kronoxtoapp.extensions.presentation.noRippleClickable
+import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 
 @Composable
 fun SettingsRadioButton(

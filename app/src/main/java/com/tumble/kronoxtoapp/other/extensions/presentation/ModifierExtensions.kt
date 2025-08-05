@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.extensions.presentation
+package com.tumble.kronoxtoapp.other.extensions.presentation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

@@ -1,11 +1,11 @@
-package com.tumble.kronoxtoapp.extensions.models
+package com.tumble.kronoxtoapp.other.extensions.models
 
 import io.realm.kotlin.ext.copyFromRealm
 import io.realm.kotlin.ext.toRealmList
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.extensions.presentation.toLocalDateTime
+import com.tumble.kronoxtoapp.other.extensions.presentation.toLocalDateTime
 import com.tumble.kronoxtoapp.utils.preprocessDateString
 import java.time.LocalDate
 import java.time.LocalDateTime
