@@ -32,7 +32,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.extensions.models.timelotHasAvailable
+import com.tumble.kronoxtoapp.extensions.models.timeslotHasAvailable
 import com.tumble.kronoxtoapp.extensions.presentation.convertToHoursAndMinutesISOString
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
@@ -123,7 +123,7 @@ fun TimeslotDropdown(
         ) {
             timeslots.forEachIndexed { index, timeslot ->
                 timeslot.id?.let { timeslotId ->
-                    if (resource.availabilities.timelotHasAvailable(timeslotId)) {
+                    if (resource.availabilities.timeslotHasAvailable(timeslotId)) {
                         val start = timeslot.from?.convertToHoursAndMinutesISOString()
                         val end = timeslot.to?.convertToHoursAndMinutesISOString()
                         if (start != null && end != null) {

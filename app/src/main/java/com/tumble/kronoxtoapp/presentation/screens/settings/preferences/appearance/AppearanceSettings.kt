@@ -8,7 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.domain.enums.Types.AppearanceType
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
 import com.tumble.kronoxtoapp.presentation.screens.settings.buttons.SettingsRadioButton

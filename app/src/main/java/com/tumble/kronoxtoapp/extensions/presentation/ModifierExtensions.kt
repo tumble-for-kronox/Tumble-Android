@@ -30,14 +30,6 @@ fun Modifier.wiggle(): Modifier = composed {
 
     LaunchedEffect(Unit) {
         val animationDelay = 1200 // in milliseconds
-        val animationDuration = 200 // in milliseconds
-        val animationSpec = infiniteRepeatable<Float>(
-            animation = tween(
-                durationMillis = animationDuration,
-                easing = LinearEasing
-            ),
-            repeatMode = RepeatMode.Reverse
-        )
         isAnimating = true
         delay(animationDelay.toLong())
         isAnimating = false

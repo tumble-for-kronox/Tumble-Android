@@ -2,24 +2,16 @@ package com.tumble.kronoxtoapp.presentation.screens.account.user.resources
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
@@ -28,24 +20,18 @@ import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
 fun Resources(
     parentViewModel: AccountViewModel = hiltViewModel(),
     getResourcesAndEvents: () -> Unit,
-    collapsedHeader: MutableState<Boolean>,
     navController: NavHostController
 ){
-    val scrollState = rememberScrollState()
-    val coroutineScope = rememberCoroutineScope()
-    var scrollOffset by remember {
-        mutableFloatStateOf(0f)
-    }
     LaunchedEffect(key1 = Unit) {
         getResourcesAndEvents()
     }
     val userBookings = parentViewModel.userBookings.collectAsState()
     val userEvents = parentViewModel.completeUserEvent.collectAsState()
     val registeredBookingsState = parentViewModel.registeredBookingsSectionState.collectAsState()
+
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
+            .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.background)
     ) {
         ResourceSectionDivider(
@@ -71,18 +57,6 @@ fun Resources(
                 state = parentViewModel.registeredEventSectionState.collectAsState(),
                 registeredEvents = userEvents.value?.registeredEvents?: emptyList()
             )
-        }
-    }
-    LaunchedEffect(key1 = scrollState.value) {
-        scrollOffset = scrollState.value.toFloat()
-        if(scrollOffset >= 80){
-            coroutineScope.launch {
-                collapsedHeader.value = true
-            }
-        } else if (scrollOffset == 0f){
-            coroutineScope.launch {
-                collapsedHeader.value = false
-            }
         }
     }
 }

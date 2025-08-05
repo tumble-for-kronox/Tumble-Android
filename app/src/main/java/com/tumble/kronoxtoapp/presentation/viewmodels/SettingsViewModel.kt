@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.data.repository.preferences.CombinedData
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
 import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
-import com.tumble.kronoxtoapp.domain.enums.Types.AppearanceType
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffset
 import javax.inject.Inject

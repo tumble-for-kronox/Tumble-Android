@@ -23,7 +23,6 @@ open class Event(
 
     val dateComponents: Calendar?
         get() {
-//            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
             val date = isoDateFormatterNoTimeZone.parse(from)
             return if (date != null) {
                 Calendar.getInstance().apply {

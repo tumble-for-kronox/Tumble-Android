@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.ext.isValid
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
 import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
 import javax.inject.Inject
@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.repository.preferences.CombinedData
 import com.tumble.kronoxtoapp.data.api.ApiResponse
-import com.tumble.kronoxtoapp.domain.enums.Types.AppearanceType
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.domain.models.util.parseIsoToInstant

@@ -6,7 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.tumble.kronoxtoapp.domain.enums.Types.AppearanceType
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 
 private val DarkColorScheme = darkColorScheme(
     primary = Primary,

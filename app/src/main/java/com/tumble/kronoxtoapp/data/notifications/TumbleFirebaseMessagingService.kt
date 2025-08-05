@@ -32,7 +32,7 @@ class TumbleFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     override fun onNewToken(token: String) {
-        println("New FCM Token: $token")
+        Log.d("TumbleFirebaseMessagingService", "New FCM Token: $token")
 
         FirebaseMessaging.getInstance().subscribeToTopic("updates")
             .addOnCompleteListener { task ->

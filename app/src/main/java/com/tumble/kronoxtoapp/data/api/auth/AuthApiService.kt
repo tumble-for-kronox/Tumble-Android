@@ -1,13 +1,13 @@
 package com.tumble.kronoxtoapp.data.api.auth
 
+import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
-import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 
 interface AuthApiService {
     @POST("/api/users/login")

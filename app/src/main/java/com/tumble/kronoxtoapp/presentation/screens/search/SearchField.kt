@@ -15,6 +15,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBarDefaults
+import androidx.compose.material3.SearchBarDefaults.colors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -29,7 +30,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.domain.models.presentation.School
-import com.tumble.kronoxtoapp.extensions.presentation.View.hideKeyboard
+import com.tumble.kronoxtoapp.extensions.presentation.view.hideKeyboard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +69,11 @@ fun SearchField(
         activity?.hideKeyboard()
         searching.value = false
     }
+    TextFieldDefaults.colors(
+        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+        cursorColor = MaterialTheme.colorScheme.primary
+    )
     DockedSearchBar(query = searchBarText.value,
         onQueryChange = { searchBarText.value = it},
         onSearch = { searchAction() },
@@ -82,23 +88,18 @@ fun SearchField(
         onActiveChange = {},
         trailingIcon = { if (searching.value) {
             InBarButtons(
-                    searchAction = { searchAction() },
-                    searchFieldAction = { searchFieldAction() }
-                )
-            }
+                searchAction = { searchAction() },
+                searchFieldAction = { searchFieldAction() }
+            )
+        }
         },
         modifier = Modifier
             .onFocusChanged { searching.value = if (it.isFocused) true else enabled}
             .blur(blur.value)
             .fillMaxWidth(),
-        colors = SearchBarDefaults.colors(
+        colors = colors(
             containerColor = MaterialTheme.colorScheme.primary.copy(.075f),
-            dividerColor = MaterialTheme.colorScheme.primary,
-            inputFieldColors = TextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                cursorColor = MaterialTheme.colorScheme.primary
-            ),
+            dividerColor = MaterialTheme.colorScheme.primary
         ),
     ) {}
 }

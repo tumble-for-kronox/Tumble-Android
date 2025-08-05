@@ -1,9 +1,6 @@
 package com.tumble.kronoxtoapp.extensions.models
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.text.HtmlCompat
-import io.realm.kotlin.ext.toRealmList
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Course
 import com.tumble.kronoxtoapp.domain.models.realm.Day
@@ -11,6 +8,7 @@ import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Location
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.domain.models.realm.Teacher
+import io.realm.kotlin.ext.toRealmList
 
 
 fun NetworkResponse.Schedule.assignCourseRandomColors(): MutableMap<String, String> {

@@ -17,7 +17,7 @@ sealed class Endpoint {
     data class BookResource(val schoolId: String) : Endpoint()
     data class ConfirmResource(val schoolId: String) : Endpoint()
     data class UnBookResource(val schoolId: String, val bookingId: String) : Endpoint()
-    object News : Endpoint()
+    data object News : Endpoint()
     data class AllResources(val schoolId: String, val date: String): Endpoint()
 }
 

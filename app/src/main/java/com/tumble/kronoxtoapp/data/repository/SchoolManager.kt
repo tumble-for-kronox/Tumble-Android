@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.datasource
+package com.tumble.kronoxtoapp.data.repository
 
 import android.content.Context
 import androidx.collection.LruCache
@@ -9,22 +9,17 @@ import java.io.InputStreamReader
 
 class SchoolManager(private val context: Context) {
     private var schools: List<School> = listOf()
-    private var ladokUrl: String = ""
     private val cache = LruCache<String, List<School>>(1)
 
     init{
          schools = loadJSON("Schools.json")
     }
 
-    fun getLadokUrl():String{
-        return ladokUrl
-    }
-
     fun getSchools(): List<School>  {
-        cache.get("schools")?.let {
+        cache["schools"]?.let {
             return it
         } ?: run { cache.put("schools", schools)
-        return schools
+            return schools
         }
     }
 

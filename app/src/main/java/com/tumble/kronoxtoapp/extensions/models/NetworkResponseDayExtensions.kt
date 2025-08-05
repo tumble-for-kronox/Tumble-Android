@@ -9,17 +9,13 @@ import java.time.LocalDate
 
 
 fun NetworkResponse.Day.isValidDay(): Boolean{
-
-//    LocalDate.parse(this.isoString)
-//    this.isoString.toLocalDateTime()
-
     val startOfToday = LocalDate.now()
     val dayDate = LocalDate.parse(this.isoString.substring(0,10))
     return startOfToday <= dayDate
 }
 
 fun List<NetworkResponse.Day>.ordered(): List<NetworkResponse.Day> {
-    return this.filterNotNull().sortedBy {
+    return this.sortedBy {
         val processedDateString = preprocessDateString(it.isoString)
         isoDateFormatter.parse(processedDateString)
     }

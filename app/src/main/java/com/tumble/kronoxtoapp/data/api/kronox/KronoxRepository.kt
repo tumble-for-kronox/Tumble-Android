@@ -1,12 +1,11 @@
-package com.tumble.kronoxtoapp.datasource.network.kronox
+package com.tumble.kronoxtoapp.data.api.kronox
 
 import okhttp3.Request
 import retrofit2.Retrofit
 import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.api.url
 import com.tumble.kronoxtoapp.data.api.ApiResponse
-import com.tumble.kronoxtoapp.data.api.kronox.KronoxApiService
-import com.tumble.kronoxtoapp.datasource.network.ApiServiceKronox
+import com.tumble.kronoxtoapp.data.api.ApiServiceKronox
 import com.tumble.kronoxtoapp.data.api.extensions.callToApiResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse

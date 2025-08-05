@@ -3,11 +3,11 @@ package com.tumble.kronoxtoapp.extensions.models
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.availabilities
 
-fun availabilities.timelotHasAvailable(timelotId: Int):Boolean {
+fun availabilities.timeslotHasAvailable(timeslotId: Int):Boolean {
 
     val availabilities = this ?: return false
     for ((_, availabilityValues) in availabilities){
-        val availability = availabilityValues[timelotId]?.availability
+        val availability = availabilityValues[timeslotId]?.availability
 
         if (availability == NetworkResponse.AvailabilityEnum.AVAILABLE){
             return true
@@ -27,12 +27,12 @@ fun availabilities.getFirstTimeSlotWithAvailability(numOfTimeSlots: Int): Int{
     return 1
 }
 
-fun availabilities.getAvailabilityValues(timelotId: Int): List<NetworkResponse.AvailabilityValue>{
+fun availabilities.getAvailabilityValues(timeslotId: Int): List<NetworkResponse.AvailabilityValue>{
 
     val availabilities = this?: return emptyList()
     val availabilityValueResult = mutableListOf<NetworkResponse.AvailabilityValue>()
     for (availabilityValues in availabilities.values){
-        val availabilityValue = availabilityValues[timelotId]
+        val availabilityValue = availabilityValues[timeslotId]
         if(availabilityValue?.availability == NetworkResponse.AvailabilityEnum.AVAILABLE){
             availabilityValueResult.add(availabilityValue)
         }

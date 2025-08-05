@@ -20,8 +20,8 @@ android {
         applicationId "com.tumble.kronoxtoapp"
         minSdk 26
         targetSdk 35
-        versionCode 43
-        versionName "4.0.0"
+        versionCode 45
+        versionName "4.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -47,7 +47,8 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
@@ -69,18 +70,12 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = null // Managed by Kotlin plugin
     }
-    packaging {
-        resources {
-            excludes += '/META-INF/{AL2.0,LGPL2.1}'
-        }
-    }
     hilt {
         enableAggregatingTask = true
     }
 }
 
 dependencies {
-    // Compose BOM for version alignment
     implementation platform("androidx.compose:compose-bom:$compose_bom_version")
 
     implementation 'androidx.core:core-ktx:1.16.0'
@@ -112,15 +107,13 @@ dependencies {
 
     //HiltViewModel
     implementation 'androidx.hilt:hilt-navigation-compose:1.2.0'
-
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
 
     implementation 'androidx.compose.material:material-icons-extended'
 
+    // Retrofit
     implementation "com.squareup.retrofit2:converter-moshi:2.11.0"
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
-
-    // Retrofit
     implementation 'com.google.code.gson:gson:2.11.0'
     implementation 'com.squareup.retrofit2:retrofit:2.11.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.11.0'

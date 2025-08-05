@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.data.api.auth.AuthManager
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
-import com.tumble.kronoxtoapp.datasource.SchoolManager
+import com.tumble.kronoxtoapp.data.repository.SchoolManager
 import com.tumble.kronoxtoapp.domain.models.presentation.School
 import javax.inject.Inject
 

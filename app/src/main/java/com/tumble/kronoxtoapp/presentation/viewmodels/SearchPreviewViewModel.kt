@@ -1,21 +1,19 @@
 package com.tumble.kronoxtoapp.presentation.viewmodels
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.repository.realm.RealmManager
-import com.tumble.kronoxtoapp.datasource.SchoolManager
+import com.tumble.kronoxtoapp.data.repository.SchoolManager
 import com.tumble.kronoxtoapp.data.api.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.ButtonState
 import com.tumble.kronoxtoapp.domain.enums.SchedulePreviewStatus

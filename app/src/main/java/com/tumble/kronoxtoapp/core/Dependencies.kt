@@ -12,8 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import com.tumble.kronoxtoapp.BuildConfig
-import com.tumble.kronoxtoapp.datasource.SchoolManager
+import com.tumble.kronoxtoapp.data.repository.SchoolManager
 import com.tumble.kronoxtoapp.data.api.auth.AuthApiService
 import com.tumble.kronoxtoapp.data.api.auth.AuthManager
 import com.tumble.kronoxtoapp.data.notifications.NotificationManager
@@ -110,7 +109,7 @@ object RetrofitModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        return if (BuildConfig.DEBUG) provideDevOkHttpClient() else OkHttpClient.Builder()
+        return OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })

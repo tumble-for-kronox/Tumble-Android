@@ -48,7 +48,7 @@ fun ResourceSelection(
     val resource = AppController.shared.resourceModel!!.resource
     val selectedTimeIndex = remember { mutableIntStateOf(resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)) }
     val availabilityValues = remember {
-        mutableStateOf(resource.availabilities.getAvailabilityValues(timelotId = selectedTimeIndex.intValue))
+        mutableStateOf(resource.availabilities.getAvailabilityValues(timeslotId = selectedTimeIndex.intValue))
     }
     val selectedPickerDate = AppController.shared.resourceModel!!.date
     val timeslots = resource.timeSlots
@@ -96,7 +96,7 @@ fun ResourceSelection(
                     onIndexChange = { index ->
                         selectedTimeIndex.intValue = index
                         availabilityValues.value =
-                            resource.availabilities.getAvailabilityValues(timelotId = index)
+                            resource.availabilities.getAvailabilityValues(timeslotId = index)
                     }
                 )
             }

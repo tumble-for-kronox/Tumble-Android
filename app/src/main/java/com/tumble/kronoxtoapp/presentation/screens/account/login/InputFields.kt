@@ -54,7 +54,7 @@ fun UsernameField(username: MutableState<String>) {
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Next,
-            autoCorrect = false
+            autoCorrectEnabled = false
         ),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
@@ -110,7 +110,7 @@ fun PasswordField(
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done,
-            autoCorrect = false
+            autoCorrectEnabled = false
         ),
         visualTransformation = if (visiblePassword.value) VisualTransformation.None else PasswordVisualTransformation(),
         colors = TextFieldDefaults.colors(

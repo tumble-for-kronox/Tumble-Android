@@ -1,8 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.viewmodels
 
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +11,7 @@ import com.tumble.kronoxtoapp.data.api.Endpoint
 import com.tumble.kronoxtoapp.data.api.auth.AuthManager
 import com.tumble.kronoxtoapp.data.repository.preferences.DataStoreManager
 import com.tumble.kronoxtoapp.data.api.ApiResponse
-import com.tumble.kronoxtoapp.datasource.network.kronox.KronoxRepository
+import com.tumble.kronoxtoapp.data.api.kronox.KronoxRepository
 import com.tumble.kronoxtoapp.domain.enums.PageState
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
@@ -78,9 +76,7 @@ class ResourceViewModel @Inject constructor(
             val refreshToken = authManager.getRefreshToken() ?: return@launch
             val schoolID = dataStoreManager.authSchoolId.value.toString()
             val endpoint = Endpoint.RegisterEvent(eventId = eventId, schoolId = schoolID)
-            val response = kronoxManager.registerForEvent(endpoint, refreshToken)
-
-            when(response){
+            when(val response = kronoxManager.registerForEvent(endpoint, refreshToken)){
                 is ApiResponse.Error -> {
                     if(response.errorMessage == "Empty response body"){
                         Log.e("unbooked", "Success")
@@ -101,9 +97,7 @@ class ResourceViewModel @Inject constructor(
 
             val endpoint = Endpoint.UnregisterEvent(eventId, dataStoreManager.authSchoolId.value.toString())
             val refreshToken = authManager.getRefreshToken() ?: return@launch
-            val response = kronoxManager.unRegisterForEvent(endpoint, refreshToken)
-
-            when(response){
+            when(val response = kronoxManager.unRegisterForEvent(endpoint, refreshToken)){
                 is ApiResponse.Error -> {
                     if(response.errorMessage == "Empty response body"){
                         Log.e("unRegister", "Success")

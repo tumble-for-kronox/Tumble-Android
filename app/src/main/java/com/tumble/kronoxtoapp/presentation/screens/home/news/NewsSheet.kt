@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
+import androidx.compose.material3.SearchBarDefaults.colors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -111,6 +112,11 @@ fun NewsSearchBar(
 ) {
     val searching = remember { mutableStateOf(false) }
 
+    TextFieldDefaults.colors(
+        focusedTextColor = MaterialTheme.colorScheme.onBackground,
+        unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+        cursorColor = MaterialTheme.colorScheme.primary
+    )
     DockedSearchBar(
         query = query,
         onQueryChange = onQueryChange,
@@ -144,14 +150,9 @@ fun NewsSearchBar(
         },
         modifier = modifier
             .fillMaxWidth(),
-        colors = SearchBarDefaults.colors(
+        colors = colors(
             containerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.075f),
-            dividerColor = MaterialTheme.colorScheme.primary,
-            inputFieldColors = TextFieldDefaults.colors(
-                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
-                cursorColor = MaterialTheme.colorScheme.primary
-            ),
+            dividerColor = MaterialTheme.colorScheme.primary
         ),
     ) {}
 }

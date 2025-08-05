@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import com.tumble.kronoxtoapp.domain.enums.Types.AppearanceType
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.domain.enums.ViewType
 import com.tumble.kronoxtoapp.domain.models.util.formatInstantToIso
 import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffset

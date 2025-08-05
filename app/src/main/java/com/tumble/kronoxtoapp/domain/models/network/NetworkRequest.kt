@@ -5,9 +5,6 @@ import com.squareup.moshi.JsonClass
 sealed class NetworkRequest {
 
     @JsonClass(generateAdapter = true)
-    class Empty
-
-    @JsonClass(generateAdapter = true)
     data class RegisterUserEvent(
         val eventId: String,
         val schoolId: Int,

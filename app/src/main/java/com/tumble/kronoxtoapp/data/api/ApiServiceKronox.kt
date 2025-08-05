@@ -1,4 +1,4 @@
-package com.tumble.kronoxtoapp.datasource.network
+package com.tumble.kronoxtoapp.data.api
 
 import retrofit2.Call
 import retrofit2.http.Body

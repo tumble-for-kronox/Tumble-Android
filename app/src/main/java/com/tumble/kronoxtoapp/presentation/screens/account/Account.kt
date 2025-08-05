@@ -17,6 +17,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Logout
@@ -183,7 +185,7 @@ fun LogoutConfirmationDialog(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Logout,
+                    imageVector = Icons.AutoMirrored.Outlined.Logout,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.error,
                     modifier = Modifier.size(24.dp)
@@ -270,7 +272,7 @@ private fun EventBottomSheet(
 @Composable
 private fun SignOutButton(onClick: () -> Unit) {
     ActionButton(
-        imageVector = Icons.Default.Logout,
+        imageVector = Icons.AutoMirrored.Filled.Logout,
         onClick = onClick
     )
 }

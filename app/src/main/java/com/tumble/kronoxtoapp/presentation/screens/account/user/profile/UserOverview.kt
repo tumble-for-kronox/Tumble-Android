@@ -10,16 +10,23 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -30,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.Resources
+import kotlinx.coroutines.launch
 
 @Composable
 fun UserOverview(
@@ -39,10 +47,17 @@ fun UserOverview(
     val collapsedHeader = remember {
         mutableStateOf(false)
     }
+    val scrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
+    var scrollOffset by remember {
+        mutableFloatStateOf(0f)
+    }
     val user = viewModel.user.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .background(MaterialTheme.colorScheme.background),
     ) {
         user.value?.name?.let { name ->
@@ -95,9 +110,21 @@ fun UserOverview(
         Resources(
             parentViewModel = viewModel,
             getResourcesAndEvents = { getResourcesAndEvents(viewModel) },
-            collapsedHeader = collapsedHeader,
             navController = navController
         )
+    }
+
+    LaunchedEffect(key1 = scrollState.value) {
+        scrollOffset = scrollState.value.toFloat()
+        if(scrollOffset >= 80){
+            coroutineScope.launch {
+                collapsedHeader.value = true
+            }
+        } else if (scrollOffset == 0f){
+            coroutineScope.launch {
+                collapsedHeader.value = false
+            }
+        }
     }
 }
 
