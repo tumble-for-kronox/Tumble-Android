@@ -49,7 +49,7 @@ fun BookmarkSettingsRow(
             modifier = Modifier
                 .matchParentSize()
                 .background(MaterialTheme.colorScheme.error)
-                .padding(end = 15.dp),
+                .padding(end = 12.dp),
             contentAlignment = Alignment.CenterEnd
         ) {
             IconButton(
@@ -111,7 +111,7 @@ fun BookmarkSettingsRow(
                 Text(
                     text = schedule.title,
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 18.sp
+                    fontSize = 16.sp
                 )
                 Text(
                     text = schedule.scheduleId,

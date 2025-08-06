@@ -9,22 +9,26 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
@@ -61,7 +66,7 @@ fun SettingsScreen(
         BuildConfig.VERSION_NAME
     }
 
-    val externalNav = {uri:String ->
+    val externalNav = { uri:String ->
         startActivity(
             context,
             Intent(
@@ -85,36 +90,69 @@ fun SettingsScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         SettingsList {
-            SettingsListGroup {
+            SettingsListGroup(title = "Account") {
                 SettingsNavigationButton(
-                    title = stringResource(R.string.preferences),
+                    title = "Preferences",
                     leadingIcon = Icons.Default.Checklist,
+                    trailingIcon = Icons.Default.ChevronRight,
                     action = { navController.navigate(Routes.accountSettingsPreferences) }
                 )
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                )
                 SettingsNavigationButton(
-                    title = stringResource(R.string.bookmark),
+                    title = "Bookmarks",
                     leadingIcon = Icons.Default.Bookmark,
+                    trailingIcon = Icons.Default.ChevronRight,
                     action = { navController.navigate(Routes.accountSettingsBookmarks) }
                 )
             }
-            SettingsListGroup {
+
+            SettingsListGroup(title = "Support") {
                 SettingsNavigationButton(
                     title = stringResource(R.string.review_app),
                     leadingIcon = Icons.Default.Star,
                     trailingIcon = Icons.Default.ArrowOutward,
-                    action = { externalNav("market://details?id=com.kronoxtoapp.kronoxtoapp") }
+                    action = { externalNav("market://details?id=com.tumble.kronoxtoapp") }
+                )
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                 )
                 SettingsNavigationButton(
                     title = stringResource(R.string.share_feedback),
                     leadingIcon = Icons.Default.Email,
                     trailingIcon = Icons.Default.ArrowOutward,
-                    action = {  }
+                    action = { }
+                )
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                 )
                 SettingsNavigationButton(
                     title = stringResource(R.string.share_app),
                     leadingIcon = Icons.Default.Share,
                     trailingIcon = Icons.Default.ArrowOutward,
                     action = { showShareSheet = true }
+                )
+            }
+
+            SettingsListGroup(title = "Community") {
+                SettingsNavigationButton(
+                    title = stringResource(R.string.github),
+                    leadingIcon = Icons.Default.Code,
+                    trailingIcon = Icons.Default.ArrowOutward,
+                    action = { externalNav("https://github.com/tumble-for-kronox/Tumble-Android") }
+                )
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+                )
+                SettingsNavigationButton(
+                    title = stringResource(R.string.discord),
+                    leadingIcon = Icons.Default.Forum,
+                    trailingIcon = Icons.Default.ArrowOutward,
+                    action = { externalNav("https://discord.gg/g4QQFuwRFT") }
+                )
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
                 )
                 SettingsNavigationButton(
                     title = "Buy Me a Coffee",
@@ -123,27 +161,15 @@ fun SettingsScreen(
                     action = { externalNav("https://buymeacoffee.com/defaultdino") }
                 )
             }
-            SettingsListGroup {
-                SettingsNavigationButton(
-                    title = stringResource(R.string.github),
-                    leadingIcon = Icons.Default.Code,
-                    action = { externalNav("https://github.com/tumble-for-kronox/Tumble-Android") }
-                )
-                SettingsNavigationButton(
-                    title = stringResource(R.string.discord),
-                    leadingIcon = Icons.Default.Forum,
-                    action = { externalNav("https://discord.gg/g4QQFuwRFT") }
-                )
-            }
 
-            SettingsListGroup {
-                Text(
-                    text = "Tumble, Android v.$appVersion",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-                )
-            }
+            // Version at bottom without group
+            Spacer(modifier = Modifier.height(24.dp))
+            Text(
+                text = "Tumble, Android v.$appVersion",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
         }
     }
 

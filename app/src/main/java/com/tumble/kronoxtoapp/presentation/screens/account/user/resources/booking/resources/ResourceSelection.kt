@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -25,32 +26,32 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.other.extensions.models.getAvailabilityValues
 import com.tumble.kronoxtoapp.other.extensions.models.getFirstTimeSlotWithAvailability
-import com.tumble.kronoxtoapp.observables.AppController
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
-import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel
+import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceBookingState
+import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceSelectionViewModel
 import com.tumble.kronoxtoapp.utils.isoVerboseDateFormatter
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import java.util.Date
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun ResourceSelection(
-    parentViewModel: ResourceViewModel = hiltViewModel(),
+    viewModel: ResourceSelectionViewModel = hiltViewModel(),
     navController: NavController,
-    setTopNavState: (AppBarState) -> Unit
-
+    setTopNavState: (AppBarState) -> Unit,
+    resourceId: String,
+    selectedPickerDate: Date
 ) {
     val pageTitle = stringResource(R.string.rooms)
     val backTitle = stringResource(R.string.resources)
 
-    val resource = AppController.shared.resourceModel!!.resource
-    val selectedTimeIndex = remember { mutableIntStateOf(resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)) }
-    val availabilityValues = remember {
-        mutableStateOf(resource.availabilities.getAvailabilityValues(timeslotId = selectedTimeIndex.intValue))
-    }
-    val selectedPickerDate = AppController.shared.resourceModel!!.date
-    val timeslots = resource.timeSlots
     LaunchedEffect(key1 = true) {
         setTopNavState(
             AppBarState(
@@ -63,58 +64,106 @@ fun ResourceSelection(
             )
         )
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Row {
-            Text(
-                text = isoVerboseDateFormatter.format(selectedPickerDate),
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onBackground,
-                modifier = Modifier
-                    .padding(horizontal = 15.dp)
-                    .padding(top = 20.dp, bottom = 5.dp)
-                    .fillMaxWidth(),
-                fontSize = 20.sp
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
-        if (timeslots != null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                TimeslotDropdown(
+        when (viewModel.resourceBookingState) {
+            is ResourceBookingState.Loading -> {
+                CustomProgressIndicator()
+            }
+            is ResourceBookingState.Error -> {
+                val errorMessage = (viewModel.resourceBookingState as ResourceBookingState.Error).message
+                Info(errorMessage)
+            }
+            is ResourceBookingState.Loaded -> {
+                val resource = (viewModel.resourceBookingState as ResourceBookingState.Loaded).resource
+                val timeslots = resource.timeSlots
+                ResourceAvailabilities(
+                    selectedPickerDate = selectedPickerDate,
                     resource = resource,
-                    timeslots = timeslots,
-                    selectedIndex = selectedTimeIndex,
-                    onIndexChange = { index ->
-                        selectedTimeIndex.intValue = index
-                        availabilityValues.value =
-                            resource.availabilities.getAvailabilityValues(timeslotId = index)
-                    }
+                    viewModel = viewModel,
+                    timeSlots = timeslots
                 )
             }
-            HorizontalDivider()
-            TimeslotSelection(
-                bookResource = { availabilityValue ->
-                    parentViewModel.bookResource(
-                        resourceId = resource.id!!,
-                        date = selectedPickerDate,
-                        availabilityValue = availabilityValue
-                    )
-                },
-                availabilityValues = availabilityValues
-            )
-        } else {
-            Info(
-                title = stringResource(R.string.no_timeslots),
-                image = null,
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.getResource(resourceId, selectedPickerDate)
+    }
+}
+
+@Composable
+private fun ResourceAvailabilities(
+    selectedPickerDate: Date,
+    resource: NetworkResponse.KronoxResourceElement,
+    viewModel: ResourceSelectionViewModel,
+    timeSlots: List<NetworkResponse.TimeSlot>?
+) {
+    val scope = rememberCoroutineScope()
+    val selectedTimeIndex = remember { mutableIntStateOf(resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)) }
+    val availabilityValues = remember {
+        mutableStateOf(resource.availabilities.getAvailabilityValues(timeslotId = selectedTimeIndex.intValue))
+    }
+
+    Row {
+        Text(
+            text = isoVerboseDateFormatter.format(selectedPickerDate),
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .padding(horizontal = 15.dp)
+                .padding(top = 20.dp, bottom = 5.dp)
+                .fillMaxWidth(),
+            fontSize = 20.sp
+        )
+        Spacer(modifier = Modifier.weight(1f))
+    }
+    if (timeSlots != null) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            TimeslotDropdown(
+                resource = resource,
+                timeslots = timeSlots,
+                selectedIndex = selectedTimeIndex,
+                onIndexChange = { index ->
+                    selectedTimeIndex.intValue = index
+                    availabilityValues.value =
+                        resource.availabilities.getAvailabilityValues(timeslotId = index)
+                }
             )
         }
+        HorizontalDivider()
+        TimeslotSelection(
+            bookResource = { availabilityValue, onResult ->
+                resource.id?.let { resourceId ->
+                    scope.launch {
+                        try {
+                            val success = viewModel.bookResource(
+                                resourceId = resourceId,
+                                date = selectedPickerDate,
+                                availabilityValue = availabilityValue
+                            )
+                            onResult(success)
+                        } catch (e: Exception) {
+                            onResult(false)
+                        }
+                    }
+                } ?: onResult(false)
+            },
+            availabilityValues = availabilityValues
+        )
+    } else {
+        Info(
+            title = stringResource(R.string.no_timeslots),
+            image = null,
+        )
     }
 }

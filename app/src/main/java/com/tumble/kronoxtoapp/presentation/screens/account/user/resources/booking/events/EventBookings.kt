@@ -28,27 +28,24 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.domain.enums.PageState
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.UpcomingKronoxUserEvent
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
-import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.SectionDivider
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.viewmodels.AccountEventsState
+import com.tumble.kronoxtoapp.presentation.viewmodels.AccountEventsViewModel
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun EventBookings(
-    viewModel: ResourceViewModel = hiltViewModel(),
+    viewModel: AccountEventsViewModel = hiltViewModel(),
     navController: NavController,
     setTopNavState: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.events)
     val backTitle = stringResource(R.string.account)
-    val completeUserEvent = viewModel.completeUserEvent.collectAsState()
-    val eventBookingPageState = viewModel.eventBookingPageState.collectAsState()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(key1 = true) {
         setTopNavState(
@@ -63,7 +60,6 @@ fun EventBookings(
         )
     }
 
-    val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,25 +73,25 @@ fun EventBookings(
                 .padding(15.dp),
             verticalArrangement = Arrangement.spacedBy(48.dp)
         ) {
-            when (eventBookingPageState.value) {
-                PageState.LOADING -> {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CustomProgressIndicator()
-                    }
+            when (viewModel.state) {
+                is AccountEventsState.Loading -> {
+                    CustomProgressIndicator()
                 }
-                PageState.LOADED -> {
+                is AccountEventsState.Error -> {
+                    val errorMessage = (viewModel.state as AccountEventsState.Error).message
+                    Info(errorMessage)
+                }
+                is AccountEventsState.Loaded -> {
+                    val events = (viewModel.state as AccountEventsState.Loaded).events
                     SectionDivider(
                         title = stringResource(R.string.registered),
                         image = Icons.Default.PersonAddAlt1,
                         content = {
-                            if (completeUserEvent.value?.registeredEvents != null) {
+                            if (events.registeredEvents != null) {
                                 RegisteredEventsView(
-                                    registeredEvents = completeUserEvent.value?.registeredEvents,
+                                    registeredEvents = events.registeredEvents,
                                     onTapEventAction = { eventId, eventType ->
-                                        onTapEventAction(viewModel, eventId, eventType)
+                                        viewModel.bookingAction(eventId, eventType)
                                     }
                                 )
                             } else {
@@ -110,11 +106,11 @@ fun EventBookings(
                         title = stringResource(R.string.unregistered),
                         image = Icons.Default.PersonRemove,
                         content = {
-                            if (completeUserEvent.value?.unregisteredEvents != null) {
+                            if (events.unregisteredEvents != null) {
                                 UnregisteredEventsView(
-                                    unregisteredEvents = completeUserEvent.value?.unregisteredEvents,
+                                    unregisteredEvents = events.unregisteredEvents,
                                     onTapEventAction = { eventId, eventType ->
-                                        onTapEventAction(viewModel, eventId, eventType)
+                                        viewModel.bookingAction(eventId, eventType)
                                     }
                                 )
                             } else {
@@ -129,8 +125,8 @@ fun EventBookings(
                         title = stringResource(R.string.upcoming),
                         image = Icons.Default.PersonSearch,
                         content = {
-                            if (completeUserEvent.value?.upcomingEvents != null) {
-                                UpcomingEventsView(upcomingEvents = completeUserEvent.value?.upcomingEvents)
+                            if (events.upcomingEvents != null) {
+                                UpcomingEventsView(upcomingEvents = events.upcomingEvents)
                             } else {
                                 Text(
                                     text = stringResource(R.string.no_upcoming_events),
@@ -140,29 +136,11 @@ fun EventBookings(
                         }
                     )
                 }
-                PageState.ERROR -> {
-                    Info(
-                        title = stringResource(R.string.server_error),
-                        image = null,
-                    )
-                }
             }
         }
-        LaunchedEffect(Unit) {
-            viewModel.getUserEventsForPage()
-        }
     }
-}
 
-
-
-fun onTapEventAction(viewModel: ResourceViewModel, eventId: String, eventType: EventType) {
-    when (eventType) {
-        EventType.REGISTER -> {
-            viewModel.registerForEvent(eventId)
-        }
-        EventType.UNREGISTER -> {
-            viewModel.unregisterForEvent(eventId)
-        }
+    LaunchedEffect(Unit) {
+        viewModel.getAllEvents()
     }
 }

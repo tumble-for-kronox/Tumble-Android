@@ -1,6 +1,8 @@
 package com.tumble.kronoxtoapp.presentation.screens.settings.preferences.appearance
 
 
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,14 +45,27 @@ fun AppearanceSettings(
 
     SettingsList {
         SettingsListGroup {
-            val appearanceTypes = AppearanceType.values()
-            appearanceTypes.forEach { type ->
-                SettingsRadioButton(
-                    title = stringResource(type.id),
-                    isSelected = appearance.value == type,
-                    onValueChange = { viewModel.updateAppearance(type) },
-                )
-            }
+            SettingsRadioButton(
+                title = stringResource(AppearanceType.AUTOMATIC.id),
+                isSelected = appearance.value == AppearanceType.AUTOMATIC,
+                onValueChange = { viewModel.updateAppearance(AppearanceType.AUTOMATIC) },
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            )
+            SettingsRadioButton(
+                title = stringResource(AppearanceType.LIGHT.id),
+                isSelected = appearance.value == AppearanceType.LIGHT,
+                onValueChange = { viewModel.updateAppearance(AppearanceType.LIGHT) },
+            )
+            HorizontalDivider(
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+            )
+            SettingsRadioButton(
+                title = stringResource(AppearanceType.DARK.id),
+                isSelected = appearance.value == AppearanceType.DARK,
+                onValueChange = { viewModel.updateAppearance(AppearanceType.DARK) },
+            )
         }
     }
 }

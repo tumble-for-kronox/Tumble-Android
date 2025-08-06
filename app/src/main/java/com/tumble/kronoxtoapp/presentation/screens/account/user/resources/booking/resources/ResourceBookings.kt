@@ -1,5 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.resources
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -19,31 +24,28 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.tumble.kronoxtoapp.domain.enums.PageState
-import com.tumble.kronoxtoapp.domain.models.presentation.ResourceSelectionModel
-import com.tumble.kronoxtoapp.observables.AppController
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
-import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceSelectionState
+import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceSelectionViewModel
+import com.tumble.kronoxtoapp.utils.isoDateFormatter
 import java.util.Calendar
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun ResourceBookings(
-    viewModel: ResourceViewModel = hiltViewModel(),
+    viewModel: ResourceSelectionViewModel = hiltViewModel(),
     navController: NavController,
     setTopNavState: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.resources)
     val backTitle = stringResource(R.string.account)
-
-    val resourceBookingPageState = viewModel.resourceBookingPageState.collectAsState()
-    val selectedPikerDate = viewModel.selectedPickerDate.collectAsState()
+    var selectedPickerDate by remember { mutableStateOf<Date>(Date()) }
 
     LaunchedEffect(key1 = true) {
         setTopNavState(
@@ -65,56 +67,40 @@ fun ResourceBookings(
     ) {
         ResourceDatePicker(
             onDateChange = { date ->
-                viewModel.setBookingDate(date)
+                selectedPickerDate = date
+                viewModel.getAllResources(date)
             }
         )
         HorizontalDivider()
 
-        when (resourceBookingPageState.value) {
-            PageState.LOADING -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CustomProgressIndicator()
-                }
+        when (viewModel.resourceSelectionState) {
+            is ResourceSelectionState.Loading -> {
+                CustomProgressIndicator()
             }
-            PageState.LOADED -> {
+            is ResourceSelectionState.Error -> {
+                val errorMessage = (viewModel.resourceSelectionState as ResourceSelectionState.Error).message
+                Info(errorMessage)
+            }
+            is ResourceSelectionState.Loaded -> {
+                val allResources = (viewModel.resourceSelectionState as ResourceSelectionState.Loaded).allResources
                 ResourceLocationsList(
-                    parentViewModel = viewModel,
-                    selectedPickerDate = selectedPikerDate.value,
+                    allResources = allResources,
+                    selectedPickerDate = selectedPickerDate,
                     navigateToResourceSelection = { resource, date ->
-                        AppController.shared.resourceModel = ResourceSelectionModel(resource, date)
-                        navController.navigate(UriBuilder.buildAccountResourceDetailsUri(resource.id.toString()).toUri())
+                        navController.navigate(
+                            UriBuilder.buildAccountResourceDetailsUri(
+                                resourceId = resource.id.toString(),
+                                isoDateString = isoDateFormatter.format(date)
+                            ).toUri())
                     }
                 )
             }
-            PageState.ERROR -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 48.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (isWeekend(selectedPikerDate.value)) {
-                        Info(
-                            title = stringResource(R.string.no_rooms_on_weekend),
-                            icon = Icons.Default.Bedtime
-                        )
-                    } else {
-                        Info(
-                            title = stringResource(R.string.could_not_contact_server),
-                            icon = Icons.Default.ErrorOutline
-                        )
-                    }
-                }
-            }
         }
     }
-    LaunchedEffect(viewModel.selectedPickerDate) {
-        viewModel.getAllResources(selectedPikerDate.value)
+
+    // Initial call to get today's resources
+    LaunchedEffect(Unit) {
+        viewModel.getAllResources(selectedPickerDate)
     }
 }
 

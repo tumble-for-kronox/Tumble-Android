@@ -8,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
-import com.tumble.kronoxtoapp.observables.AppController
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.screens.search.Search

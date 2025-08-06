@@ -16,7 +16,7 @@ fun availabilities.timeslotHasAvailable(timeslotId: Int):Boolean {
     return false
 }
 
-fun availabilities.getFirstTimeSlotWithAvailability(numOfTimeSlots: Int): Int{
+fun availabilities.getFirstTimeSlotWithAvailability(numOfTimeSlots: Int): Int {
     for(i in 0..numOfTimeSlots){
         for(j in this!!.values){
             if(j[i]!!.availability == NetworkResponse.AvailabilityEnum.AVAILABLE){

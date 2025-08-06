@@ -23,7 +23,6 @@ import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.domain.models.util.parseIsoToInstant
 import com.tumble.kronoxtoapp.other.extensions.models.toRealmSchedule
-import com.tumble.kronoxtoapp.observables.AppController
 import java.time.Instant
 
 @HiltViewModel
@@ -37,18 +36,19 @@ class ParentViewModel @Inject constructor(
     private val _appearance = MutableStateFlow<AppearanceType>(AppearanceType.AUTOMATIC)
     val appearance: StateFlow<AppearanceType> = _appearance
     private var updateAttempted = false
+    private var isUpdatingBookMarks = false
 
     init {
         observeDataStoreChanges()
     }
 
     private fun updateRealmSchedules() {
-        if (AppController.shared.isUpdatingBookmarks.value) {
+        if (isUpdatingBookMarks) {
             Log.d("updateRealmSchedules", "Update already in progress, skipping...")
             return
         }
 
-        AppController.shared.setIsUpdatingBookmarks(true)
+        isUpdatingBookMarks = true
 
         val schedules = realmService.getAllLiveSchedules()
 
@@ -62,27 +62,27 @@ class ParentViewModel @Inject constructor(
                     try {
                         updateBookmarks(scheduleIds)
                         withContext(Dispatchers.Main) {
-                            AppController.shared.setIsUpdatingBookmarks(false)
+                            isUpdatingBookMarks = false
                             dataStoreService.setLastUpdated(Instant.now())
                             updateAttempted = true
                         }
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
-                            AppController.shared.setIsUpdatingBookmarks(false)
+                            isUpdatingBookMarks = false
                             Log.e("updateRealmSchedules", "Failed to update schedules: ${e.localizedMessage}")
                         }
                     }
                 }
             } else {
                 viewModelScope.launch(Dispatchers.Main) {
-                    AppController.shared.setIsUpdatingBookmarks(false)
+                    isUpdatingBookMarks = false
                     dataStoreService.setLastUpdated(Instant.now())
                     updateAttempted = true
                 }
             }
         } else {
             viewModelScope.launch(Dispatchers.Main) {
-                AppController.shared.setIsUpdatingBookmarks(false)
+                isUpdatingBookMarks = false
                 dataStoreService.setLastUpdated(Instant.now())
                 updateAttempted = true
             }

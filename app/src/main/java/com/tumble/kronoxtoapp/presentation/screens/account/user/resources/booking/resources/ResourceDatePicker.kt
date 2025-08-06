@@ -30,6 +30,8 @@ fun ResourceDatePicker(
             state = datePickerState,
             showModeToggle = false,
             colors = DatePickerDefaults.colors(
+                // Your existing ones
+                headlineContentColor = MaterialTheme.colorScheme.primary,
                 selectedDayContentColor = MaterialTheme.colorScheme.onPrimary,
                 dayContentColor = MaterialTheme.colorScheme.onBackground,
                 selectedDayContainerColor = MaterialTheme.colorScheme.primary,
@@ -37,11 +39,12 @@ fun ResourceDatePicker(
                 todayContentColor = MaterialTheme.colorScheme.onBackground,
                 todayDateBorderColor = MaterialTheme.colorScheme.primary,
                 yearContentColor = MaterialTheme.colorScheme.onBackground,
-                subheadContentColor = Color.Red,
                 containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.primary,
                 selectedYearContainerColor = MaterialTheme.colorScheme.primary,
                 selectedYearContentColor = MaterialTheme.colorScheme.onPrimary,
                 currentYearContentColor = MaterialTheme.colorScheme.onBackground,
+                navigationContentColor = MaterialTheme.colorScheme.primary,
             ),
             title = null,
             headline = null,

@@ -1,7 +1,9 @@
 package com.tumble.kronoxtoapp.presentation.navigation.navgraphs
 
+import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -18,6 +20,7 @@ import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.bookin
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.resources.ResourceBookings
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.resources.ResourceSelection
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.utils.isoDateFormatter
 
 
 @Composable
@@ -68,7 +71,7 @@ private fun NavGraphBuilder.accountSettingsPreferences(navController: NavHostCon
 
 private fun NavGraphBuilder.accountSettingsAppearance(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountSettingsAppearance) {
-        AppearanceSettings( navController = navController, setTopNavState = setTopNavState)
+        AppearanceSettings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
@@ -101,11 +104,42 @@ private fun NavGraphBuilder.accountResourceDetails(navController: NavHostControl
     composable(
         Routes.accountResourceDetails,
         deepLinks = listOf(
-            navDeepLink { uriPattern = Routes.AccountResourceDetailsUri},
+            navDeepLink { uriPattern = Routes.AccountResourceDetailsUri },
         )
     ) { backStackEntry ->
-        val id = backStackEntry.arguments?.getString("id")
-        ResourceSelection(navController = navController, setTopNavState = setTopNavState)
+        val arguments = backStackEntry.arguments
+        val resourceId = arguments?.getString("resource_id")
+        val dateString = arguments?.getString("iso_date_string")
+
+        if (resourceId == null || dateString == null) {
+            LaunchedEffect(Unit) {
+                navController.popBackStack()
+            }
+            return@composable
+        }
+
+        val selectedPickerDate = try {
+            isoDateFormatter.parse(dateString)
+        } catch (e: Exception) {
+            LaunchedEffect(Unit) {
+                navController.popBackStack()
+            }
+            return@composable
+        }
+
+        if (selectedPickerDate == null) {
+            LaunchedEffect(Unit) {
+                navController.popBackStack()
+            }
+            return@composable
+        }
+
+        ResourceSelection(
+            navController = navController,
+            setTopNavState = setTopNavState,
+            selectedPickerDate = selectedPickerDate,
+            resourceId = resourceId
+        )
     }
 }
 
