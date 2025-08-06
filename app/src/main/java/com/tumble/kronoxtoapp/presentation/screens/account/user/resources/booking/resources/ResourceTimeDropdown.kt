@@ -36,6 +36,7 @@ import com.tumble.kronoxtoapp.other.extensions.models.timeslotHasAvailable
 import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.ui.unit.DpOffset
 
 @Composable
@@ -107,7 +108,7 @@ fun TimeslotDropdown(
                 Icon(
                     imageVector = if (isExpanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -116,6 +117,7 @@ fun TimeslotDropdown(
         DropdownMenu(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
+            containerColor = MaterialTheme.colorScheme.surface,
             offset = DpOffset(0.dp, 4.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -154,7 +156,15 @@ fun TimeslotDropdown(
                                         }
                                     }
                                 },
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = MenuItemColors(
+                                    textColor = MaterialTheme.colorScheme.onSurface,
+                                    leadingIconColor = MaterialTheme.colorScheme.primary,
+                                    trailingIconColor = MaterialTheme.colorScheme.primary,
+                                    disabledTextColor = MaterialTheme.colorScheme.error,
+                                    disabledLeadingIconColor = MaterialTheme.colorScheme.error,
+                                    disabledTrailingIconColor = MaterialTheme.colorScheme.error,
+                                )
                             )
                         }
                     }

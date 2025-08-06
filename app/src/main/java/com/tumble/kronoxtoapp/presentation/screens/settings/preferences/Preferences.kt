@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowOutward
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,6 +22,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
 import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
@@ -37,9 +40,6 @@ fun PreferencesScreen(
 ) {
     val pageTitle = stringResource(R.string.preferences)
     val appearance = viewModel.appearance.collectAsState()
-
-    val currentLocale = Locale.getDefault().displayLanguage
-    val context = LocalContext.current
 
     LaunchedEffect(key1 = true) {
         setTopNavState(
@@ -60,18 +60,16 @@ fun PreferencesScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         SettingsList {
-            SettingsListGroup {
-//                SettingsNavigationButton(
-//                    title = stringResource(R.string.app_language),
-//                    current = currentLocale,
-//                    leadingIcon = Icons.Default.Language,
-//                    trailingIcon = Icons.Default.ArrowOutward,
-//                    action = {  startActivity(context, Intent(Settings.ACTION_LOCALE_SETTINGS), null) }
-//                )
+            SettingsListGroup (title = "General") {
                 SettingsNavigationButton(
                     title = stringResource(R.string.appearance),
                     current = stringResource(appearance.value.id),
-                    leadingIcon = Icons.Default.DarkMode,
+                    trailingIcon = Icons.Default.ChevronRight,
+                    leadingIcon = if (appearance.value == AppearanceType.DARK) {
+                        Icons.Default.DarkMode
+                    } else {
+                        Icons.Default.LightMode
+                    },
                     action = { navController.navigate(Routes.accountSettingsAppearance) }
                 )
 //                SettingsNavigationButton(

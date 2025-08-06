@@ -71,7 +71,7 @@ private fun NavGraphBuilder.accountSettingsPreferences(navController: NavHostCon
 
 private fun NavGraphBuilder.accountSettingsAppearance(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
     composable(Routes.accountSettingsAppearance) {
-        AppearanceSettings( navController = navController, setTopNavState = setTopNavState)
+        AppearanceSettings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 

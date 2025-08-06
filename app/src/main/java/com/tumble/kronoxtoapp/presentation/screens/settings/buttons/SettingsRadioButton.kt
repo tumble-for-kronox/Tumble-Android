@@ -1,14 +1,14 @@
 package com.tumble.kronoxtoapp.presentation.screens.settings.buttons
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 
 @Composable
 fun SettingsRadioButton(
@@ -24,58 +23,35 @@ fun SettingsRadioButton(
     isSelected: Boolean,
     onValueChange: () -> Unit,
 ) {
-
+    Surface(
+        onClick = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surface
+    ) {
         Row(
             modifier = Modifier
-                .noRippleClickable {
-                    onValueChange()
-                    // haptics
-                }
                 .fillMaxWidth()
-                .padding(vertical = 2.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            if (isSelected) {
-                Box(
-                    modifier = Modifier
-                        .size(25.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.background,
-                            shape = CircleShape
-                        )
-                        .border(
-                            2.dp,
-                            MaterialTheme.colorScheme.primary,
-                            CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(14.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = CircleShape
-                            )
-                    )
-                }
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(25.dp)
-                        .border(
-                            2.dp,
-                            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
-                            CircleShape
-                        )
+            RadioButton(
+                selected = isSelected,
+                onClick = null,
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = MaterialTheme.colorScheme.primary,
+                    unselectedColor = MaterialTheme.colorScheme.onSurface
                 )
-            }
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
             Text(
                 text = title,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Normal,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.padding(start = 20.dp)
+                modifier = Modifier.weight(1f)
             )
         }
+    }
 }

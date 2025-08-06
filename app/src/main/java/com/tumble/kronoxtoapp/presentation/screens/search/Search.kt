@@ -21,8 +21,6 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.SearchStatus
-import com.tumble.kronoxtoapp.domain.models.presentation.SearchPreviewModel
-import com.tumble.kronoxtoapp.observables.AppController
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.viewmodels.SearchViewModel
