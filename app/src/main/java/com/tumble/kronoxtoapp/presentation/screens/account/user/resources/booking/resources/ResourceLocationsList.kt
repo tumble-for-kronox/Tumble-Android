@@ -31,27 +31,23 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.DetailItem
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
-import com.tumble.kronoxtoapp.presentation.viewmodels.ResourceViewModel
 import com.tumble.kronoxtoapp.utils.isoVerboseDateFormatter
 import java.util.Date
 
 @Composable
 fun ResourceLocationsList(
-    parentViewModel: ResourceViewModel = hiltViewModel(),
+    allResources: List<NetworkResponse.KronoxResourceElement>,
     selectedPickerDate: Date,
     navigateToResourceSelection: (NetworkResponse.KronoxResourceElement, Date) -> Unit
 ) {
-    val allResources = parentViewModel.allResources.collectAsState()
-
-    val availableResources = allResources.value?.filter { resource ->
+    val availableResources = allResources.filter { resource ->
         val availableCounts = resource.availabilities?.let { calcAvailability(it) } ?: 0
         availableCounts > 0
-    } ?: emptyList()
+    }
 
     if (availableResources.isEmpty()) {
         Info("No available resources")

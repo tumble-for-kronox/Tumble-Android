@@ -22,7 +22,7 @@ object Routes {
 
     // Protected routes
     const val accountResources = "account/resources"
-    const val accountResourceDetails = "account/resources/{id}"
+    const val accountResourceDetails = "account/resourceDetails?resourceId={resource_id}&isoDateString={iso_date_string}"
     const val accountEvents = "account/events"
     const val accountEventDetails = "account/events/{id}"
 
@@ -64,7 +64,9 @@ object UriBuilder {
             .replace("{event_id}", eventId)
     }
 
-    fun buildAccountResourceDetailsUri(resourceId: String): String {
-        return Routes.AccountResourceDetailsUri.replace("{id}", resourceId)
+    fun buildAccountResourceDetailsUri(resourceId: String, isoDateString: String): String {
+        return Routes.AccountResourceDetailsUri
+            .replace("{resource_id}", resourceId)
+            .replace("{iso_date_string}", isoDateString)
     }
 }

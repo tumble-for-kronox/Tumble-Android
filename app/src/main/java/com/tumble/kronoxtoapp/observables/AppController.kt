@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.presentation.ResourceSelectionModel
-import com.tumble.kronoxtoapp.domain.models.presentation.SearchPreviewModel
 import javax.inject.Inject
 
 /**
@@ -25,7 +24,6 @@ class AppController @Inject constructor() : ViewModel() {
         val shared: AppController by lazy { AppController() }
     }
 
-    var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
     var resourceModel by mutableStateOf<ResourceSelectionModel?>(null)
     private var _isUpdatingBookmarks = MutableStateFlow(false)
     val isUpdatingBookmarks = _isUpdatingBookmarks.asStateFlow()
