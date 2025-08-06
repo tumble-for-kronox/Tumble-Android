@@ -25,6 +25,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -38,37 +40,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.domain.models.presentation.School
-import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
 import com.tumble.kronoxtoapp.presentation.viewmodels.LoginViewModel
+import com.tumble.kronoxtoapp.presentation.viewmodels.LoginUiState
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 
-
 @SuppressLint("UnusedBoxWithConstraintsScope")
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun AccountLogin(
-    viewModel: AccountViewModel = hiltViewModel(),
-    viewModel1: LoginViewModel = hiltViewModel()
-){
-    val username = remember {
-        mutableStateOf("")
-    }
-
-    val password = remember {
-        mutableStateOf("")
-    }
-
-    val visiblePassword = remember {
-        mutableStateOf(false)
-    }
-
-    var selectedSchool by remember {
-        mutableStateOf<School?>(viewModel1.getSchoolName())
-    }
-
-    val attemptingLogin by viewModel.attemptingLogin.collectAsState()
+    viewModel: LoginViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val formState by viewModel.formState.collectAsState()
 
     BoxWithConstraints(
         modifier = Modifier
@@ -77,44 +60,81 @@ fun AccountLogin(
             .background(MaterialTheme.colorScheme.background),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
             LoginHeader()
+
             Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.Start
             ) {
                 SchoolSelectionMenu(
-                    selectedSchool = selectedSchool,
-                    onSchoolSelected = { school ->
-                        selectedSchool = school
-                        setSchoolForAuth(viewModel1 = viewModel1, selectedSchool = school)
-                    }
+                    selectedSchool = formState.selectedSchool,
+                    onSchoolSelected = viewModel::selectSchool,
+                    schools = viewModel.schools
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
-                UsernameField(username)
+
+                UsernameField(
+                    username = formState.username,
+                    onUsernameChange = viewModel::updateUsername
+                )
+
                 Spacer(modifier = Modifier.height(10.dp))
-                PasswordField(password, visiblePassword)
-            }
-            Spacer(modifier = Modifier.height(20.dp))
-            if (attemptingLogin) {
-                Row(
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    CustomProgressIndicator()
-                }
-            } else {
-                LoginButton(
-                    login = { viewModel.login(username.value, password.value)},
-                    enabled = username.value.isNotBlank() && password.value.isNotBlank() && selectedSchool != null
+
+                PasswordField(
+                    password = formState.password,
+                    onPasswordChange = viewModel::updatePassword,
+                    isPasswordVisible = formState.isPasswordVisible,
+                    onTogglePasswordVisibility = viewModel::togglePasswordVisibility
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            when (uiState) {
+                is LoginUiState.Loading -> {
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 20.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        CustomProgressIndicator()
+                    }
+                }
+                is LoginUiState.Error -> {
+                    Column {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer
+                            )
+                        ) {
+                            Text(
+                                text = (uiState as LoginUiState.Error).message,
+                                modifier = Modifier.padding(16.dp),
+                                color = MaterialTheme.colorScheme.onErrorContainer,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        LoginButton(
+                            onLogin = viewModel::login,
+                            enabled = formState.isValid
+                        )
+                    }
+                }
+                else -> {
+                    LoginButton(
+                        onLogin = viewModel::login,
+                        enabled = formState.isValid
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.weight(1f))
         }
     }
@@ -125,11 +145,9 @@ fun AccountLogin(
 fun SchoolSelectionMenu(
     selectedSchool: School?,
     onSchoolSelected: (School) -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
-){
-    var schoolMenuVisibility by remember {
-        mutableStateOf<Boolean>(false)
-    }
+    schools: List<School>
+) {
+    var schoolMenuVisibility by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = schoolMenuVisibility,
@@ -153,9 +171,7 @@ fun SchoolSelectionMenu(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.School,
                         contentDescription = null,
@@ -165,11 +181,7 @@ fun SchoolSelectionMenu(
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = selectedSchool?.name ?: "Select University",
-                        color = if (selectedSchool != null) {
-                            MaterialTheme.colorScheme.onSurface
-                        } else {
-                            MaterialTheme.colorScheme.onSurface
-                        },
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = if (selectedSchool != null) {
                             FontWeight.Medium
                         } else {
@@ -189,7 +201,7 @@ fun SchoolSelectionMenu(
             expanded = schoolMenuVisibility,
             onDismissRequest = { schoolMenuVisibility = false }
         ) {
-            viewModel.schools.forEach { school ->
+            schools.forEach { school ->
                 DropdownMenuItem(
                     onClick = {
                         schoolMenuVisibility = false
@@ -201,14 +213,5 @@ fun SchoolSelectionMenu(
                 )
             }
         }
-    }
-}
-
-fun setSchoolForAuth(
-    selectedSchool: School?,
-    viewModel1: LoginViewModel
-){
-    selectedSchool?.let {
-        viewModel1.setDefaultAuthSchool(schoolId = it.id)
     }
 }

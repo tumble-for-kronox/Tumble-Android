@@ -1,10 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.account
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -19,18 +14,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.outlined.Logout
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -42,104 +33,170 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
 import com.tumble.kronoxtoapp.presentation.screens.account.login.AccountLogin
 import com.tumble.kronoxtoapp.presentation.screens.account.user.profile.UserOverview
-import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.sheets.EventDetailsSheet
-import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.sheets.ResourceDetailsSheet
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.services.authentication.AuthState
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun Account(
     viewModel: AccountViewModel = hiltViewModel(),
     navController: NavHostController,
     setTopNavState: (AppBarState) -> Unit
 ) {
-    val pageTitle = stringResource(R.string.account)
+    val authState by viewModel.authState.collectAsState()
 
-    val isSigningOut by viewModel.isSigningOut
-    val authStatus by viewModel.authStatus.collectAsState()
-    val booking by viewModel.booking.collectAsState()
-    val event by viewModel.event.collectAsState()
-
-    val topBarState = remember(authStatus, pageTitle) {
-        AppBarState(
-            title = pageTitle,
-            actions = {
-                if (authStatus == AccountViewModel.AuthStatus.AUTHORIZED) {
-                    SignOutButton { viewModel.openLogOutConfirm() }
+    when (authState) {
+        is AuthState.Loading -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                LaunchedEffect(Unit) {
+                    resetTopNavState(
+                        setTopNavState,
+                        showLogoutDialog = viewModel::showLogoutDialog,
+                        navigateToAccountSettings = {
+                            navController.navigate(Routes.accountSettings)
+                        },
+                        authState
+                    )
                 }
-                SettingsButton { navController.navigate(Routes.accountSettings) }
+                CustomProgressIndicator()
+            }
+        }
+
+        is AuthState.Unauthenticated -> {
+            LaunchedEffect(Unit) {
+                resetTopNavState(
+                    setTopNavState,
+                    showLogoutDialog = viewModel::showLogoutDialog,
+                    navigateToAccountSettings = {
+                        navController.navigate(Routes.accountSettings)
+                    },
+                    authState
+                )
+            }
+
+            AccountLogin()
+        }
+
+        is AuthState.Authenticated -> {
+            val user = (authState as AuthState.Authenticated).user
+            val isShowingLogoutDialog by viewModel.isShowingLogoutDialog.collectAsState()
+            val bookingsState by viewModel.bookingsState.collectAsState()
+            val eventsState by viewModel.eventsState.collectAsState()
+
+            LaunchedEffect(Unit) {
+                resetTopNavState(
+                    setTopNavState,
+                    showLogoutDialog = viewModel::showLogoutDialog,
+                    navigateToAccountSettings = {
+                        navController.navigate(Routes.accountSettings)
+                    },
+                    authState
+                )
+            }
+
+            UserOverview(
+                user = user,
+                schoolName = viewModel.getSchoolName()?.name,
+                resetTopNavState = {
+                    resetTopNavState(
+                        setTopNavState,
+                        showLogoutDialog = viewModel::showLogoutDialog,
+                        navigateToAccountSettings = {
+                            navController.navigate(Routes.accountSettings)
+                        },
+                        authState
+                    )
+                },
+                bookingsState = bookingsState,
+                eventsState = eventsState,
+                onClickResource = viewModel::selectBooking,
+                onClickEvent = viewModel::selectEvent,
+                onConfirmBooking = { resourceId, bookingId ->
+                    viewModel.confirmResource(resourceId, bookingId)
+                    viewModel.loadUserBookings()
+                },
+                onUnbookResource = { bookingId ->
+                    viewModel.unbookResource(bookingId)
+                    viewModel.loadUserBookings()
+                },
+                onLoadUserEvents = viewModel::loadUserEvents,
+                onLoadUserBookings = viewModel::loadUserBookings,
+                selectedBooking = viewModel.selectedBooking.collectAsState().value,
+                selectedEvent = viewModel.selectedEvent.collectAsState().value,
+                onClearSelectedBooking = viewModel::clearSelectedBooking,
+                onClearSelectedEvent = viewModel::clearSelectedEvent,
+                setTopNavState = setTopNavState,
+                navController = navController
+            )
+
+            if (isShowingLogoutDialog) {
+                LogoutConfirmationDialog(
+                    onConfirm = viewModel::logout,
+                    onDismiss = viewModel::hideLogoutDialog
+                )
+            }
+        }
+    }
+}
+
+fun resetTopNavState(
+    setTopNavState: (AppBarState) -> Unit,
+    showLogoutDialog: () -> Unit,
+    navigateToAccountSettings: () -> Unit,
+    authState: AuthState
+) {
+    setTopNavState(
+        AppBarState(
+            title = "Account",
+            actions = {
+                when (authState) {
+                    is AuthState.Authenticated -> {
+                        LogoutButton { showLogoutDialog() }
+                    }
+                    else -> { }
+                }
+                SettingsButton { navigateToAccountSettings() }
             }
         )
-    }
-
-    LaunchedEffect(topBarState) {
-        setTopNavState(topBarState)
-    }
-
-    AccountContent(
-        authStatus = authStatus,
-        navController = navController
-    )
-
-    if (isSigningOut) {
-        LogoutConfirmationDialog(
-            onConfirm = {
-                viewModel.logOut()
-                viewModel.closeLogOutConfirm()
-            },
-            onDismiss = { viewModel.closeLogOutConfirm() }
-        )
-    }
-
-    ResourceBottomSheet(
-        booking = booking,
-        onDismiss = {
-            setTopNavState(topBarState)
-            viewModel.unSetBooking()
-        },
-        onUnbook = { bookingId ->
-            viewModel.unBookResource(bookingId)
-            setTopNavState(topBarState)
-            viewModel.unSetBooking()
-            viewModel.getUserBookingsForSection()
-        },
-        onConfirm = { resourceId, bookingId ->
-            viewModel.confirmResource(resourceId, bookingId)
-        },
-        setTopNavState = setTopNavState
-    )
-
-    EventBottomSheet(
-        event = event,
-        onDismiss = {
-            viewModel.unSetEvent()
-            setTopNavState(topBarState)
-        },
-        setTopNavState = setTopNavState
     )
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
-private fun AccountContent(
-    authStatus: AccountViewModel.AuthStatus,
-    navController: NavHostController
+private fun LogoutButton(onClick: () -> Unit) {
+    ActionButton(
+        imageVector = Icons.AutoMirrored.Filled.Logout,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun SettingsButton(onClick: () -> Unit) {
+    ActionButton(
+        imageVector = Icons.Default.Settings,
+        onClick = onClick
+    )
+}
+
+@Composable
+private fun ActionButton(
+    imageVector: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit
 ) {
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        when (authStatus) {
-            AccountViewModel.AuthStatus.AUTHORIZED -> UserOverview(navController = navController)
-            AccountViewModel.AuthStatus.UNAUTHORIZED -> AccountLogin()
-            AccountViewModel.AuthStatus.LOADING -> CustomProgressIndicator()
-        }
+    IconButton(onClick = onClick) {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = MaterialTheme.colorScheme.primary
+        )
     }
 }
 
@@ -215,87 +272,4 @@ fun LogoutConfirmationDialog(
             dismissOnClickOutside = true
         )
     )
-}
-
-@Composable
-private fun ResourceBottomSheet(
-    booking: NetworkResponse.KronoxUserBookingElement?,
-    onDismiss: () -> Unit,
-    onUnbook: (String) -> Unit,
-    onConfirm: (String, String) -> Unit,
-    setTopNavState: (AppBarState) -> Unit
-) {
-    val slideTransition = slideInVertically(initialOffsetY = { it }) to
-            slideOutVertically(targetOffsetY = { it })
-
-    AnimatedVisibility(
-        visible = booking != null,
-        enter = fadeIn() + slideTransition.first,
-        exit = fadeOut() + slideTransition.second
-    ) {
-        booking?.let {
-            ResourceDetailsSheet(
-                booking = it,
-                onDismiss = onDismiss,
-                onUnbook = { onUnbook(it.id) },
-                onConfirm = onConfirm,
-                setTopNavState = setTopNavState
-            )
-        }
-    }
-}
-
-@Composable
-private fun EventBottomSheet(
-    event: NetworkResponse.AvailableKronoxUserEvent?,
-    onDismiss: () -> Unit,
-    setTopNavState: (AppBarState) -> Unit
-) {
-    val slideTransition = slideInVertically(initialOffsetY = { it }) to
-            slideOutVertically(targetOffsetY = { it })
-
-    AnimatedVisibility(
-        visible = event != null,
-        enter = fadeIn() + slideTransition.first,
-        exit = fadeOut() + slideTransition.second
-    ) {
-        event?.let {
-            EventDetailsSheet(
-                event = it,
-                onDismiss = onDismiss,
-                setTopNavState = setTopNavState
-            )
-        }
-    }
-}
-
-@Composable
-private fun SignOutButton(onClick: () -> Unit) {
-    ActionButton(
-        imageVector = Icons.AutoMirrored.Filled.Logout,
-        onClick = onClick
-    )
-}
-
-@Composable
-private fun SettingsButton(onClick: () -> Unit) {
-    ActionButton(
-        imageVector = Icons.Default.Settings,
-        onClick = onClick
-    )
-}
-
-@Composable
-private fun ActionButton(
-    imageVector: androidx.compose.ui.graphics.vector.ImageVector,
-    onClick: () -> Unit
-) {
-    IconButton(onClick = onClick) {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = null,
-            modifier = Modifier.size(24.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-    }
 }

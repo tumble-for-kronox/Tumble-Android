@@ -1,9 +1,11 @@
 package com.tumble.kronoxtoapp.presentation.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,17 +15,21 @@ import com.tumble.kronoxtoapp.services.kronox.Endpoint
 import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
 import com.tumble.kronoxtoapp.services.notifications.NotificationService
 import com.tumble.kronoxtoapp.services.DataStoreService
-import com.tumble.kronoxtoapp.services.SchoolService
 import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.services.kronox.KronoxService
-import com.tumble.kronoxtoapp.domain.models.TumbleUser
-import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
-import com.tumble.kronoxtoapp.domain.enums.PageState
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
 import com.tumble.kronoxtoapp.domain.models.presentation.School
+import com.tumble.kronoxtoapp.services.SchoolService
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
+
+sealed class AccountDataState {
+    data object Idle : AccountDataState()
+    data object Loading : AccountDataState()
+    data class EventsLoaded(val events: NetworkResponse.KronoxCompleteUserEvent) : AccountDataState()
+    data class BookingsLoaded(val bookings: NetworkResponse.KronoxUserBookings) : AccountDataState()
+    data class Error(val message: String) : AccountDataState()
+}
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
@@ -33,147 +39,86 @@ class AccountViewModel @Inject constructor(
     private val schoolService: SchoolService,
     private val notificationService: NotificationService
 ) : ViewModel() {
-    private val _authStatus = MutableStateFlow(AuthStatus.LOADING)
-    val authStatus: StateFlow<AuthStatus> = _authStatus
 
-    private val _user = MutableStateFlow<TumbleUser?>(null)
-    val user: StateFlow<TumbleUser?> = _user
+    private val _eventsState = MutableStateFlow<AccountDataState>(AccountDataState.Idle)
+    val eventsState: StateFlow<AccountDataState> = _eventsState.asStateFlow()
 
-    private val _refreshToken = MutableStateFlow<String?>(null)
-    private val refreshToken: StateFlow<String?> = _refreshToken
+    private val _bookingsState = MutableStateFlow<AccountDataState>(AccountDataState.Idle)
+    val bookingsState: StateFlow<AccountDataState> = _bookingsState.asStateFlow()
 
-    private val _sessionDetails = MutableStateFlow<String?>(null)
-    private val sessionDetails: StateFlow<String?> = _sessionDetails
+    private val _isShowingLogoutDialog = MutableStateFlow(false)
+    val isShowingLogoutDialog: StateFlow<Boolean> = _isShowingLogoutDialog.asStateFlow()
 
-    private val _registeredEventSectionState = MutableStateFlow<PageState>(PageState.LOADING)
-    val registeredEventSectionState: StateFlow<PageState> = _registeredEventSectionState
+    // Selected items for detail sheet views
+    private val _selectedBooking = MutableStateFlow<NetworkResponse.KronoxUserBookingElement?>(null)
+    val selectedBooking = _selectedBooking.asStateFlow()
 
-    private val _registeredBookingsSectionState = MutableStateFlow<PageState>(PageState.LOADING)
-    val registeredBookingsSectionState: StateFlow<PageState> = _registeredBookingsSectionState
+    private val _selectedEvent = MutableStateFlow<NetworkResponse.AvailableKronoxUserEvent?>(null)
+    val selectedEvent = _selectedEvent.asStateFlow()
 
-    private val _userBookings = MutableStateFlow<NetworkResponse.KronoxUserBookings?>(null)
-    val userBookings: StateFlow<NetworkResponse.KronoxUserBookings?> = _userBookings
-
-    private val _completeUserEvent = MutableStateFlow<NetworkResponse.KronoxCompleteUserEvent?>(null)
-    val completeUserEvent: StateFlow<NetworkResponse.KronoxCompleteUserEvent?> = _completeUserEvent
-
-    private val _attemptingLogin = MutableStateFlow<Boolean>(false)
-    val attemptingLogin: StateFlow<Boolean> = _attemptingLogin
-
-    private val _booking = MutableStateFlow<KronoxUserBookingElement?>(null)
-    val booking: StateFlow<KronoxUserBookingElement?> = _booking
-
-    private val _event = MutableStateFlow<AvailableKronoxUserEvent?>(null)
-    val event: StateFlow<AvailableKronoxUserEvent?> = _event
-
-    fun setEvent(event: AvailableKronoxUserEvent){
-        _event.value = event
-    }
-
-    fun unSetEvent(){
-        _event.value = null
-    }
-
-    fun setBooking(booking: KronoxUserBookingElement){
-        _booking.value = booking
-    }
-
-    fun unSetBooking(){
-        _booking.value = null
-    }
-    var isSigningOut = mutableStateOf(false)
-
-    init {
-        viewModelScope.launch {
-            autoLogin()
-        }
-    }
-
-    fun openLogOutConfirm() {
-        isSigningOut.value = true
-    }
-
-    fun closeLogOutConfirm() {
-        isSigningOut.value = false
-    }
-
-    fun logOut() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                authenticationService.logOutUser()
-                _authStatus.value = AuthStatus.UNAUTHORIZED
-            } catch (e: Exception) {
-                // TODO: Handle logout error with toast
-            }
-        }
-    }
-
-    fun login(username: String, password: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                _attemptingLogin.value = true
-                val userRequest = NetworkRequest.KronoxUserLogin(username, password)
-                val user = authenticationService.loginUser(userRequest)
-                updateUser(user)
-            } catch (e: Exception) {
-                _authStatus.value = AuthStatus.UNAUTHORIZED
-            } finally {
-                _attemptingLogin.value = false
-            }
-        }
-    }
+    val authState = authenticationService.authState
 
     fun getSchoolName(): School?{
         return schoolService.getSchoolById(dataStoreService.authSchoolId.value)
     }
 
-    fun getUserEventsForSection() {
+    fun loadUserEvents() {
         viewModelScope.launch(Dispatchers.IO) {
-            _registeredEventSectionState.value = PageState.LOADING
-            val endpoint = Endpoint.UserEvents(dataStoreService.authSchoolId.value.toString())
-            if (refreshToken.value != null) {
-                val response: ApiResponse<NetworkResponse.KronoxCompleteUserEvent> =
-                    kronoxManager.getKronoxCompleteUserEvent(endpoint, refreshToken.value, sessionDetails.value)
-                when (response) {
-                    is ApiResponse.Success -> {
-                        _completeUserEvent.value = response.data
-                        _registeredEventSectionState.value = PageState.LOADED
-                    }
-                    else -> {
-                        _registeredEventSectionState.value = PageState.ERROR
-                    }
+            _eventsState.value = AccountDataState.Loading
+
+            try {
+                val endpoint = Endpoint.UserEvents(dataStoreService.authSchoolId.value.toString())
+                val refreshToken = authenticationService.getRefreshToken()
+
+                if (refreshToken == null) {
+                    _eventsState.value = AccountDataState.Error("Authentication required")
+                    return@launch
                 }
-            }
-        }
-    }
 
-    fun getUserBookingsForSection() {
-        viewModelScope.launch(Dispatchers.IO) {
-            _registeredBookingsSectionState.value = PageState.LOADING
-            val endpoint = Endpoint.UserBookings(dataStoreService.authSchoolId.value.toString())
-            if (refreshToken.value != null) {
-
-                val response: ApiResponse<List<KronoxUserBookingElement>> =
-                    kronoxManager.getKronoxUserBookings(endpoint, refreshToken.value, sessionDetails.value)
-
-                when (response) {
+                when (val response = kronoxManager.getKronoxCompleteUserEvent(endpoint, refreshToken, null)) {
                     is ApiResponse.Success -> {
-                        _userBookings.value = NetworkResponse.KronoxUserBookings(bookings = response.data)
-                        _registeredBookingsSectionState.value = PageState.LOADED
-                        scheduleBookingNotifications(_userBookings)
+                        _eventsState.value = AccountDataState.EventsLoaded(response.data)
                     }
                     is ApiResponse.Error -> {
-                        _registeredBookingsSectionState.value = PageState.ERROR
-                    }
-                    else -> {
-                        _registeredBookingsSectionState.value = PageState.ERROR
+                        _eventsState.value = AccountDataState.Error(response.errorMessage)
                     }
                 }
+            } catch (e: Exception) {
+                _eventsState.value = AccountDataState.Error(e.localizedMessage ?: "Failed to load events")
             }
         }
     }
 
-    fun unBookResource(bookingId: String){
+    fun loadUserBookings() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _bookingsState.value = AccountDataState.Loading
+
+            try {
+                val endpoint = Endpoint.UserBookings(dataStoreService.authSchoolId.value.toString())
+                val refreshToken = authenticationService.getRefreshToken()
+
+                if (refreshToken == null) {
+                    _bookingsState.value = AccountDataState.Error("Authentication required")
+                    return@launch
+                }
+
+                when (val response = kronoxManager.getKronoxUserBookings(endpoint, refreshToken, null)) {
+                    is ApiResponse.Success -> {
+                        val bookings = NetworkResponse.KronoxUserBookings(bookings = response.data)
+                        _bookingsState.value = AccountDataState.BookingsLoaded(bookings)
+                        scheduleBookingNotifications(response.data)
+                    }
+                    is ApiResponse.Error -> {
+                        _bookingsState.value = AccountDataState.Error(response.errorMessage)
+                    }
+                }
+            } catch (e: Exception) {
+                _bookingsState.value = AccountDataState.Error(e.localizedMessage ?: "Failed to load bookings")
+            }
+        }
+    }
+
+    fun unbookResource(bookingId: String){
         val endpoint = Endpoint.UnBookResource(dataStoreService.authSchoolId.value.toString(), bookingId)
         val refreshToken = authenticationService.getRefreshToken() ?: return
 
@@ -206,7 +151,7 @@ class AccountViewModel @Inject constructor(
             when(val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)){
                 is ApiResponse.Error -> {
                     if(response.errorMessage == "Empty response body"){
-                        Log.e("confirm", "Success")
+                        Log.d("confirm", "Success")
                     }else{
                         Log.e("confirm", "Error")
                         Log.e("confirm", response.errorMessage)
@@ -219,34 +164,42 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    private fun scheduleBookingNotifications(userBookings: MutableStateFlow<NetworkResponse.KronoxUserBookings?>) {
-        userBookings.let {
-            userBookings.value?.bookings?.forEach {
-                if (!notificationService.isNotificationScheduled(it.id)) {
-                    notificationService.createNotificationFromBooking(it)
-                }
-            }
-        }
-    }
-
-    private fun updateUser(user: TumbleUser) {
-        _user.value = user
-        _refreshToken.value = authenticationService.getRefreshToken()
-        _authStatus.value = AuthStatus.AUTHORIZED
-    }
-
-    private fun autoLogin() {
+    fun logout() {
         viewModelScope.launch {
-            try {
-                val user = authenticationService.autoLoginUser()
-                updateUser(user)
-            } catch (e: Exception) {
-                _authStatus.value = AuthStatus.UNAUTHORIZED
-            }
+            authenticationService.logOutUser()
+            _isShowingLogoutDialog.value = false
         }
     }
 
-    enum class AuthStatus {
-        AUTHORIZED, UNAUTHORIZED, LOADING
+    fun showLogoutDialog() {
+        _isShowingLogoutDialog.value = true
+    }
+
+    fun hideLogoutDialog() {
+        _isShowingLogoutDialog.value = false
+    }
+
+    fun selectBooking(booking: NetworkResponse.KronoxUserBookingElement) {
+        _selectedBooking.value = booking
+    }
+
+    fun clearSelectedBooking() {
+        _selectedBooking.value = null
+    }
+
+    fun selectEvent(event: NetworkResponse.AvailableKronoxUserEvent) {
+        _selectedEvent.value = event
+    }
+
+    fun clearSelectedEvent() {
+        _selectedEvent.value = null
+    }
+
+    private fun scheduleBookingNotifications(bookings: List<NetworkResponse.KronoxUserBookingElement>) {
+        bookings.forEach { booking ->
+            if (!notificationService.isNotificationScheduled(booking.id)) {
+                notificationService.createNotificationFromBooking(booking)
+            }
+        }
     }
 }

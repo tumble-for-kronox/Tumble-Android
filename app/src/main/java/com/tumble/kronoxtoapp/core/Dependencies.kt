@@ -22,7 +22,6 @@ import com.tumble.kronoxtoapp.services.SecureStorageService
 import com.tumble.kronoxtoapp.services.kronox.KronoxServiceProtocol
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object KronoxModule {
@@ -75,7 +74,7 @@ object SecureStorageModel{
 
 @Module
 @InstallIn(SingletonComponent::class)
-object dataStoreManager {
+object DataStoreModule {
     @Provides
     @Singleton
     fun providePreferenceService(@ApplicationContext context: Context): DataStoreService {
@@ -85,7 +84,7 @@ object dataStoreManager {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SchoolManager{
+object SchoolModule{
     @Provides
     @Singleton
     fun provideSchoolManager(@ApplicationContext context: Context): SchoolService {
