@@ -26,23 +26,23 @@ import com.tumble.kronoxtoapp.domain.enums.PageState
 import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
 import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import com.tumble.kronoxtoapp.presentation.viewmodels.AccountDataState
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun RegisteredBookings(
     onClickResource: (NetworkResponse.KronoxUserBookingElement) -> Unit,
-    state: State<PageState>,
-    bookings: List<NetworkResponse.KronoxUserBookingElement>?,
+    bookingsState: AccountDataState,
     confirmBooking: (String, String) -> Unit,
     unBook: (String) -> Unit
-){
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        when(state.value){
-            PageState.LOADING -> {
+        when (bookingsState) {
+            is AccountDataState.Idle,
+            is AccountDataState.Loading -> {
                 Row(
                     modifier = Modifier
                         .padding(top = 15.dp)
@@ -52,30 +52,35 @@ fun RegisteredBookings(
                     CustomProgressIndicator()
                 }
             }
-            PageState.LOADED -> {
-                if(!bookings.isNullOrEmpty()){
-                    bookings.forEach{ resource ->
+
+            is AccountDataState.BookingsLoaded -> {
+                val bookings = bookingsState.bookings.bookings
+
+                if (bookings.isNotEmpty()) {
+                    bookings.forEach { resource ->
                         val eventStart = resource.timeSlot.from?.convertToHoursAndMinutesISOString()
                         val eventEnd = resource.timeSlot.to?.convertToHoursAndMinutesISOString()
                         val noDate = stringResource(R.string.no_date)
+
                         ResourceCard(
-                            eventStart = eventStart?: noDate,
-                            eventEnd = eventEnd?: noDate,
+                            eventStart = eventStart ?: noDate,
+                            eventEnd = eventEnd ?: noDate,
                             title = stringResource(R.string.user_booked_resource),
                             location = resource.locationId,
-                            date = resource.timeSlot.from?.formatDate()?: noDate,
+                            date = resource.timeSlot.from?.formatDate() ?: noDate,
                             onClick = { onClickResource(resource) }
                         )
-                        if (resource.showConfirmButton){
-                            Row (
+
+                        if (resource.showConfirmButton) {
+                            Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement =  Arrangement.SpaceEvenly
-                            ){
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
                                 Button(
-                                    onClick = {confirmBooking(resource.resourceId, resource.id)},
+                                    onClick = { confirmBooking(resource.resourceId, resource.id) },
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                                     shape = RoundedCornerShape(15.dp),
-                                    ) {
+                                ) {
                                     Text(
                                         text = stringResource(R.string.confirm),
                                         fontSize = 16.sp,
@@ -84,9 +89,10 @@ fun RegisteredBookings(
                                     )
                                 }
                                 Button(
-                                    onClick = {unBook(resource.id)},
+                                    onClick = { unBook(resource.id) },
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                                    shape = RoundedCornerShape(15.dp),) {
+                                    shape = RoundedCornerShape(15.dp),
+                                ) {
                                     Text(
                                         text = stringResource(R.string.cancel_booking),
                                         fontSize = 16.sp,
@@ -97,11 +103,16 @@ fun RegisteredBookings(
                             }
                         }
                     }
-                } else{
+                } else {
                     Text(text = stringResource(R.string.no_booked_resource))
                 }
             }
-            PageState.ERROR -> {
+
+            is AccountDataState.Error -> {
+                Text(text = stringResource(R.string.could_not_contact_server))
+            }
+
+            else -> {
                 Text(text = stringResource(R.string.could_not_contact_server))
             }
         }

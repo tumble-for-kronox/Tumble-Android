@@ -13,21 +13,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
+import com.tumble.kronoxtoapp.presentation.viewmodels.AccountDataState
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
 
 @Composable
 fun Resources(
-    parentViewModel: AccountViewModel = hiltViewModel(),
-    getResourcesAndEvents: () -> Unit,
+    bookingsState: AccountDataState,
+    eventsState: AccountDataState,
+    onClickResource: (NetworkResponse.KronoxUserBookingElement) -> Unit,
+    onClickEvent: (NetworkResponse.AvailableKronoxUserEvent) -> Unit,
+    onConfirmBooking: (String, String) -> Unit,
+    onUnbookResource: (String) -> Unit,
+    onLoadResourcesAndEvents: () -> Unit,
     navController: NavHostController
-){
+) {
     LaunchedEffect(key1 = Unit) {
-        getResourcesAndEvents()
+        onLoadResourcesAndEvents()
     }
-    val userBookings = parentViewModel.userBookings.collectAsState()
-    val userEvents = parentViewModel.completeUserEvent.collectAsState()
-    val registeredBookingsState = parentViewModel.registeredBookingsSectionState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -40,22 +44,21 @@ fun Resources(
             destination = { navController.navigate(Routes.accountResources) }
         ) {
             RegisteredBookings(
-                onClickResource = { parentViewModel.setBooking(it) },
-                state = registeredBookingsState,
-                bookings = userBookings.value?.bookings?: emptyList(),
-                confirmBooking = {resourceId, bookingId -> parentViewModel.confirmResource(resourceId, bookingId)},
-                unBook = {bookingId -> parentViewModel.unBookResource(bookingId)}
+                onClickResource = onClickResource,
+                bookingsState = bookingsState,
+                confirmBooking = onConfirmBooking,
+                unBook = onUnbookResource
             )
         }
+
         ResourceSectionDivider(
             title = stringResource(R.string.user_events),
             resourceType = ResourceType.EVENT,
             destination = { navController.navigate(Routes.accountEvents) }
         ) {
             RegisteredEvents(
-                onClickEvent = { parentViewModel.setEvent(it) },
-                state = parentViewModel.registeredEventSectionState.collectAsState(),
-                registeredEvents = userEvents.value?.registeredEvents?: emptyList()
+                onClickEvent = onClickEvent,
+                eventsState = eventsState
             )
         }
     }

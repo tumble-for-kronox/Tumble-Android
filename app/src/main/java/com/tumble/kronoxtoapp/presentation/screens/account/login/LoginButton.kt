@@ -15,13 +15,13 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun LoginButton(
-    login: () -> Unit,
+    onLogin: () -> Unit,
     enabled: Boolean
 ){
     Button(
         onClick = {
             if (enabled) {
-                login()
+                onLogin()
             }
         },
         modifier = Modifier

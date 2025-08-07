@@ -27,10 +27,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun UsernameField(username: MutableState<String>) {
+fun UsernameField(
+    username: String,
+    onUsernameChange: (String) -> Unit
+) {
     TextField(
-        value = username.value,
-        onValueChange = { value: String -> username.value = value },
+        value = username,
+        onValueChange = onUsernameChange,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Person,
@@ -72,12 +75,14 @@ fun UsernameField(username: MutableState<String>) {
 
 @Composable
 fun PasswordField(
-    password: MutableState<String>,
-    visiblePassword: MutableState<Boolean>
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    onTogglePasswordVisibility: () -> Unit,
+    isPasswordVisible: Boolean
 ) {
     TextField(
-        value = password.value,
-        onValueChange = { value: String -> password.value = value },
+        value = password,
+        onValueChange = onPasswordChange,
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Lock,
@@ -86,10 +91,10 @@ fun PasswordField(
             )
         },
         trailingIcon = {
-            IconButton(onClick = { visiblePassword.value = !visiblePassword.value }) {
+            IconButton(onClick = onTogglePasswordVisibility) {
                 Icon(
-                    imageVector = if (visiblePassword.value) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                    contentDescription = if (visiblePassword.value) "Hide password" else "Show password",
+                    imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                    contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
                     tint = MaterialTheme.colorScheme.onSurface
                 )
             }
@@ -112,7 +117,7 @@ fun PasswordField(
             imeAction = ImeAction.Done,
             autoCorrectEnabled = false
         ),
-        visualTransformation = if (visiblePassword.value) VisualTransformation.None else PasswordVisualTransformation(),
+        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,

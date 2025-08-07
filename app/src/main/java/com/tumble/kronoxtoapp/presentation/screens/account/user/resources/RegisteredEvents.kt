@@ -20,21 +20,21 @@ import com.tumble.kronoxtoapp.domain.enums.PageState
 import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
 import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import com.tumble.kronoxtoapp.presentation.viewmodels.AccountDataState
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun RegisteredEvents(
     onClickEvent: (NetworkResponse.AvailableKronoxUserEvent) -> Unit,
-    state: State<PageState>,
-    registeredEvents: List<NetworkResponse.AvailableKronoxUserEvent>?
-){
+    eventsState: AccountDataState
+) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        when(state.value){
-            PageState.LOADING -> {
+        when (eventsState) {
+            is AccountDataState.Idle,
+            is AccountDataState.Loading -> {
                 Row(
                     modifier = Modifier
                         .padding(top = 15.dp)
@@ -44,27 +44,37 @@ fun RegisteredEvents(
                     CustomProgressIndicator()
                 }
             }
-            PageState.LOADED -> {
-                if(!registeredEvents.isNullOrEmpty()){
-                    registeredEvents.forEach{ event ->
-                        val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
-                        val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
-                        if (eventStart != null && eventEnd != null){
-                            ResourceCard(
-                                eventStart = eventStart,
-                                eventEnd = eventEnd,
-                                type = event.type,
-                                title = event.title,
-                                date = event.eventStart.formatDate()?: stringResource(R.string.no_date),
-                                onClick = { onClickEvent(event) }
-                            )
+
+            is AccountDataState.EventsLoaded -> {
+                val registeredEvents = eventsState.events.registeredEvents
+                registeredEvents?.let { events ->
+                    if (events.isNotEmpty()) {
+                        registeredEvents.forEach { event ->
+                            val eventStart = event.eventStart.convertToHoursAndMinutesISOString()
+                            val eventEnd = event.eventEnd.convertToHoursAndMinutesISOString()
+
+                            if (eventStart != null && eventEnd != null) {
+                                ResourceCard(
+                                    eventStart = eventStart,
+                                    eventEnd = eventEnd,
+                                    type = event.type,
+                                    title = event.title,
+                                    date = event.eventStart.formatDate() ?: stringResource(R.string.no_date),
+                                    onClick = { onClickEvent(event) }
+                                )
+                            }
                         }
+                    } else {
+                        Text(text = stringResource(R.string.no_registered_event_yet))
                     }
-                }else{
-                    Text(text = stringResource(R.string.no_registered_event_yet))
-                }
+                } ?: Text(text = stringResource(R.string.no_registered_event_yet))
             }
-            PageState.ERROR -> {
+
+            is AccountDataState.Error -> {
+                Text(text = stringResource(R.string.could_not_contact_server))
+            }
+
+            else -> {
                 Text(text = stringResource(R.string.could_not_contact_server))
             }
         }
