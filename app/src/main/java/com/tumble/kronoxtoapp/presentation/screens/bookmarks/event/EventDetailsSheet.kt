@@ -60,6 +60,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.other.extensions.presentation.isAvailableNotificationDate
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
@@ -102,10 +103,12 @@ fun EventDetailsSheet(
         }
         is EventDetailsState.Loaded -> {
             val event = (viewModel.eventDetailsState as EventDetailsState.Loaded).event
+            val courseColor = (viewModel.eventDetailsState as EventDetailsState.Loaded).color
 
             EventInfo(
                 event = event,
-                selectedColor = selectedColor,
+                courseColor = courseColor,
+                colorPickerSelectedColor = selectedColor,
                 showColorPicker = showColorPicker,
                 onColorSelected = { color ->
                     selectedColor = color
@@ -135,7 +138,8 @@ fun EventDetailsSheet(
 @Composable
 private fun EventInfo(
     event: Event,
-    selectedColor: Color,
+    courseColor: Color,
+    colorPickerSelectedColor: Color,
     showColorPicker: Boolean,
     onColorSelected: (Color) -> Unit,
     setShowColorPicker: (Boolean) -> Unit
@@ -150,7 +154,7 @@ private fun EventInfo(
     ) {
         EventHeaderCard(
             event = event,
-            eventColor = selectedColor
+            eventColor = courseColor
         )
 
         Text(
@@ -304,7 +308,7 @@ private fun EventInfo(
     // Enhanced Color Picker Dialog
     if (showColorPicker) {
         ModernColorPickerDialog(
-            currentColor = selectedColor,
+            currentColor = colorPickerSelectedColor,
             onColorSelected = onColorSelected,
             onDismiss = { setShowColorPicker(false) }
         )
