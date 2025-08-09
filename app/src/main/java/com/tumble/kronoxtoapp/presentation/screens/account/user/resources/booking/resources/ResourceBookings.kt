@@ -79,7 +79,7 @@ fun ResourceBookings(
             }
             is ResourceSelectionState.Error -> {
                 val errorMessage = (viewModel.resourceSelectionState as ResourceSelectionState.Error).message
-                Info(errorMessage)
+                Info("The resource date you attempted to access is unavailable. You may be attempting to access it on a weekend.")
             }
             is ResourceSelectionState.Loaded -> {
                 val allResources = (viewModel.resourceSelectionState as ResourceSelectionState.Loaded).allResources
