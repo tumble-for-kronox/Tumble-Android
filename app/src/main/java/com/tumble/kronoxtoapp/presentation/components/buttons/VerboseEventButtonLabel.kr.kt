@@ -25,7 +25,8 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
+import com.tumble.kronoxtoapp.other.extensions.models.displayFromTime
+import com.tumble.kronoxtoapp.other.extensions.models.displayToTime
 import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 import java.util.Locale
 
@@ -100,10 +101,9 @@ fun VerboseEventButtonLabel(
                     )
                 }
 
-                // Time Display
                 TimeRangeChip(
-                    startTime = event.from.convertToHoursAndMinutesISOString(),
-                    endTime = event.to.convertToHoursAndMinutesISOString(),
+                    startTime = event.displayFromTime,
+                    endTime = event.displayToTime,
                     isSpecial = event.isSpecial,
                     color = event.course?.color?.toColor() ?: Color.Gray
                 )
@@ -114,8 +114,8 @@ fun VerboseEventButtonLabel(
 
 @Composable
 private fun TimeRangeChip(
-    startTime: String?,
-    endTime: String?,
+    startTime: String,
+    endTime: String,
     isSpecial: Boolean,
     color: Color
 ) {
@@ -136,23 +136,13 @@ private fun TimeRangeChip(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier.wrapContentWidth()
     ) {
-        if (startTime != null && endTime != null) {
-            Text(
-                text = "$startTime - $endTime",
-                color = textColor,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-            )
-        } else {
-            Text(
-                text = "Time TBA",
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
-            )
-        }
+        Text(
+            text = "$startTime - $endTime",
+            color = textColor,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+        )
     }
 }
 

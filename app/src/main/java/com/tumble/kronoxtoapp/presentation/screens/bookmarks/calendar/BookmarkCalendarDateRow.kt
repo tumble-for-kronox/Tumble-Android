@@ -19,7 +19,8 @@ import java.time.LocalDate
 fun dateRow(
     inMonth: (Int) -> Float,
     localDate: LocalDate,
-    getColor:@Composable (LocalDate) -> Color,
+    getBackgroundColor: @Composable (LocalDate) -> Color,
+    getOnBackgroundColor: @Composable (LocalDate) -> Color,
     onClick: (LocalDate) -> Unit
 ): LocalDate {
 
@@ -36,7 +37,8 @@ fun dateRow(
                 CalendarDate(
                     inMonth = inMonth,
                     localDate = localLocalDate,
-                    getColor = getColor,
+                    getBackgroundColor = getBackgroundColor,
+                    getOnBackgroundColor = getOnBackgroundColor,
                     onClick = onClick
                 )
                 EventIndicator(localDate = localLocalDate)

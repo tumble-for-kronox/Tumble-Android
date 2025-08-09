@@ -14,14 +14,14 @@ keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     namespace 'com.tumble.kronoxtoapp'
-    compileSdk 36
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.tumble.kronoxtoapp"
         minSdk 26
-        targetSdk 36
-        versionCode 49
-        versionName "4.1.4"
+        targetSdk 35
+        versionCode 50
+        versionName "4.1.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -68,7 +68,7 @@ android {
         buildConfig true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = null // Managed by Kotlin plugin
+        kotlinCompilerExtensionVersion = null
     }
     hilt {
         enableAggregatingTask = true

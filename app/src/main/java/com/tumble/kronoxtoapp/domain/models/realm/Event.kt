@@ -1,5 +1,6 @@
 package com.tumble.kronoxtoapp.domain.models.realm
 
+import com.tumble.kronoxtoapp.utils.DateUtils
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
@@ -23,12 +24,24 @@ open class Event(
 
     val dateComponents: Calendar?
         get() {
-            val date = isoDateFormatterNoTimeZone.parse(from)
-            return if (date != null) {
+            return try {
+                val localDateTime = DateUtils.toUserLocalDateTime(from)
                 Calendar.getInstance().apply {
-                    time = date
+                    set(Calendar.YEAR, localDateTime.year)
+                    set(Calendar.MONTH, localDateTime.monthValue - 1)
+                    set(Calendar.DAY_OF_MONTH, localDateTime.dayOfMonth)
+                    set(Calendar.HOUR_OF_DAY, localDateTime.hour)
+                    set(Calendar.MINUTE, localDateTime.minute)
+                    set(Calendar.SECOND, localDateTime.second)
                 }
-            } else null
+            } catch (e: Exception) {
+                val date = isoDateFormatterNoTimeZone.parse(from)
+                if (date != null) {
+                    Calendar.getInstance().apply {
+                        time = date
+                    }
+                } else null
+            }
         }
 }
 
