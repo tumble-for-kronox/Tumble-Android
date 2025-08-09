@@ -41,8 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
-import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
+import com.tumble.kronoxtoapp.utils.DateUtils
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
@@ -101,13 +100,14 @@ fun ResourceDetailsSheet(
             }
         )
 
-        // Date
         DetailCard(
             icon = Icons.Default.CalendarMonth,
             title = stringResource(R.string.date),
             content = {
                 Text(
-                    text = booking.timeSlot.from?.formatDate().orEmpty(),
+                    text = booking.timeSlot.from?.let {
+                        DateUtils.formatInstitutionalDate(it)
+                    } ?: stringResource(R.string.no_date),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Medium
@@ -115,7 +115,6 @@ fun ResourceDetailsSheet(
             }
         )
 
-        // Time slot
         DetailCard(
             icon = Icons.Default.Schedule,
             title = stringResource(R.string.timeslot),
@@ -124,7 +123,9 @@ fun ResourceDetailsSheet(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = booking.timeSlot.from?.convertToHoursAndMinutesISOString().orEmpty(),
+                        text = booking.timeSlot.from?.let {
+                            DateUtils.formatInstitutionalTime(it)
+                        } ?: "",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
@@ -132,10 +133,12 @@ fun ResourceDetailsSheet(
                     Text(
                         text = " - ",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = booking.timeSlot.to?.convertToHoursAndMinutesISOString().orEmpty(),
+                        text = booking.timeSlot.to?.let {
+                            DateUtils.formatInstitutionalTime(it)
+                        } ?: "",
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
@@ -144,7 +147,6 @@ fun ResourceDetailsSheet(
             }
         )
 
-        // Confirmation window
         DetailCard(
             icon = Icons.Default.CheckCircleOutline,
             title = stringResource(R.string.confirmation),
@@ -155,24 +157,36 @@ fun ResourceDetailsSheet(
                     Text(
                         text = "Confirmation Window",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                    val bookingDate = booking.timeSlot.from?.formatDate()
-                    val confirmationStart = booking.confirmationOpen?.convertToHoursAndMinutesISOString()
-                    val confirmationEnd = booking.confirmationClosed?.convertToHoursAndMinutesISOString()
 
-                    Text(
-                        text = "$bookingDate",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Medium
-                    )
-                    Text(
-                        text = "$confirmationStart - $confirmationEnd",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.Medium
-                    )
+                    val bookingDate = booking.timeSlot.from?.let {
+                        DateUtils.formatScheduleDate(it)
+                    }
+                    val confirmationStart = booking.confirmationOpen?.let {
+                        DateUtils.formatScheduleTime(it)
+                    }
+                    val confirmationEnd = booking.confirmationClosed?.let {
+                        DateUtils.formatScheduleTime(it)
+                    }
+
+                    bookingDate?.let {
+                        Text(
+                            text = it,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                    if (confirmationStart != null && confirmationEnd != null) {
+                        Text(
+                            text = "$confirmationStart - $confirmationEnd",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
         )
@@ -197,6 +211,7 @@ fun ResourceDetailsSheet(
         }
     }
 }
+
 
 @Composable
 private fun BookingHeaderCard() {

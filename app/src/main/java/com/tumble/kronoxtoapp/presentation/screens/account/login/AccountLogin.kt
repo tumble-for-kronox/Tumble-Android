@@ -44,7 +44,9 @@ import com.tumble.kronoxtoapp.domain.models.presentation.School
 import com.tumble.kronoxtoapp.presentation.viewmodels.LoginViewModel
 import com.tumble.kronoxtoapp.presentation.viewmodels.LoginUiState
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun AccountLogin(

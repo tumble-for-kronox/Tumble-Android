@@ -35,7 +35,6 @@ fun BookmarksNavGraph(
         bookmarksDetails(navController, setTopNavState)
     }
 
-    // Add this to see the graph state
     LaunchedEffect(navController) {
         Log.d("BookmarksNavGraph", "NavController graph: ${navController.graph}")
         Log.d("BookmarksNavGraph", "NavController graph nodes: ${navController.graph.nodes}")

@@ -1,8 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks.calendar
 
 import android.icu.util.Calendar
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,16 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.utils.month_date
 import kotlin.math.abs
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun BookmarkCalendarView(
     onEventSelection: (Event) -> Unit
@@ -79,7 +75,7 @@ fun BookmarkCalendarView(
                     .fillMaxWidth(),
             ) { page ->
 
-                var showConten by remember {
+                var showContent by remember {
                     mutableStateOf(false)
                 }
                 LaunchedEffect(key1 = datesPagerState.isScrollInProgress) {
@@ -90,13 +86,12 @@ fun BookmarkCalendarView(
                         )
                     }.collect { (scrollInProgress, diff) ->
                         if (!scrollInProgress && (diff in 0..1)) {
-                            showConten = true
+                            showContent = true
                             cancel()
                         }
                     }
                 }
-                if (showConten) {
-
+                if (showContent) {
                     BookmarkCalendarMonthView(
                         page = page,
                     )
@@ -156,7 +151,7 @@ fun DaysOfTheWeek(){
             .fillMaxWidth()
             .padding(bottom = 8.dp)
     ) {
-        DaysOfWeek.values().forEach {
+        DaysOfWeek.entries.forEach {
             Box(contentAlignment = Alignment.Center,
                 modifier = Modifier.size(40.dp)
             ){

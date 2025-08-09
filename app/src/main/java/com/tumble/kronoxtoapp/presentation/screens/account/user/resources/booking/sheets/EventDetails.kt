@@ -37,8 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
-import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
+import com.tumble.kronoxtoapp.utils.DateUtils
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
@@ -109,7 +108,6 @@ fun EventDetailsSheet(
             }
         )
 
-        // Date and Time
         DetailCard(
             icon = Icons.Default.CalendarMonth,
             title = stringResource(R.string.date),
@@ -117,50 +115,43 @@ fun EventDetailsSheet(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
-                    event.eventStart.formatDate()?.let {
+                    Text(
+                        text = DateUtils.formatInstitutionalDate(event.eventStart),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontWeight = FontWeight.Medium
+                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = it,
+                            text = DateUtils.formatInstitutionalTime(event.eventStart),
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurface,
                             fontWeight = FontWeight.Medium
                         )
-                    }
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        event.eventStart.convertToHoursAndMinutesISOString()?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
                         Text(
                             text = " - ",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        event.eventEnd.convertToHoursAndMinutesISOString()?.let {
-                            Text(
-                                text = it,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = MaterialTheme.colorScheme.onSurface,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
+                        Text(
+                            text = DateUtils.formatInstitutionalTime(event.eventEnd),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.Medium
+                        )
                     }
                 }
             }
         )
 
-        // Available Until
         DetailCard(
             icon = Icons.Default.Timelapse,
             title = stringResource(R.string.available_until),
             content = {
                 Text(
-                    text = event.lastSignupDate.formatDate().orEmpty(),
+                    text = DateUtils.formatScheduleDate(event.lastSignupDate),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Medium

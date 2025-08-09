@@ -54,8 +54,8 @@ class BookmarksViewModel @Inject constructor(
     private val _defaultViewType = MutableStateFlow(ViewType.LIST)
     val defaultViewType: StateFlow<ViewType> = _defaultViewType
 
-    var selectedDate by mutableStateOf<LocalDate?>(null)
-    var todayDate by mutableStateOf<LocalDate>(LocalDate.now())
+    var selectedDate by mutableStateOf<LocalDate>(LocalDate.now())
+    var todaysDate by mutableStateOf<LocalDate>(LocalDate.now())
     var eventSheet by mutableStateOf<EventDetailsSheetModel?>(null)
 
     init {
@@ -163,41 +163,21 @@ class BookmarksViewModel @Inject constructor(
         return dict.toMap()
     }
 
-    private fun updateView(days: List<Day>, calendarEvents: Map<LocalDate, List<Event>>){
+    private fun updateView(days: List<Day>, calendarEvents: Map<LocalDate, List<Event>>) {
         bookmarkData = BookmarkData(
-                        days = days,
-                        calendarEventsByDate = calendarEvents,
-                        weeks = days.groupByWeek(),
-                        weekStartDates = weekStartDates()
-                        )
+            days = days,
+            calendarEventsByDate = calendarEvents,
+            weeks = days.groupByWeek(),
+            weekStartDates = weekStartDates()
+        )
         status = BookmarksStatus.LOADED
-    }
-
-    @Composable
-    fun getColor(date: LocalDate): Color {
-        if (date == selectedDate){
-            return MaterialTheme.colorScheme.primary
-        }
-        if (date == todayDate){
-            return MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-        }
-        return MaterialTheme.colorScheme.background
-    }
-
-    fun changeCourseColor(color: String, courseId: String) {
-        viewModelScope.launch {
-            realmService.updateCourseColors(
-                courseId,
-                color
-            )
-        }
     }
 
     fun updateSelectedDate(clickedDate: LocalDate){
         selectedDate = if (selectedDate != clickedDate){
             clickedDate
-        } else{
-            null
+        } else {
+            LocalDate.now()
         }
     }
 

@@ -1,9 +1,11 @@
 package com.tumble.kronoxtoapp.other.extensions.models
 
 import com.tumble.kronoxtoapp.domain.models.realm.Day
+import com.tumble.kronoxtoapp.utils.DateUtils
 import com.tumble.kronoxtoapp.utils.isoDateFormatter
 import com.tumble.kronoxtoapp.utils.preprocessDateString
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 fun List<Day>.ordered(): List<Day> {
 
@@ -40,3 +42,9 @@ fun Day.isValidDay(): Boolean {
     val dayDate = LocalDate.parse(this.isoString?.substring(0,10)?.let { preprocessDateString(it) })
     return startOfToday <= dayDate
 }
+
+val Day.localDateTime: LocalDateTime?
+    get() = this.isoString?.let { DateUtils.toUserLocalDateTime(it) }
+
+val Day.displayDate: String
+    get() = this.isoString?.let { DateUtils.formatDateOnly(it) } ?: this.date ?: ""

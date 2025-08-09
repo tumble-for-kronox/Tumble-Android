@@ -27,20 +27,19 @@ import java.time.LocalDate
 fun CalendarDate (
     inMonth: (Int) -> Float,
     localDate: LocalDate,
-    getColor:@Composable (LocalDate) -> Color,
+    getBackgroundColor: @Composable (LocalDate) -> Color,
+    getOnBackgroundColor: @Composable (LocalDate) -> Color,
     onClick: (LocalDate) -> Unit
 ) {
-     Box(contentAlignment = Alignment.Center,) {
+     Box(contentAlignment = Alignment.Center) {
         Background(
             localDate = localDate,
             onClick = onClick,
-            getColor =  getColor
+            getColor = getBackgroundColor
         )
         Text(
             text = localDate.dayOfMonth.toString(),
-            color = MaterialTheme.colorScheme.onBackground.copy(
-                alpha = inMonth(localDate.month.value)
-            ),
+            color = getOnBackgroundColor(localDate),
             fontSize = 20.sp
         )
     }
@@ -69,7 +68,7 @@ fun EventIndicator(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
-            .padding(vertical = 1.dp)
+            .padding(vertical = 2.dp)
             .height(6.dp)
     ) {
 

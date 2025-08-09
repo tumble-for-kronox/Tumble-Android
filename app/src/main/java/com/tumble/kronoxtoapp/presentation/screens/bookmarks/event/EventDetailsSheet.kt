@@ -1,5 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks.event
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.size
@@ -60,6 +61,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.other.extensions.presentation.isAvailableNotificationDate
+import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
@@ -67,6 +69,7 @@ import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.viewmodels.EventDetailsSheetViewModel
 import com.tumble.kronoxtoapp.presentation.viewmodels.EventDetailsState
 import com.tumble.kronoxtoapp.presentation.viewmodels.NotificationState
+import com.tumble.kronoxtoapp.utils.DateUtils
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -102,10 +105,12 @@ fun EventDetailsSheet(
         }
         is EventDetailsState.Loaded -> {
             val event = (viewModel.eventDetailsState as EventDetailsState.Loaded).event
+            val courseColor = (viewModel.eventDetailsState as EventDetailsState.Loaded).color
 
             EventInfo(
                 event = event,
-                selectedColor = selectedColor,
+                courseColor = courseColor,
+                colorPickerSelectedColor = selectedColor,
                 showColorPicker = showColorPicker,
                 onColorSelected = { color ->
                     selectedColor = color
@@ -135,7 +140,8 @@ fun EventDetailsSheet(
 @Composable
 private fun EventInfo(
     event: Event,
-    selectedColor: Color,
+    courseColor: Color,
+    colorPickerSelectedColor: Color,
     showColorPicker: Boolean,
     onColorSelected: (Color) -> Unit,
     setShowColorPicker: (Boolean) -> Unit
@@ -150,7 +156,7 @@ private fun EventInfo(
     ) {
         EventHeaderCard(
             event = event,
-            eventColor = selectedColor
+            eventColor = courseColor
         )
 
         Text(
@@ -207,7 +213,7 @@ private fun EventInfo(
             title = "Date",
             content = {
                 Text(
-                    text = event.from.substringBefore("T"),
+                    text = DateUtils.formatDateOnly(event.from),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Medium
@@ -224,7 +230,7 @@ private fun EventInfo(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = event.from.substringAfter("T").substringBefore("+").substring(0, 5),
+                        text = DateUtils.formatTimeOnly(event.from),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
@@ -232,10 +238,10 @@ private fun EventInfo(
                     Text(
                         text = " - ",
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = event.to.substringAfter("T").substringBefore("+").substring(0, 5),
+                        text = DateUtils.formatTimeOnly(event.to),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium
@@ -263,10 +269,11 @@ private fun EventInfo(
                                         fontWeight = FontWeight.Medium
                                     )
                                     if (location.maxSeats > 0) {
+                                        Log.d("EventDetailsSheet", "Max seats: ${location.maxSeats}")
                                         Text(
                                             text = "Capacity: ${location.maxSeats} seats",
                                             style = MaterialTheme.typography.bodyMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                            color = MaterialTheme.colorScheme.onSurface
                                         )
                                     }
                                 }
@@ -304,7 +311,7 @@ private fun EventInfo(
     // Enhanced Color Picker Dialog
     if (showColorPicker) {
         ModernColorPickerDialog(
-            currentColor = selectedColor,
+            currentColor = colorPickerSelectedColor,
             onColorSelected = onColorSelected,
             onDismiss = { setShowColorPicker(false) }
         )
@@ -392,7 +399,7 @@ private fun NotificationControls(
             text = "Notifications",
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurface
         )
 
         // Event notifications
@@ -469,7 +476,7 @@ private fun NotificationToggleRow(
                 Text(
                     text = subtitle,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -507,7 +514,7 @@ private fun NotificationToggleRow(
                             Icon(
                                 imageVector = Icons.Outlined.Notifications,
                                 contentDescription = "Notifications disabled",
-                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                tint = MaterialTheme.colorScheme.onSurface,
                                 modifier = Modifier.size(20.dp)
                             )
                         }
