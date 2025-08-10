@@ -11,16 +11,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.other.extensions.models.flatten
 import com.tumble.kronoxtoapp.other.extensions.models.ordered
 import com.tumble.kronoxtoapp.other.extensions.models.toRealmEvent
 import com.tumble.kronoxtoapp.presentation.components.buttons.VerboseEventButtonLabel
-import com.tumble.kronoxtoapp.presentation.viewmodels.SearchPreviewViewModel
 
 
 @Composable
 fun SearchPreviewList(
-    viewModel: SearchPreviewViewModel
+    schedule: NetworkResponse.Schedule,
+    colorsForPreview: MutableMap<String, String>
 ){
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -30,13 +31,13 @@ fun SearchPreviewList(
         item {
             Spacer(modifier = Modifier.height(20.dp))
         }
-        viewModel.schedule?.flatten()?.ordered()?.forEach{day ->
+        schedule.flatten().ordered().forEach{day ->
             if (day.events.isNotEmpty()) {
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(15.dp)) {
                         DayResponseHeader(day = day)
                         day.events.forEach { event ->
-                            VerboseEventButtonLabel(event = event.toRealmEvent(viewModel.courseColorsForPreview))
+                            VerboseEventButtonLabel(event = event.toRealmEvent(colorsForPreview))
                         }
                     }
                     Spacer(modifier = Modifier.height(20.dp))

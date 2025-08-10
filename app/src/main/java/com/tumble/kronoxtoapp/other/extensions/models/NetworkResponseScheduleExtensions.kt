@@ -35,6 +35,10 @@ fun NetworkResponse.Schedule.assignCourseRandomColors(): MutableMap<String, Stri
     return courseColors
 }
 
+fun NetworkResponse.Schedule.hasNoEvents(): Boolean {
+    return !this.days.any { it.events.isNotEmpty() }
+}
+
 fun NetworkResponse.Schedule.toRealmSchedule(
     scheduleRequiresAuth: Boolean,
     schoolId: String,

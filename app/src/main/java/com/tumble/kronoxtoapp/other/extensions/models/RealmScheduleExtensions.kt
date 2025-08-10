@@ -32,6 +32,10 @@ fun List<Schedule>.filterEventsMatchingToday(): List<Event> {
     return eventsForToday
 }
 
+fun List<Schedule>.hasScheduleWithId(id: String): Boolean {
+    return this.map { it.scheduleId }.contains(id)
+}
+
 fun List<Schedule>.findNextUpcomingEvent(): Event? {
     val now = LocalDateTime.now()
 

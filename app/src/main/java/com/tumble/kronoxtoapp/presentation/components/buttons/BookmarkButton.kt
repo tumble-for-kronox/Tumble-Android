@@ -8,46 +8,55 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.BookmarkRemove
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.domain.enums.ButtonState
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun BookmarkButton(
-    bookmark: () -> Unit,
-    buttonState: ButtonState
-){
-    val coroutineScope = rememberCoroutineScope()
-
-    IconButton(onClick = { coroutineScope.launch { bookmark() } } ) {
-        when (buttonState){
-            ButtonState.LOADING, ButtonState.DISABLED -> {
-                CustomProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+    onToggleBookmark: () -> Unit,
+    buttonState: ButtonState,
+    modifier: Modifier = Modifier
+) {
+    IconButton(
+        onClick = onToggleBookmark,
+        enabled = buttonState != ButtonState.DISABLED && buttonState != ButtonState.LOADING,
+        modifier = modifier
+    ) {
+        when (buttonState) {
+            ButtonState.LOADING -> {
+                CustomProgressIndicator(
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            ButtonState.DISABLED -> {
+                Icon(
+                    imageVector = Icons.Filled.BookmarkAdd,
+                    contentDescription = "Bookmark disabled",
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
+                    modifier = Modifier.size(24.dp)
+                )
             }
             ButtonState.SAVED -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkRemove,
-                    contentDescription = null,
+                    contentDescription = "Remove bookmark",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .size(24.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
             ButtonState.NOT_SAVED -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkAdd,
-                    contentDescription = null,
+                    contentDescription = "Add bookmark",
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier
-                        .size(24.dp)
+                    modifier = Modifier.size(24.dp)
                 )
             }
         }
     }
 }
-

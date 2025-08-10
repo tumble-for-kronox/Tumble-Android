@@ -1,8 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,12 +12,32 @@ import com.tumble.kronoxtoapp.services.kronox.Endpoint
 import com.tumble.kronoxtoapp.services.RealmService
 import com.tumble.kronoxtoapp.services.SchoolService
 import com.tumble.kronoxtoapp.services.kronox.ApiResponse
-import com.tumble.kronoxtoapp.domain.enums.ButtonState
-import com.tumble.kronoxtoapp.domain.enums.SheetStatus
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.other.extensions.models.assignCourseRandomColors
+import com.tumble.kronoxtoapp.other.extensions.models.hasNoEvents
+import com.tumble.kronoxtoapp.other.extensions.models.hasScheduleWithId
 import com.tumble.kronoxtoapp.other.extensions.models.toRealmSchedule
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+sealed class BookmarkState {
+    data object Idle : BookmarkState()
+    data object Loading : BookmarkState()
+    data class Bookmarked(val isBookmarked: Boolean) : BookmarkState()
+    data class Error(val message: String) : BookmarkState()
+}
+
+sealed class SearchPreviewState {
+    data object Loading : SearchPreviewState()
+    data class Loaded(
+        val schedule: NetworkResponse.Schedule,
+        val colorsForPreview: MutableMap<String, String>,
+        val bookmarkState: BookmarkState = BookmarkState.Idle
+    ) : SearchPreviewState()
+    data object Empty : SearchPreviewState()
+    data class Error(val errorMessage: String) : SearchPreviewState()
+}
 
 @HiltViewModel
 class SearchPreviewViewModel @Inject constructor(
@@ -28,111 +45,148 @@ class SearchPreviewViewModel @Inject constructor(
     private val realmService: RealmService,
     private val schoolService: SchoolService
 ): ViewModel() {
-    private var isSaved by mutableStateOf(false)
-    var status by mutableStateOf<SheetStatus>(SheetStatus.LOADING)
-    private var errorMessage by mutableStateOf("")
-    var buttonState by mutableStateOf<ButtonState>(ButtonState.LOADING)
-    var courseColorsForPreview by mutableStateOf<Map<String,String>>(emptyMap())
 
-    var schedule by mutableStateOf<NetworkResponse.Schedule?>(null)
+    private val _state = MutableStateFlow<SearchPreviewState>(SearchPreviewState.Loading)
+    val state: StateFlow<SearchPreviewState> = _state.asStateFlow()
 
     private val schools by lazy { schoolService.getSchools() }
-    private var currentSchedules: List<Schedule> = realmService.getAllSchedules()
 
-    
-    fun getSchedule(programmeId: String, schoolId: String){
-        val isScheduleSaved = checkSavedSchedule(programmeId = programmeId, schedules = currentSchedules)
+    private var currentScheduleData: ScheduleData? = null
 
-        with(Dispatchers.Main){
-            status = SheetStatus.LOADING
-            isSaved = isScheduleSaved
-        }
+    data class ScheduleData(
+        val schedule: NetworkResponse.Schedule,
+        val schoolId: String,
+        val colorsForPreview: MutableMap<String, String>,
+        val scheduleTitle: String
+    )
 
+    fun getSchedule(programmeId: String, schoolId: String, scheduleTitle: String) {
+        _state.value = SearchPreviewState.Loading
         viewModelScope.launch {
             try {
-                val parsedSchedule: NetworkResponse.Schedule
                 val endpoint = Endpoint.Schedule(scheduleId = programmeId, schoolId = schoolId)
                 val fetchedSchedule: ApiResponse<NetworkResponse.Schedule> = kronoxManager.getSchedule(endpoint)
-                parsedSchedule = parseFetchedSchedules(fetchedSchedule)
-                updateUIWithFetchedSchedule(parsedSchedule, existingSchedule = currentSchedules)
-            } catch (e: Exception){
-                withContext(Dispatchers.Main){
-                    status = SheetStatus.ERROR
-                    errorMessage = "An unexpected error occurred. Please try again later."
+                val parsedSchedule = parseFetchedSchedules(fetchedSchedule)
+
+                updateUIWithFetchedSchedule(
+                    parsedSchedule,
+                    schoolId,
+                    scheduleTitle
+                )
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    val errorMessage = "An unexpected error occurred. Please try again later."
+                    _state.value = SearchPreviewState.Error(e.localizedMessage ?: errorMessage)
                 }
             }
         }
     }
 
     private fun parseFetchedSchedules(schedules: ApiResponse<NetworkResponse.Schedule>): NetworkResponse.Schedule {
-        when(schedules){
-            is ApiResponse.Success ->{
-                return schedules.data
-            }
-            is ApiResponse.Error -> {
-                throw Exception()
-            }
-            else -> {
-                throw Exception()
-            }
+        return when(schedules) {
+            is ApiResponse.Success -> schedules.data
+            is ApiResponse.Error -> throw Exception("Failed to fetch schedule")
         }
     }
 
-    
-    private fun updateUIWithFetchedSchedule(fetchedSchedule: NetworkResponse.Schedule, existingSchedule: List<Schedule>){
-        viewModelScope.launch(Dispatchers.Main) {
-            if (!fetchedSchedule.days.any { it.events.isNotEmpty() }){
-                status = SheetStatus.EMPTY
-                buttonState = ButtonState.DISABLED
-            }else if (existingSchedule.map { it.scheduleId }.contains(fetchedSchedule.id)){
-                isSaved = true
-                buttonState = ButtonState.SAVED
-                schedule = fetchedSchedule
-                courseColorsForPreview = realmService.getCourseColors()
-                status = SheetStatus.LOADED
-            } else{
-                withContext(Dispatchers.Default){
-                    val randomCourseColor = fetchedSchedule.assignCourseRandomColors()
-                    withContext(Dispatchers.Main){
-                        courseColorsForPreview = randomCourseColor
-                        schedule = fetchedSchedule
-                        buttonState = ButtonState.NOT_SAVED
-                        status = SheetStatus.LOADED
-                    }
-                }
-            }
-        }
-    }
-
-    private fun scheduleRequiresAuth(scheduleId: String): Boolean {
-        return schools.firstOrNull{ it.id == scheduleId.toInt() }?.loginRq ?: false
-    }
-
-    fun bookmark(
-        scheduleId: String,
+    private suspend fun updateUIWithFetchedSchedule(
+        fetchedSchedule: NetworkResponse.Schedule,
         schoolId: String,
         scheduleTitle: String
-    ){
-        buttonState = ButtonState.LOADING
-        viewModelScope.launch {
-            if (!isSaved) {
-                schedule?.toRealmSchedule(scheduleRequiresAuth(schoolId), schoolId, courseColorsForPreview, scheduleTitle)
-                    ?.let { realmSchedule ->
-                        realmService.saveSchedule(realmSchedule)
-                        isSaved = true
-                        buttonState = ButtonState.SAVED
-                    }
+    ) {
+        val scheduleId = fetchedSchedule.id
+
+        withContext(Dispatchers.Main) {
+            if (fetchedSchedule.hasNoEvents()) {
+                _state.value = SearchPreviewState.Empty
+                return@withContext
+            }
+
+            val bookmarkedSchedules = realmService.getAllSchedules()
+            val isBookmarked = bookmarkedSchedules.hasScheduleWithId(scheduleId)
+
+            val colorsForPreview = if (isBookmarked) {
+                realmService.getCourseColors()
             } else {
-                val realmSchedule = realmService.getScheduleByScheduleId(scheduleId)
-                realmSchedule?.let {
-                    realmService.deleteSchedule(it)
-                    isSaved = false
-                    buttonState = ButtonState.NOT_SAVED
+                withContext(Dispatchers.Default) {
+                    fetchedSchedule.assignCourseRandomColors()
                 }
+            }
+
+            currentScheduleData = ScheduleData(
+                schedule = fetchedSchedule,
+                schoolId = schoolId,
+                colorsForPreview = colorsForPreview,
+                scheduleTitle = scheduleTitle
+            )
+
+            _state.value = SearchPreviewState.Loaded(
+                schedule = fetchedSchedule,
+                colorsForPreview = colorsForPreview,
+                bookmarkState = BookmarkState.Bookmarked(isBookmarked)
+            )
+        }
+    }
+
+    fun toggleBookmark() {
+        val currentState = _state.value
+        if (currentState !is SearchPreviewState.Loaded) return
+
+        val scheduleData = currentScheduleData ?: return
+        val currentBookmarkState = currentState.bookmarkState
+
+        if (currentBookmarkState !is BookmarkState.Bookmarked) return
+
+        _state.value = currentState.copy(
+            bookmarkState = BookmarkState.Loading
+        )
+
+        viewModelScope.launch {
+            try {
+                if (currentBookmarkState.isBookmarked) {
+                    removeBookmark(scheduleData.schedule.id)
+                } else {
+                    addBookmark(scheduleData)
+                }
+
+                _state.value = currentState.copy(
+                    bookmarkState = BookmarkState.Bookmarked(!currentBookmarkState.isBookmarked)
+                )
+
+            } catch (e: Exception) {
+                _state.value = currentState.copy(
+                    bookmarkState = BookmarkState.Error(
+                        e.localizedMessage ?: "Failed to update bookmark"
+                    )
+                )
+
+                kotlinx.coroutines.delay(2000)
+                _state.value = currentState.copy(
+                    bookmarkState = currentBookmarkState
+                )
             }
         }
     }
-    private fun checkSavedSchedule(programmeId: String, schedules: List<Schedule>): Boolean{
-        return schedules.map { it.scheduleId }.contains(programmeId)
+
+    private suspend fun removeBookmark(scheduleId: String) {
+        val realmSchedule = realmService.getScheduleByScheduleId(scheduleId)
+        realmSchedule?.let {
+            realmService.deleteSchedule(it)
+        }
     }
+
+    private suspend fun addBookmark(scheduleData: ScheduleData) {
+        val realmSchedule = scheduleData.schedule.toRealmSchedule(
+            scheduleRequiresAuth = scheduleRequiresAuth(scheduleData.schoolId),
+            schoolId = scheduleData.schoolId,
+            existingCourseColors = scheduleData.colorsForPreview,
+            scheduleTitle = scheduleData.scheduleTitle
+        )
+        realmService.saveSchedule(realmSchedule)
+    }
+
+    private fun scheduleRequiresAuth(schoolId: String): Boolean {
+        return schools.firstOrNull { it.id == schoolId.toInt() }?.loginRq ?: false
+    }
+
 }
