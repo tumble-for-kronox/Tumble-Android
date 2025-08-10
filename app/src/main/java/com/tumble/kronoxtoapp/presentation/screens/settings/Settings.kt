@@ -122,7 +122,9 @@ fun SettingsScreen(
                     title = stringResource(R.string.share_feedback),
                     leadingIcon = Icons.Default.Email,
                     trailingIcon = Icons.Default.ArrowOutward,
-                    action = { }
+                    action = {
+                        externalNav("mailto:tumbleapps.studios@gmail.com")
+                    }
                 )
                 HorizontalDivider(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
