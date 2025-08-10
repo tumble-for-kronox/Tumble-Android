@@ -123,7 +123,7 @@ fun SettingsScreen(
                     leadingIcon = Icons.Default.Email,
                     trailingIcon = Icons.Default.ArrowOutward,
                     action = {
-                        externalNav("mailto:tumbleapps.studios@gmail.com")
+                        externalNav("mailto:support@tumbleforkronox.com")
                     }
                 )
                 HorizontalDivider(
