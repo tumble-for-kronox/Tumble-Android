@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -20,12 +22,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.domain.enums.SearchStatus
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.viewmodels.SearchViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.viewmodels.SearchState
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -35,6 +37,7 @@ fun Search(
     setTopNavState: (AppBarState) -> Unit
 ) {
     val pageTitle = stringResource(R.string.search)
+    val state by viewModel.state.collectAsState()
 
     fun searchBoxNotEmpty(): Boolean{
         return viewModel.searchBarText.value.trim().isNotEmpty()
@@ -70,29 +73,27 @@ fun Search(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally) {
 
-        when(viewModel.status){
-            SearchStatus.INITIAL -> { SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)
+        when (state) {
+            is SearchState.Initial -> {
+                SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)
             }
-            SearchStatus.LOADING -> { CustomProgressIndicator(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), color = MaterialTheme.colorScheme.primary) }
-            SearchStatus.LOADED -> {
+            is SearchState.Loading -> { CustomProgressIndicator(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), color = MaterialTheme.colorScheme.primary) }
+            is SearchState.Error -> { Box(modifier = Modifier.weight(1f)) {
+                Info(title = stringResource(id = R.string.error_something_wrong), image = null)
+            } }
+            is SearchState.Empty -> { Box(modifier = Modifier.weight(1f)) {
+                Info(title = stringResource(id = R.string.error_empty_schedule), image = null)
+            } }
+            is SearchState.Loaded -> {
+                val results = (state as SearchState.Loaded).results
                 Box(modifier = Modifier.weight(1f)) {
                     SearchResults(
                         searchText = viewModel.searchBarText.value,
-                        numberOfSearchResults = viewModel.programmeSearchResults.count(),
-                        searchResults = viewModel.programmeSearchResults,
+                        numberOfSearchResults = results.count(),
+                        searchResults = results,
                         onOpenProgramme = openProgramme,
                         universityImage = viewModel.universityImage
                     )
-                }
-            }
-            SearchStatus.ERROR -> {
-                Box(modifier = Modifier.weight(1f)) {
-                    Info(title = stringResource(id = R.string.error_something_wrong), image = null)
-                }
-            }
-            SearchStatus.EMPTY -> {
-                Box(modifier = Modifier.weight(1f)) {
-                    Info(title = stringResource(id = R.string.error_empty_schedule), image = null)
                 }
             }
         }

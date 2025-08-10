@@ -1,7 +1,6 @@
 package com.tumble.kronoxtoapp.presentation.viewmodels
 
 import android.icu.util.Calendar
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -14,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.services.DataStoreService
 import com.tumble.kronoxtoapp.services.RealmService
-import com.tumble.kronoxtoapp.domain.enums.BookmarksStatus
 import com.tumble.kronoxtoapp.domain.enums.ViewType
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Day

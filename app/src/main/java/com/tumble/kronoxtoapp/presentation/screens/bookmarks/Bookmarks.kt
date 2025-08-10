@@ -1,11 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks
 
-import android.util.Log
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,11 +13,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.domain.enums.BookmarksStatus
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel

@@ -13,25 +13,33 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.services.kronox.Endpoint
 import com.tumble.kronoxtoapp.services.kronox.url
-import com.tumble.kronoxtoapp.services.DataStoreService
 import com.tumble.kronoxtoapp.services.SchoolService
 import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.services.kronox.KronoxService
-import com.tumble.kronoxtoapp.domain.enums.SearchStatus
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.presentation.School
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
+
+sealed class SearchState {
+    data object Initial : SearchState()
+    data object Loading : SearchState()
+    data class Loaded(val results: List<NetworkResponse.Programme>) : SearchState()
+    data class Error(val errorMessage: String) : SearchState()
+    data object Empty : SearchState()
+}
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val kronoxManager: KronoxService,
-    private val preferenceService: DataStoreService,
     private val schoolService: SchoolService,
 ): ViewModel() {
-    var status by mutableStateOf<SearchStatus>(SearchStatus.INITIAL)
-    var programmeSearchResults by mutableStateOf<List<NetworkResponse.Programme>>(emptyList())
-    var errorMessageSearch by mutableStateOf<String?>(null)
-    //var searchPreviewModel by mutableStateOf<SearchPreviewModel?>(null)
+
+    private val _state = MutableStateFlow<SearchState>(SearchState.Initial)
+    val state: StateFlow<SearchState> = _state.asStateFlow()
+
     var schoolNotSelected = mutableStateOf(true)
     var selectedSchool = mutableStateOf<School?>(null)
     var universityImage by mutableStateOf<Int?>(null)
@@ -43,7 +51,7 @@ class SearchViewModel @Inject constructor(
     val schools: List<School> by lazy { schoolService.getSchools() }
 
     fun search(query: MutableState<String>, selectedSchoolId: Int){
-        status = SearchStatus.LOADING
+        _state.value = SearchState.Loading
         currentSearchJob?.cancel()
         currentSearchJob = viewModelScope.launch {
 
@@ -53,9 +61,9 @@ class SearchViewModel @Inject constructor(
                 val searchResult: ApiResponse<NetworkResponse.Search> = kronoxManager.getProgramme(endpoint)
                 parseSearchResults(searchResult)
             } catch (e: Exception){
-                status = SearchStatus.ERROR
+                _state.value = SearchState.Error(errorMessage = e.localizedMessage ?: "An unknown error occured")
                 if (e is CancellationException){
-                    Log.e("error", errorMessageSearch.toString())
+                    Log.e("error", e.localizedMessage ?: "Unknown error")
                     return@launch
                 }
             }
@@ -63,22 +71,22 @@ class SearchViewModel @Inject constructor(
     }
 
      fun resetSearchResults(){
-        programmeSearchResults = listOf()
         currentSearchJob?.cancel()
-        status = SearchStatus.INITIAL
+        _state.value = SearchState.Initial
     }
 
     private fun parseSearchResults(result: ApiResponse<NetworkResponse.Search>){
         when(result){
             is ApiResponse.Success -> {
-                programmeSearchResults = result.data.items
-                status = SearchStatus.LOADED
+                val results = result.data.items
+                if (result.data.items.isEmpty()) {
+                    _state.value = SearchState.Empty
+                }
+                _state.value = SearchState.Loaded(results = results)
             }
             is ApiResponse.Error -> {
-                status = SearchStatus.ERROR
-            }
-            else -> {
-                status = SearchStatus.LOADING
+                val errorMessage = (result).errorMessage
+                _state.value = SearchState.Error(errorMessage)
             }
         }
     }
