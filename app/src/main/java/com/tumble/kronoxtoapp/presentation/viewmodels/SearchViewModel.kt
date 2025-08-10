@@ -81,6 +81,7 @@ class SearchViewModel @Inject constructor(
                 val results = result.data.items
                 if (result.data.items.isEmpty()) {
                     _state.value = SearchState.Empty
+                    return
                 }
                 _state.value = SearchState.Loaded(results = results)
             }
