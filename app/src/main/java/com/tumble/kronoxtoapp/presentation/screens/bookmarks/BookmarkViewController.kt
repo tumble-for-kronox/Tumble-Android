@@ -1,8 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -20,14 +17,18 @@ import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.calendar.BookmarkCalendarView
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.list.BookmarkListView
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.week.BookmarkWeekView
-
-@OptIn(ExperimentalFoundationApi::class)
+import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarkData
+import java.time.LocalDate
 
 @Composable
 fun BookmarkViewController(
-    viewModel: BookmarksViewModel = hiltViewModel(),
+    bookmarkData: BookmarkData,
+    updateSelectedDate: (LocalDate) -> Unit,
+    todaysDate: LocalDate,
+    selectedDate: LocalDate,
     viewType: State<ViewType>,
-    onEventSelection: (Event) -> Unit
+    setViewType: (ViewType) -> Unit,
+    onEventSelection: (Event) -> Unit,
 ){
     val pagerState = rememberPagerState(
         initialPage = viewType.value.ordinal,
@@ -44,16 +45,25 @@ fun BookmarkViewController(
             when ( page) {
                 ViewType.LIST.ordinal -> {
                     BookmarkListView(
-                        onEventSelection = onEventSelection
+                        onEventSelection = onEventSelection,
+                        days = bookmarkData.days
                     )
                 }
                 ViewType.WEEK.ordinal -> {
                     BookmarkWeekView(
                         onEventSelection = onEventSelection,
+                        weekStartDates = bookmarkData.weekStartDates,
+                        weeks = bookmarkData.weeks,
                     )
                 }
                 ViewType.CALENDAR.ordinal -> {
-                    BookmarkCalendarView(onEventSelection = onEventSelection,)
+                    BookmarkCalendarView(
+                        onEventSelection = onEventSelection,
+                        calendarEventsByDate = bookmarkData.calendarEventsByDate,
+                        updateSelectedDate = updateSelectedDate,
+                        todaysDate = todaysDate,
+                        selectedDate = selectedDate,
+                    )
                 }
             }
         }
@@ -66,6 +76,6 @@ fun BookmarkViewController(
     }
 
     LaunchedEffect(key1 = pagerState.currentPage){
-        viewModel.setViewType(ViewType.entries[pagerState.currentPage])
+        setViewType(ViewType.entries[pagerState.currentPage])
     }
 }

@@ -27,25 +27,26 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerInputScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumble.kronoxtoapp.domain.models.realm.Day
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import java.util.Date
 import kotlin.math.abs
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalCoroutinesApi::class)
 @Composable
 fun BookmarkWeekView(
-    viewModel: BookmarksViewModel = hiltViewModel(),
     onEventSelection: (Event) -> Unit,
+    weekStartDates: List<Date>,
+    weeks: Map<Int, List<Day>>
 ) {
 
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f,
-        pageCount = { viewModel.bookmarkData.weekStartDates.size }
+        pageCount = { weekStartDates.size }
     )
 
     val indicatorScrollState = rememberLazyListState()
@@ -95,7 +96,9 @@ fun BookmarkWeekView(
                     if (showContend) {
                         WeekPage(
                             page = page,
-                            onEventSelection = onEventSelection
+                            onEventSelection = onEventSelection,
+                            weekStartDates = weekStartDates,
+                            weeks = weeks
                         )
                     } else {
                         CustomProgressIndicator()
@@ -119,14 +122,13 @@ fun BookmarkWeekView(
         if (currentPageIndication > lastVisibleIndex - 2) {
             indicatorScrollState.animateScrollToItem(currentPageIndication - size + 3)
         } else if (currentPageIndication <= firstVisibleIndex + 2) {
-            indicatorScrollState.animateScrollToItem(Math.max(currentPageIndication - 2, 0))
+            indicatorScrollState.animateScrollToItem((currentPageIndication - 2).coerceAtLeast(0))
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 suspend fun handleLeftSwipeOnFirstPage(pointerInputScope: PointerInputScope, pagerState: PagerState, updateUserScroll: (Boolean) -> Unit){
-    pointerInputScope.let {
+    pointerInputScope.let { it ->
         it.awaitEachGesture {
             awaitFirstDown(pass = PointerEventPass.Initial)
             do {

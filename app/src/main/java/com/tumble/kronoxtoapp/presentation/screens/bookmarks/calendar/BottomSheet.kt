@@ -21,15 +21,18 @@ import com.tumble.kronoxtoapp.presentation.components.buttons.CompactEventButton
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
+import java.time.LocalDate
+import java.util.Date
 
 
 @Composable
 fun BottomSheet(
-    viewModel: BookmarksViewModel = hiltViewModel(),
     onEventSelection: (Event) -> Unit,
+    selectedDate: LocalDate,
+    calendarEventsByDate: Map<LocalDate, List<Event>>
 ) {
-    viewModel.selectedDate?.let {
-        val events = viewModel.bookmarkData.calendarEventsByDate.getOrDefault(it, emptyList())
+    selectedDate.let {
+        val events = calendarEventsByDate.getOrDefault(it, emptyList())
         if (events.isEmpty()) {
             Row(
                 modifier = Modifier.fillMaxSize().padding(top = 20.dp),

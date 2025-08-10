@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,6 +30,7 @@ import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksState
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -43,7 +45,7 @@ fun Bookmarks(
         navController.navigate(UriBuilder.buildBookmarksDetailsUri(eventId = event.eventId).toUri())
     }
 
-    val bookmarksStatus = viewModel.status
+    val state by viewModel.state.collectAsState()
     val viewType = viewModel.defaultViewType.collectAsState()
 
     LaunchedEffect(key1 = viewModel.eventSheet) {
@@ -54,38 +56,51 @@ fun Bookmarks(
         )
     }
 
-    Log.d("Bookmarks", "Showing Bookmarks")
-
     Column (
         modifier = Modifier
             .fillMaxSize()
     ) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start) {
-            when (bookmarksStatus) {
-                BookmarksStatus.LOADING -> CustomProgressIndicator()
-                BookmarksStatus.LOADED -> {
-                    BookmarkViewController(viewType = viewType, onEventSelection = onEventSelection)
+            when (state) {
+                is BookmarksState.Loading ->  { CustomProgressIndicator() }
+                is BookmarksState.Uninitialized -> {
+                    Info(
+                        title = stringResource(id = R.string.no_bookmarks),
+                        image = null
+                    )
+                }
+                is BookmarksState.AllHidden -> {
+                    Info(
+                        title = stringResource(id = R.string.bookmarks_hidden),
+                        image = null
+                    )
+                }
+                is BookmarksState.Loaded -> {
+                    val bookmarkData = (state as BookmarksState.Loaded).bookmarkData
+                    BookmarkViewController(
+                        bookmarkData = bookmarkData,
+                        viewType = viewType,
+                        onEventSelection = onEventSelection,
+                        setViewType = viewModel::setViewType,
+                        updateSelectedDate = viewModel::updateSelectedDate,
+                        todaysDate = viewModel.todaysDate,
+                        selectedDate = viewModel.selectedDate
+                    )
                 }
 
-                BookmarksStatus.UNINITIALIZED -> Info(
-                    title = stringResource(id = R.string.no_bookmarks),
-                    image = null
-                )
+                is BookmarksState.Error -> {
+                    Info(
+                        title = stringResource(id = R.string.error_something_wrong),
+                        image = null
+                    )
+                }
 
-                BookmarksStatus.HIDDEN_ALL -> Info(
-                    title = stringResource(id = R.string.bookmarks_hidden),
-                    image = null
-                )
-
-                BookmarksStatus.ERROR -> Info(
-                    title = stringResource(id = R.string.error_something_wrong),
-                    image = null
-                )
-
-                BookmarksStatus.EMPTY -> Info(
-                    title = stringResource(id = R.string.schedules_contain_no_events),
-                    image = null
-                )
+                is BookmarksState.AllEmpty -> {
+                    Info(
+                        title = stringResource(id = R.string.schedules_contain_no_events),
+                        image = null
+                    )
+                }
             }
         }
         Spacer(Modifier.weight(1f))

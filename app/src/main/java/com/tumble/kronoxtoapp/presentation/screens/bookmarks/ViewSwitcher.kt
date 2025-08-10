@@ -1,9 +1,9 @@
 package com.tumble.kronoxtoapp.presentation.screens.bookmarks
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -24,17 +24,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.domain.enums.ViewType
 import com.tumble.kronoxtoapp.domain.enums.viewTypeToStringResource
 import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
-import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@SuppressLint("UseOfNonLambdaOffsetOverload")
 @Composable
 fun ViewSwitcher(
-    viewmodel: BookmarksViewModel = hiltViewModel(),
     pagerState: PagerState,
     viewType: State<ViewType>
 ) {
@@ -42,7 +39,7 @@ fun ViewSwitcher(
     val selectedIndex = viewType.value.ordinal
     val switcherSize = 280
     val padding = 3
-    val pillSize = (switcherSize - padding * (ViewType.values().size + 1)) / ViewType.values().size
+    val pillSize = (switcherSize - padding * (ViewType.entries.size + 1)) / ViewType.entries.size
 
     val pillOffset = animateDpAsState(
         targetValue = ((selectedIndex - 1) * pillSize + (selectedIndex - 1) * padding).dp,
@@ -66,7 +63,7 @@ fun ViewSwitcher(
                 .background(color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(30.dp))
         )
         Row {
-            ViewType.values().forEach { type ->
+            ViewType.entries.forEach { type ->
                 val isSelected = viewType.value == type
                 val buttonColor by animateColorAsState(
                     targetValue = if (isSelected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface,

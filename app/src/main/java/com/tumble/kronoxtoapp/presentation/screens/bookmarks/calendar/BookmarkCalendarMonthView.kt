@@ -8,30 +8,33 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import java.time.LocalDate
 
 
 @Composable
 fun BookmarkCalendarMonthView(
-    viewModel: BookmarksViewModel = hiltViewModel(),
-    page: Int,
-    ){
+    updateSelectedDate: (LocalDate) -> Unit,
+    calendarEventsByDate: Map<LocalDate, List<Event>>,
+    todaysDate: LocalDate,
+    selectedDate: LocalDate,
+    page: Int
+){
 
     val date = LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1)
 
     val localDate = date.plusMonths(page.toLong())
 
-    val inMonth = { int: Int -> if (int == localDate.month.value) 1f else 0.5f}
-    val onClick =  {localDat: LocalDate -> viewModel.updateSelectedDate(localDat)}
-    val getBackgroundColor = @Composable { passedLocalDate: LocalDate -> getBackgroundColor(todaysDate = viewModel.todaysDate, selectedDate = viewModel.selectedDate, date = passedLocalDate)}
-    val getOnBackgroundColor = @Composable { passedLocalDate: LocalDate -> getOnBackgroundColor(todaysDate = viewModel.todaysDate, selectedDate = viewModel.selectedDate, date = passedLocalDate)}
+    val onClick =  {localDat: LocalDate -> updateSelectedDate(localDat)}
+    val getBackgroundColor = @Composable { passedLocalDate: LocalDate -> getBackgroundColor(todaysDate = todaysDate, selectedDate = selectedDate, date = passedLocalDate)}
+    val getOnBackgroundColor = @Composable { passedLocalDate: LocalDate -> getOnBackgroundColor(todaysDate = todaysDate, selectedDate = selectedDate, date = passedLocalDate)}
     var currentDate = localDate.minusDays((localDate.dayOfWeek.value-1).toLong())
 
     Column {
         repeat(6) {
             currentDate = dateRow(
-                inMonth = inMonth,
+                calendarEventsByDate = calendarEventsByDate,
                 localDate = currentDate,
                 getBackgroundColor = getBackgroundColor,
                 getOnBackgroundColor = getOnBackgroundColor,

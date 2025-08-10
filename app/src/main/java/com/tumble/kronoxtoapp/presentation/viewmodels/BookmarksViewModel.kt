@@ -1,12 +1,10 @@
 package com.tumble.kronoxtoapp.presentation.viewmodels
 
 import android.icu.util.Calendar
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +27,7 @@ import com.tumble.kronoxtoapp.other.extensions.models.groupByWeek
 import com.tumble.kronoxtoapp.other.extensions.models.isMissingEvents
 import com.tumble.kronoxtoapp.other.extensions.models.ordered
 import com.tumble.kronoxtoapp.utils.preprocessDateString
+import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject
@@ -40,19 +39,26 @@ data class BookmarkData(
     val weekStartDates: List<Date>
 )
 
+sealed class BookmarksState {
+    data object Loading : BookmarksState()
+    data class Loaded(val bookmarkData: BookmarkData) : BookmarksState()
+    data object Uninitialized : BookmarksState()
+    data object AllHidden : BookmarksState()
+    data object AllEmpty : BookmarksState()
+    data class Error(val message: String) : BookmarksState()
+}
+
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(
     private val realmService: RealmService,
     private val dataStoreService: DataStoreService,
 ): ViewModel(){
 
+    private val _state = MutableStateFlow<BookmarksState>(BookmarksState.Loading)
+    val state: StateFlow<BookmarksState> = _state.asStateFlow()
+    val defaultViewType = dataStoreService.viewType
+
     private val _cancellables = mutableListOf<Job>()
-
-    var status by mutableStateOf<BookmarksStatus>(BookmarksStatus.LOADING)
-    var bookmarkData by mutableStateOf(BookmarkData(listOf(), mutableMapOf(), mapOf(), listOf()))
-
-    private val _defaultViewType = MutableStateFlow(ViewType.LIST)
-    val defaultViewType: StateFlow<ViewType> = _defaultViewType
 
     var selectedDate by mutableStateOf<LocalDate>(LocalDate.now())
     var todaysDate by mutableStateOf<LocalDate>(LocalDate.now())
@@ -67,14 +73,8 @@ class BookmarksViewModel @Inject constructor(
         val job = viewModelScope.launch {
             setupRealmListener()
         }
-        val job2 = viewModelScope.launch {
-            dataStoreService.viewType.collect { viewType ->
-                _defaultViewType.value = viewType
-            }
-        }
 
         _cancellables.add(job)
-        _cancellables.add(job2)
     }
 
     private suspend fun setupRealmListener(){
@@ -86,32 +86,33 @@ class BookmarksViewModel @Inject constructor(
 
     private fun createDaysAndCalenderEvents(schedules: List<Schedule>){
 
-        status = BookmarksStatus.LOADING
+        _state.value = BookmarksState.Loading
         val hiddenScheduleIds = extractHiddenScheduleIds(schedules)
         val visibleSchedules = extractVisibleSchedules(schedules)
 
         if (schedules.isEmpty()){
-            status = BookmarksStatus.UNINITIALIZED
+            _state.value = BookmarksState.Uninitialized
             return
         }
 
         if (areAllSchedulesHidden(schedules)){
-            status = BookmarksStatus.HIDDEN_ALL
+            _state.value = BookmarksState.AllHidden
             return
         }
 
         if (areVisibleSchedulesEmpty(visibleSchedules)){
-            status = BookmarksStatus.EMPTY
+            _state.value = BookmarksState.AllEmpty
             return
         }
 
         val days = processSchedules(schedules, hiddenScheduleIds)
         val calendarEvents = makeCalendarEvents(days)
-        updateView(days, calendarEvents)
+        val bookmarkData = makeBookmarkData(days, calendarEvents)
+        _state.value = BookmarksState.Loaded(bookmarkData = bookmarkData)
+
     }
 
     fun setViewType(viewType: ViewType){
-        _defaultViewType.value = viewType
         viewModelScope.launch {
             dataStoreService.setBookmarksViewType(viewType)
         }
@@ -163,14 +164,13 @@ class BookmarksViewModel @Inject constructor(
         return dict.toMap()
     }
 
-    private fun updateView(days: List<Day>, calendarEvents: Map<LocalDate, List<Event>>) {
-        bookmarkData = BookmarkData(
+    private fun makeBookmarkData(days: List<Day>, calendarEvents: Map<LocalDate, List<Event>>): BookmarkData {
+        return BookmarkData(
             days = days,
             calendarEventsByDate = calendarEvents,
             weeks = days.groupByWeek(),
             weekStartDates = weekStartDates()
         )
-        status = BookmarksStatus.LOADED
     }
 
     fun updateSelectedDate(clickedDate: LocalDate){

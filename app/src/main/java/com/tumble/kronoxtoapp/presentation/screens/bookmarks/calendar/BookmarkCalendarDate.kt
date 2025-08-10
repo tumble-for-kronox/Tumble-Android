@@ -18,14 +18,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
+import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarkData
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import java.time.LocalDate
 
 @Composable
 fun CalendarDate (
-    inMonth: (Int) -> Float,
     localDate: LocalDate,
     getBackgroundColor: @Composable (LocalDate) -> Color,
     getOnBackgroundColor: @Composable (LocalDate) -> Color,
@@ -61,7 +62,7 @@ fun Background(
 
 @Composable
 fun EventIndicator(
-    viewModel: BookmarksViewModel = hiltViewModel(),
+    calendarEventsByDate: Map<LocalDate, List<Event>>,
     localDate: LocalDate
 ){
     Row(
@@ -72,7 +73,7 @@ fun EventIndicator(
             .height(6.dp)
     ) {
 
-        val events = viewModel.bookmarkData.calendarEventsByDate.getOrDefault(localDate, emptyList())
+        val events = calendarEventsByDate.getOrDefault(localDate, emptyList())
         if (events.isNotEmpty()) {
             events.forEach {
                 Box(

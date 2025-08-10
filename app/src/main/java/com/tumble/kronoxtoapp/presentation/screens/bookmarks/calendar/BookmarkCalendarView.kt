@@ -33,12 +33,17 @@ import kotlinx.coroutines.cancel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.utils.month_date
+import java.time.LocalDate
 import kotlin.math.abs
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun BookmarkCalendarView(
-    onEventSelection: (Event) -> Unit
+    onEventSelection: (Event) -> Unit,
+    calendarEventsByDate: Map<LocalDate, List<Event>>,
+    updateSelectedDate: (LocalDate) -> Unit,
+    todaysDate: LocalDate,
+    selectedDate: LocalDate
 ){
     val monthTitlePagerState = rememberPagerState(
         initialPage = 0,
@@ -94,6 +99,10 @@ fun BookmarkCalendarView(
                 if (showContent) {
                     BookmarkCalendarMonthView(
                         page = page,
+                        updateSelectedDate = updateSelectedDate,
+                        calendarEventsByDate = calendarEventsByDate,
+                        todaysDate = todaysDate,
+                        selectedDate = selectedDate,
                     )
                 } else {
                     Box(modifier = Modifier.padding(top = 10.dp)) {
@@ -103,7 +112,11 @@ fun BookmarkCalendarView(
             }
         }
         item{
-            BottomSheet(onEventSelection = onEventSelection,)
+            BottomSheet(
+                onEventSelection = onEventSelection,
+                selectedDate = selectedDate,
+                calendarEventsByDate = calendarEventsByDate,
+            )
         }
         item{
             Spacer(modifier = Modifier.height(68.dp))

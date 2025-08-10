@@ -13,29 +13,21 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.other.extensions.models.sorted
-import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BookmarkListView(
-    viewModel: BookmarksViewModel = hiltViewModel(),
-    onEventSelection: (Event) -> Unit = { Event -> }
+    days: List<Day>,
+    onEventSelection: (Event) -> Unit
 ){
-    val days by remember {
-       mutableStateOf(viewModel.bookmarkData.days)
-    }
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 

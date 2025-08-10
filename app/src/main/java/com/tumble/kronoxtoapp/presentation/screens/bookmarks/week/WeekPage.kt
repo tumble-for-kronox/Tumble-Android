@@ -29,25 +29,28 @@ import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import java.util.Calendar
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.domain.models.realm.Day
+import java.util.Date
 
 @Composable
 fun WeekPage(
-    viewModel: BookmarksViewModel = hiltViewModel(),
     page: Int,
+    weekStartDates: List<Date>,
+    weeks: Map<Int, List<Day>>,
     onEventSelection: (Event) -> Unit
 ){
 
     val weekStart by remember {
-        mutableStateOf(viewModel.bookmarkData.weekStartDates[page])
+        mutableStateOf(weekStartDates[page])
     }
-    val weekDays = viewModel.bookmarkData.weeks
-    .getOrDefault(
-        Calendar
-            .getInstance()
-            .apply { time = weekStart }
-            .get(Calendar.WEEK_OF_YEAR),
-        listOf()
-    )
+    val weekDays = weeks
+        .getOrDefault(
+            Calendar
+                .getInstance()
+                .apply { time = weekStart }
+                .get(Calendar.WEEK_OF_YEAR),
+            listOf()
+        )
     val weekOfYear = Calendar.getInstance().apply { time = weekStart }.get(Calendar.WEEK_OF_YEAR)
 
     Column(modifier = Modifier
