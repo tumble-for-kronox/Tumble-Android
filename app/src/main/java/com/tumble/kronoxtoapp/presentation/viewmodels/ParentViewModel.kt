@@ -145,8 +145,6 @@ class ParentViewModel @Inject constructor(
                 is ApiResponse.Error -> {
                     throw Exception("Network error: ${fetchedScheduleResponse.errorMessage}")
                 }
-
-                else -> {}
             }
         } catch (e: Exception) {
             if (!schedule.isValid()) {
@@ -194,13 +192,9 @@ class ParentViewModel @Inject constructor(
                 is ApiResponse.Error -> {
                     return ""
                 }
-
-                else -> {
-                    return ""
-                }
             }
         } catch (e: Exception) {
-            Log.e("getScheduleTitle", "Failed to get schedule title: ${e.localizedMessage}")
+            Log.e("ParentViewModel", "Failed to get schedule title: ${e.localizedMessage}")
             return ""
         }
     }
@@ -208,7 +202,7 @@ class ParentViewModel @Inject constructor(
     private fun updateShouldOccur(): Boolean {
         val lastUpdated = dataStoreService.lastUpdated.value
         val isoLastUpdated = parseIsoToInstant(lastUpdated)
-        Log.d("updateShouldOccur", "Schedules were last updated at $isoLastUpdated")
+        Log.d("ParentViewModel", "Schedules were last updated at $isoLastUpdated")
         val threeHoursAgo = Instant.now().minusSeconds(3 * 60 * 60)
         return isoLastUpdated.isBefore(threeHoursAgo)
     }

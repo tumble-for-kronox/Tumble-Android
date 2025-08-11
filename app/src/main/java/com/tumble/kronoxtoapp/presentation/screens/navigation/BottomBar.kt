@@ -6,18 +6,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.compose.runtime.MutableState
 
 @Composable
 fun BottomBar(
-    currentNavGraph: MutableState<BottomNavItem>,
+    currentNavGraph: MutableState<Tab>,
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground
     ) {
-        BottomNavItem.entries.forEach { item ->
+        Tab.entries.forEach { item ->
             NavigationBarItem(
                 label = { Text(item.title) },
                 icon = { Icon(item.icon, contentDescription = null) },

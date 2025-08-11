@@ -25,7 +25,7 @@ import com.tumble.kronoxtoapp.presentation.navigation.navgraphs.HomeNavGraph
 import com.tumble.kronoxtoapp.presentation.navigation.navgraphs.SearchNavGraph
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.screens.navigation.BottomBar
-import com.tumble.kronoxtoapp.presentation.screens.navigation.BottomNavItem
+import com.tumble.kronoxtoapp.presentation.screens.navigation.Tab
 import com.tumble.kronoxtoapp.presentation.screens.navigation.TopBar
 import com.tumble.kronoxtoapp.presentation.viewmodels.ParentViewModel
 import com.tumble.kronoxtoapp.theme.TumbleTheme
@@ -42,7 +42,7 @@ fun AppParent() {
     val homeNavController = rememberNavController()
     val searchNavController = rememberNavController()
 
-    val currentTab = remember { mutableStateOf(BottomNavItem.HOME) }
+    val currentTab = remember { mutableStateOf(Tab.Home) }
 
     TumbleTheme(userPreferences = appearance.value) {
         Surface(
@@ -72,16 +72,16 @@ fun AppParent() {
                         .fillMaxSize()
                 ) {
                     when (currentTab.value) {
-                        BottomNavItem.HOME -> HomeNavGraph(homeNavController) { appBarState = it }
-                        BottomNavItem.BOOKMARKS -> BookmarksNavGraph(bookmarksNavController) {
+                        Tab.Home -> HomeNavGraph(homeNavController) { appBarState = it }
+                        Tab.Bookmarks -> BookmarksNavGraph(bookmarksNavController) {
                             appBarState = it
                         }
 
-                        BottomNavItem.SEARCH -> SearchNavGraph(searchNavController) {
+                        Tab.Search -> SearchNavGraph(searchNavController) {
                             appBarState = it
                         }
 
-                        BottomNavItem.ACCOUNT -> AccountNavGraph(accountNavController) {
+                        Tab.Account -> AccountNavGraph(accountNavController) {
                             appBarState = it
                         }
                     }
