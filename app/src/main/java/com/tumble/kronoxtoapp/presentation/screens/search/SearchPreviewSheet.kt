@@ -109,18 +109,18 @@ private fun getBookmarkButtonState(state: SearchPreviewState): ButtonState {
     return when (state) {
         is SearchPreviewState.Loaded -> {
             when (state.bookmarkState) {
-                is BookmarkState.Loading -> ButtonState.LOADING
+                is BookmarkState.Loading -> ButtonState.Loading
                 is BookmarkState.Bookmarked -> {
                     if (state.bookmarkState.isBookmarked) {
-                        ButtonState.SAVED
+                        ButtonState.Saved
                     } else {
-                        ButtonState.NOT_SAVED
+                        ButtonState.NotSaved
                     }
                 }
-                is BookmarkState.Error -> ButtonState.DISABLED
-                is BookmarkState.Idle -> ButtonState.DISABLED
+                is BookmarkState.Error -> ButtonState.Disabled
+                is BookmarkState.Idle -> ButtonState.Disabled
             }
         }
-        else -> ButtonState.DISABLED
+        else -> ButtonState.Disabled
     }
 }

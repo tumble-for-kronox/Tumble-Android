@@ -16,15 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
-import com.tumble.kronoxtoapp.domain.enums.HomeStatus
-import com.tumble.kronoxtoapp.domain.enums.PageState
-import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.presentation.components.buttons.CloseCoverButton
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.viewmodels.HomeViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
@@ -33,6 +28,8 @@ import com.tumble.kronoxtoapp.presentation.screens.home.available.HomeAvailable
 import com.tumble.kronoxtoapp.presentation.screens.home.news.News
 import com.tumble.kronoxtoapp.presentation.screens.home.news.NewsSheet
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.viewmodels.HomeState
+import com.tumble.kronoxtoapp.presentation.viewmodels.NewsState
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -43,11 +40,11 @@ fun HomeScreen(
 ) {
     val pageTitle = stringResource(R.string.home)
 
-    val newsStatus = viewModel.newsSectionStatus
-    val homeStatus = viewModel.status
-    val news = viewModel.news
+    val newsState by viewModel.newsState.collectAsState()
+    val homeState by viewModel.homeState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(viewModel.eventSheet) {
+    LaunchedEffect(Unit) {
         onComposing(AppBarState(title = pageTitle))
     }
 
@@ -55,65 +52,74 @@ fun HomeScreen(
         navController.navigate(UriBuilder.buildHomeEventDetailsUri(event.eventId).toUri())
     }
 
-    val toggleNewsOverlay = { value: Boolean ->
-        viewModel.showNewsSheet = value
-    }
-
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 15.dp, vertical = 15.dp)
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        if (newsStatus == PageState.LOADED) {
-            News(news = news, toggleNewsOverlay = toggleNewsOverlay)
-        }
-
-        Spacer(Modifier.weight(1f))
-
+    Box(modifier = Modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            horizontalAlignment = Alignment.Start
+                .padding(horizontal = 15.dp, vertical = 15.dp)
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
         ) {
-            when (homeStatus) {
-                HomeStatus.AVAILABLE -> HomeAvailable(
-                    eventsForToday = viewModel.todaysEventsCards,
-                    nextClass = viewModel.nextClass,
-                    swipedCards = viewModel.swipedCards,
-                    onEventSelection = onEventSelection
-                )
-                HomeStatus.LOADING -> CustomProgressIndicator()
-                HomeStatus.NO_BOOKMARKS -> HomeNoBookmarks()
-                HomeStatus.NOT_AVAILABLE -> HomeNotAvailable()
-                HomeStatus.ERROR -> Info(
-                    title = stringResource(id = R.string.error_something_wrong),
-                    image = null
-                )
+            when (newsState) {
+                is NewsState.Loaded -> {
+                    News(
+                        news = (newsState as NewsState.Loaded).news,
+                        toggleNewsOverlay = viewModel::toggleNewsSheet
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+                is NewsState.Loading -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    }
+                }
+                is NewsState.Error -> { }
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Center
+            ) {
+                when (homeState) {
+                    is HomeState.BookmarksAvailable -> {
+                        HomeAvailable(
+                            nextClass = (homeState as HomeState.BookmarksAvailable).nextClass,
+                            onEventSelection = onEventSelection
+                        )
+                    }
+                    is HomeState.Loading -> CustomProgressIndicator()
+                    is HomeState.NoBookmarks -> HomeNoBookmarks()
+                    is HomeState.AllBookmarksHidden -> HomeNotAvailable()
+                    is HomeState.Error -> Info(
+                        title = stringResource(id = R.string.error_something_wrong),
+                        image = null
+                    )
+                }
             }
         }
 
-        Spacer(Modifier.weight(1f))
-    }
-
-    // News Sheet with built-in navigation
-    AnimatedVisibility(
-        visible = viewModel.showNewsSheet,
-        enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
-        exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
-    ) {
-        NewsSheet(
-            news = news,
-            setTopNavState = onComposing,
-            onClose = {
-                toggleNewsOverlay(false)
-                onComposing(
-                    AppBarState(
-                        title = pageTitle
-                    )
+        AnimatedVisibility(
+            visible = uiState.showNewsSheet,
+            enter = fadeIn() + slideInVertically(initialOffsetY = { it }),
+            exit = fadeOut() + slideOutVertically(targetOffsetY = { it })
+        ) {
+            if (newsState is NewsState.Loaded) {
+                NewsSheet(
+                    news = (newsState as NewsState.Loaded).news,
+                    setTopNavState = onComposing,
+                    onClose = {
+                        viewModel.toggleNewsSheet(false)
+                        onComposing(AppBarState(title = pageTitle))
+                    }
                 )
             }
-        )
+        }
     }
 }

@@ -23,17 +23,17 @@ fun BookmarkButton(
 ) {
     IconButton(
         onClick = onToggleBookmark,
-        enabled = buttonState != ButtonState.DISABLED && buttonState != ButtonState.LOADING,
+        enabled = buttonState != ButtonState.Disabled && buttonState != ButtonState.Loading,
         modifier = modifier
     ) {
         when (buttonState) {
-            ButtonState.LOADING -> {
+            ButtonState.Loading -> {
                 CustomProgressIndicator(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                     modifier = Modifier.size(20.dp)
                 )
             }
-            ButtonState.DISABLED -> {
+            ButtonState.Disabled -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkAdd,
                     contentDescription = "Bookmark disabled",
@@ -41,7 +41,7 @@ fun BookmarkButton(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            ButtonState.SAVED -> {
+            ButtonState.Saved -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkRemove,
                     contentDescription = "Remove bookmark",
@@ -49,7 +49,7 @@ fun BookmarkButton(
                     modifier = Modifier.size(24.dp)
                 )
             }
-            ButtonState.NOT_SAVED -> {
+            ButtonState.NotSaved -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkAdd,
                     contentDescription = "Add bookmark",

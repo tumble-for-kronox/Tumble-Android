@@ -10,10 +10,8 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.tumble.kronoxtoapp.domain.enums.ViewType
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.calendar.BookmarkCalendarView
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.list.BookmarkListView
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.week.BookmarkWeekView

@@ -13,9 +13,7 @@ import com.tumble.kronoxtoapp.presentation.models.WeekEventCardModel
 
 @Composable
 fun HomeAvailable(
-    eventsForToday: MutableState<List<WeekEventCardModel>>,
     nextClass: Event?,
-    swipedCards: MutableState<Int>,
     onEventSelection: (Event) -> Unit
 ) {
     Column(
@@ -23,10 +21,6 @@ fun HomeAvailable(
             .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
-//        TodaysEvents(
-//            eventsForToday = eventsForToday.value,
-//            swipedCards = swipedCards.value
-//        )
         NextClass(nextClass = nextClass, onEventSelection)
         Spacer(modifier = Modifier.weight(1f))
     }
