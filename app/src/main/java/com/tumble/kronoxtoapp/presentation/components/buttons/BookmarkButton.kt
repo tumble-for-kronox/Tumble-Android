@@ -1,12 +1,12 @@
 package com.tumble.kronoxtoapp.presentation.components.buttons
 
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.BookmarkRemove
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,6 +33,7 @@ fun BookmarkButton(
                     modifier = Modifier.size(20.dp)
                 )
             }
+
             ButtonState.Disabled -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkAdd,
@@ -41,6 +42,7 @@ fun BookmarkButton(
                     modifier = Modifier.size(24.dp)
                 )
             }
+
             ButtonState.Saved -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkRemove,
@@ -49,6 +51,7 @@ fun BookmarkButton(
                     modifier = Modifier.size(24.dp)
                 )
             }
+
             ButtonState.NotSaved -> {
                 Icon(
                     imageVector = Icons.Filled.BookmarkAdd,

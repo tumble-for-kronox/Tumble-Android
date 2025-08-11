@@ -3,13 +3,13 @@ package com.tumble.kronoxtoapp.other.extensions.models
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.availabilities
 
-fun availabilities.timeslotHasAvailable(timeslotId: Int):Boolean {
+fun availabilities.timeslotHasAvailable(timeslotId: Int): Boolean {
 
     val availabilities = this ?: return false
-    for ((_, availabilityValues) in availabilities){
+    for ((_, availabilityValues) in availabilities) {
         val availability = availabilityValues[timeslotId]?.availability
 
-        if (availability == NetworkResponse.AvailabilityEnum.AVAILABLE){
+        if (availability == NetworkResponse.AvailabilityEnum.AVAILABLE) {
             return true
         }
     }
@@ -17,9 +17,9 @@ fun availabilities.timeslotHasAvailable(timeslotId: Int):Boolean {
 }
 
 fun availabilities.getFirstTimeSlotWithAvailability(numOfTimeSlots: Int): Int {
-    for(i in 0..numOfTimeSlots){
-        for(j in this!!.values){
-            if(j[i]!!.availability == NetworkResponse.AvailabilityEnum.AVAILABLE){
+    for (i in 0..numOfTimeSlots) {
+        for (j in this!!.values) {
+            if (j[i]!!.availability == NetworkResponse.AvailabilityEnum.AVAILABLE) {
                 return i
             }
         }
@@ -27,13 +27,13 @@ fun availabilities.getFirstTimeSlotWithAvailability(numOfTimeSlots: Int): Int {
     return 1
 }
 
-fun availabilities.getAvailabilityValues(timeslotId: Int): List<NetworkResponse.AvailabilityValue>{
+fun availabilities.getAvailabilityValues(timeslotId: Int): List<NetworkResponse.AvailabilityValue> {
 
-    val availabilities = this?: return emptyList()
+    val availabilities = this ?: return emptyList()
     val availabilityValueResult = mutableListOf<NetworkResponse.AvailabilityValue>()
-    for (availabilityValues in availabilities.values){
+    for (availabilityValues in availabilities.values) {
         val availabilityValue = availabilityValues[timeslotId]
-        if(availabilityValue?.availability == NetworkResponse.AvailabilityEnum.AVAILABLE){
+        if (availabilityValue?.availability == NetworkResponse.AvailabilityEnum.AVAILABLE) {
             availabilityValueResult.add(availabilityValue)
         }
     }

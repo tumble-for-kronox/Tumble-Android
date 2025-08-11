@@ -12,20 +12,22 @@ import io.realm.kotlin.ext.toRealmList
 
 
 fun NetworkResponse.Schedule.assignCourseRandomColors(): MutableMap<String, String> {
-    val colors = mutableListOf("#f44336","#e91e63","#9c27b0","#673ab7",
-        "#3f51b5","#2196f3","#03a9f4","#00bcd4",
-        "#009688","#4caf50","#8bc34a","#cddc39",
-        "#ffeb3b","#ffc107","#ff9800","#ff5722",
-        "#795548","#9e9e9e","#607d8b","#333333")
+    val colors = mutableListOf(
+        "#f44336", "#e91e63", "#9c27b0", "#673ab7",
+        "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4",
+        "#009688", "#4caf50", "#8bc34a", "#cddc39",
+        "#ffeb3b", "#ffc107", "#ff9800", "#ff5722",
+        "#795548", "#9e9e9e", "#607d8b", "#333333"
+    )
     colors.shuffle()
     val courseColors: MutableMap<String, String> = mutableMapOf()
 
-    for (day in days){
-        for (event in day.events){
+    for (day in days) {
+        for (event in day.events) {
             val courseId = event.course.id
-            if(!courseColors.containsKey(courseId)){
+            if (!courseColors.containsKey(courseId)) {
                 val color = colors.firstOrNull()
-                if (color != null){
+                if (color != null) {
                     courseColors[courseId] = color
                     colors.remove(color)
                 }
@@ -47,22 +49,22 @@ fun NetworkResponse.Schedule.toRealmSchedule(
 ): Schedule {
     val realmDays: MutableList<Day> = mutableListOf()
     val visitedColors = existingCourseColors.toMutableMap()
-    for(responseDay in days){
+    for (responseDay in days) {
         val realmEvents: MutableList<Event> = mutableListOf()
 
-        for (responseEvent in responseDay.events){
+        for (responseEvent in responseDay.events) {
             val courseId = responseEvent.course.id
-            if(!visitedColors.containsKey(courseId)){
+            if (!visitedColors.containsKey(courseId)) {
                 visitedColors[courseId] = "#000000"
             }
             val course = Course()
             course.courseId = responseEvent.course.id
             course.swedishName = responseEvent.course.swedishName
             course.englishName = responseEvent.course.englishName
-            course.color = visitedColors[courseId]?: "#FFFFFF"
+            course.color = visitedColors[courseId] ?: "#FFFFFF"
             val locations: MutableList<Location> = mutableListOf()
 
-            for (responseLocation in responseEvent.locations){
+            for (responseLocation in responseEvent.locations) {
                 val location = Location()
                 location.locationId = responseLocation.id
                 location.name = responseLocation.name
@@ -73,7 +75,7 @@ fun NetworkResponse.Schedule.toRealmSchedule(
             }
 
             val teachers: MutableList<Teacher> = mutableListOf()
-            for (responseTeacher in responseEvent.teachers){
+            for (responseTeacher in responseEvent.teachers) {
                 val teacher = Teacher()
                 teacher.teacherId = responseTeacher.id
                 teacher.firstName = responseTeacher.firstName
@@ -83,7 +85,8 @@ fun NetworkResponse.Schedule.toRealmSchedule(
 
             val event = Event()
             event.eventId = responseEvent.id
-            event.title = HtmlCompat.fromHtml(responseEvent.title, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+            event.title = HtmlCompat.fromHtml(responseEvent.title, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                .toString()
             event.course = course
             event.from = responseEvent.from
             event.to = responseEvent.to

@@ -44,7 +44,7 @@ fun BookmarkCalendarView(
     updateSelectedDate: (LocalDate) -> Unit,
     todaysDate: LocalDate,
     selectedDate: LocalDate
-){
+) {
     val monthTitlePagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f,
@@ -111,14 +111,14 @@ fun BookmarkCalendarView(
                 }
             }
         }
-        item{
+        item {
             BottomSheet(
                 onEventSelection = onEventSelection,
                 selectedDate = selectedDate,
                 calendarEventsByDate = calendarEventsByDate,
             )
         }
-        item{
+        item {
             Spacer(modifier = Modifier.height(68.dp))
         }
     }
@@ -144,8 +144,8 @@ fun BookmarkCalendarView(
 
 @Composable
 fun MonthName(
-    page:Int,
-){
+    page: Int,
+) {
     val calendar = Calendar.getInstance()
     calendar.add(Calendar.MONTH, page)
     Text(
@@ -157,7 +157,7 @@ fun MonthName(
 }
 
 @Composable
-fun DaysOfTheWeek(){
+fun DaysOfTheWeek() {
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
@@ -165,9 +165,10 @@ fun DaysOfTheWeek(){
             .padding(bottom = 8.dp)
     ) {
         DaysOfWeek.entries.forEach {
-            Box(contentAlignment = Alignment.Center,
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier.size(40.dp)
-            ){
+            ) {
                 Text(
                     text = it.name,
                     color = MaterialTheme.colorScheme.onBackground,
@@ -178,6 +179,6 @@ fun DaysOfTheWeek(){
     }
 }
 
-enum class DaysOfWeek(){
-    Mon,Tur,Wed,Thu,Fri,Sat,Sun
+enum class DaysOfWeek() {
+    Mon, Tur, Wed, Thu, Fri, Sat, Sun
 }

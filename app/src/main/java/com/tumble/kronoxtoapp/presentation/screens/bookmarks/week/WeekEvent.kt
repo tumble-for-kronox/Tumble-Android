@@ -12,11 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,12 +33,12 @@ import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 @Composable
 fun WeekEvent(
     event: Event,
-){
+) {
     val from = event.from.convertToHoursAndMinutesISOString()
     val to = event.to.convertToHoursAndMinutesISOString()
     val color = event.course?.color?.toColor()
 
-    if (from != null && to != null && color != null){
+    if (from != null && to != null && color != null) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier

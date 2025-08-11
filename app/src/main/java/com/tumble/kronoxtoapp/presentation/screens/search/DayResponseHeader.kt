@@ -19,26 +19,33 @@ import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 
 @Composable
-fun DayResponseHeader(day: NetworkResponse.Day){
-    Row (modifier = Modifier
-        .fillMaxWidth(),
+fun DayResponseHeader(day: NetworkResponse.Day) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
-    ){
-        Text(text = day.name,
+    ) {
+        Text(
+            text = day.name,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Text(text = day.date,
+        Text(
+            text = day.date,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Box(modifier = Modifier
-            .background(MaterialTheme.colorScheme.onBackground, shape = RoundedCornerShape(20.dp))
-            .height(1.dp)
-            .weight(1f)
+        Box(
+            modifier = Modifier
+                .background(
+                    MaterialTheme.colorScheme.onBackground,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .height(1.dp)
+                .weight(1f)
         )
     }
 }

@@ -101,9 +101,11 @@ private fun AnimatedBookingButton(
         BookingButtonState.AVAILABLE -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary
         )
+
         BookingButtonState.LOADING -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         )
+
         BookingButtonState.BOOKED -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant,
             contentColor = MaterialTheme.colorScheme.onSurfaceVariant
@@ -149,6 +151,7 @@ private fun AnimatedBookingButton(
                         )
                     }
                 }
+
                 BookingButtonState.BOOKED -> {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -166,6 +169,7 @@ private fun AnimatedBookingButton(
                         )
                     }
                 }
+
                 BookingButtonState.AVAILABLE -> {
                     Text(
                         text = "Book Now",

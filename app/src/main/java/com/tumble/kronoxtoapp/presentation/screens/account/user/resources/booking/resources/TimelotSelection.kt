@@ -66,7 +66,8 @@ fun TimeslotSelection(
                                 )
                             },
                             locationId = locationId,
-                            bookingButtonState = buttonStateMap[locationId] ?: BookingButtonState.AVAILABLE
+                            bookingButtonState = buttonStateMap[locationId]
+                                ?: BookingButtonState.AVAILABLE
                         )
                     }
                 }
@@ -94,6 +95,7 @@ private fun handleBooking(
     buttonStateMap[locationId] = BookingButtonState.LOADING
 
     bookResource(availabilityValue) { success ->
-        buttonStateMap[locationId] = if (success) BookingButtonState.BOOKED else BookingButtonState.AVAILABLE
+        buttonStateMap[locationId] =
+            if (success) BookingButtonState.BOOKED else BookingButtonState.AVAILABLE
     }
 }

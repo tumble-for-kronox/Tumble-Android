@@ -7,12 +7,12 @@ import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavGraphBuilder
-import com.tumble.kronoxtoapp.presentation.navigation.Routes
-import com.tumble.kronoxtoapp.presentation.screens.bookmarks.Bookmarks
-import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
+import com.tumble.kronoxtoapp.presentation.navigation.Routes
+import com.tumble.kronoxtoapp.presentation.screens.bookmarks.Bookmarks
 import com.tumble.kronoxtoapp.presentation.screens.bookmarks.event.EventDetailsSheet
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
@@ -24,7 +24,10 @@ fun BookmarksNavGraph(
     setTopNavState: (AppBarState) -> Unit
 ) {
     Log.d("BookmarksNavGraph", "Routes.bookmarks = '${Routes.bookmarks}'")
-    Log.d("BookmarksNavGraph", "NavController current destination: ${navController.currentDestination?.route}")
+    Log.d(
+        "BookmarksNavGraph",
+        "NavController current destination: ${navController.currentDestination?.route}"
+    )
 
     NavHost(
         navController = navController,
@@ -41,7 +44,10 @@ fun BookmarksNavGraph(
     }
 }
 
-private fun NavGraphBuilder.bookmarks(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.bookmarks(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     Log.d("BookmarksNavGraph", "Calling :Bookmarks")
     composable(Routes.bookmarks) {
         Bookmarks(
@@ -51,7 +57,10 @@ private fun NavGraphBuilder.bookmarks(navController: NavHostController, setTopNa
     }
 }
 
-private fun NavGraphBuilder.bookmarksDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.bookmarksDetails(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(
         Routes.bookmarksDetails,
         deepLinks = listOf(
@@ -65,9 +74,9 @@ private fun NavGraphBuilder.bookmarksDetails(navController: NavHostController, s
         },
         popExitTransition = {
             slideOutOfContainer(
-                    AnimatedContentTransitionScope.SlideDirection.Down,
-                    animationSpec = tween(300)
-                )
+                AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(300)
+            )
         }
     ) { backStackEntry ->
         val eventId = backStackEntry.arguments?.getString("event_id")

@@ -22,13 +22,13 @@ fun SettingsList(
         modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState()) // ScrollView without indicators
+            .verticalScroll(rememberScrollState())
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(0.dp), // No spacing between children
-        ){
+                .padding(0.dp),
+        ) {
             content()
         }
     }

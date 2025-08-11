@@ -13,17 +13,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import com.tumble.kronoxtoapp.presentation.components.buttons.BookmarkButton
-import com.tumble.kronoxtoapp.presentation.viewmodels.SearchPreviewViewModel
-import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
-import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.ButtonState
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
+import com.tumble.kronoxtoapp.presentation.components.buttons.BookmarkButton
+import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
+import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
-import com.tumble.kronoxtoapp.presentation.viewmodels.SearchPreviewState
 import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarkState
+import com.tumble.kronoxtoapp.presentation.viewmodels.SearchPreviewState
+import com.tumble.kronoxtoapp.presentation.viewmodels.SearchPreviewViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -34,7 +34,7 @@ fun SearchPreviewSheet(
     scheduleTitle: String,
     navController: NavController,
     setTopNavState: (AppBarState) -> Unit
-){
+) {
     val state by viewModel.state.collectAsState()
 
     MakeNavBar(
@@ -50,8 +50,8 @@ fun SearchPreviewSheet(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
-    ){
-        when(state) {
+    ) {
+        when (state) {
             is SearchPreviewState.Loaded -> {
                 val data = (state as SearchPreviewState.Loaded)
                 SearchPreviewList(
@@ -59,13 +59,16 @@ fun SearchPreviewSheet(
                     colorsForPreview = data.colorsForPreview
                 )
             }
+
             is SearchPreviewState.Loading -> {
                 CustomProgressIndicator()
             }
+
             is SearchPreviewState.Error -> {
                 val errorMessage = (state as SearchPreviewState.Error).errorMessage
                 Info(title = errorMessage, image = null)
             }
+
             is SearchPreviewState.Empty -> {
                 Info(title = stringResource(id = R.string.error_empty_schedule), image = null)
             }
@@ -117,10 +120,12 @@ private fun getBookmarkButtonState(state: SearchPreviewState): ButtonState {
                         ButtonState.NotSaved
                     }
                 }
+
                 is BookmarkState.Error -> ButtonState.Disabled
                 is BookmarkState.Idle -> ButtonState.Disabled
             }
         }
+
         else -> ButtonState.Disabled
     }
 }

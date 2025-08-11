@@ -1,17 +1,17 @@
 package com.tumble.kronoxtoapp.services.kronox
 
-import okhttp3.Request
-import retrofit2.Retrofit
-import com.tumble.kronoxtoapp.other.extensions.models.callToApiResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
 import com.tumble.kronoxtoapp.domain.models.network.NewsItems
+import com.tumble.kronoxtoapp.other.extensions.models.callToApiResponse
+import okhttp3.Request
+import retrofit2.Retrofit
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class KronoxService @Inject constructor(private val retrofit: Retrofit): KronoxServiceProtocol {
+class KronoxService @Inject constructor(private val retrofit: Retrofit) : KronoxServiceProtocol {
     private val kronoxApiService by lazy {
         retrofit.create(KronoxApiServiceProtocol::class.java)
     }
@@ -20,7 +20,7 @@ class KronoxService @Inject constructor(private val retrofit: Retrofit): KronoxS
         return kronoxApiService.getNews().callToApiResponse()
     }
 
-     override suspend fun getProgramme(endpoint: Endpoint.SearchProgramme): ApiResponse<NetworkResponse.Search> {
+    override suspend fun getProgramme(endpoint: Endpoint.SearchProgramme): ApiResponse<NetworkResponse.Search> {
         return kronoxApiService.getProgramme(endpoint.url()).callToApiResponse()
     }
 
@@ -28,12 +28,25 @@ class KronoxService @Inject constructor(private val retrofit: Retrofit): KronoxS
         return kronoxApiService.getSchedule(endpoint.url()).callToApiResponse()
     }
 
-    override suspend fun getKronoxCompleteUserEvent(endpoint: Endpoint.UserEvents, refreshToken: String?, sessionDetails: String?): ApiResponse<NetworkResponse.KronoxCompleteUserEvent> {
-        return kronoxApiService.getKronoxCompleteUserEvent(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
+    override suspend fun getKronoxCompleteUserEvent(
+        endpoint: Endpoint.UserEvents,
+        refreshToken: String?,
+        sessionDetails: String?
+    ): ApiResponse<NetworkResponse.KronoxCompleteUserEvent> {
+        return kronoxApiService.getKronoxCompleteUserEvent(
+            endpoint.url(),
+            refreshToken,
+            sessionDetails
+        ).callToApiResponse()
     }
 
-    override suspend fun getKronoxUserBookings(endpoint: Endpoint.UserBookings, refreshToken: String?, sessionDetails: String?): ApiResponse<List<KronoxUserBookingElement>> {
-        val call = kronoxApiService.getKronoxUserBookings(endpoint.url(), refreshToken, sessionDetails)
+    override suspend fun getKronoxUserBookings(
+        endpoint: Endpoint.UserBookings,
+        refreshToken: String?,
+        sessionDetails: String?
+    ): ApiResponse<List<KronoxUserBookingElement>> {
+        val call =
+            kronoxApiService.getKronoxUserBookings(endpoint.url(), refreshToken, sessionDetails)
         return call.callToApiResponse()
     }
 
@@ -42,15 +55,24 @@ class KronoxService @Inject constructor(private val retrofit: Retrofit): KronoxS
         refreshToken: String?,
         sessionDetails: String?
     ): ApiResponse<List<NetworkResponse.KronoxResourceElement>> {
-        return kronoxApiService.getAllResources(endpoint.url(), refreshToken, sessionDetails).callToApiResponse()
+        return kronoxApiService.getAllResources(endpoint.url(), refreshToken, sessionDetails)
+            .callToApiResponse()
     }
 
-    override suspend fun registerForEvent(endpoint: Endpoint.RegisterEvent, refreshToken: String?): ApiResponse<Void> {
+    override suspend fun registerForEvent(
+        endpoint: Endpoint.RegisterEvent,
+        refreshToken: String?
+    ): ApiResponse<Void> {
         return kronoxApiService.registerForEvent(endpoint.url(), refreshToken).callToApiResponse()
     }
 
-    override suspend fun bookResource(endpoint: Endpoint.BookResource, refreshToken: String?, resource: NetworkRequest.BookKronoxResource): ApiResponse<KronoxUserBookingElement> {
-        return kronoxApiService.bookResource(endpoint.url(), refreshToken, resource).callToApiResponse()
+    override suspend fun bookResource(
+        endpoint: Endpoint.BookResource,
+        refreshToken: String?,
+        resource: NetworkRequest.BookKronoxResource
+    ): ApiResponse<KronoxUserBookingElement> {
+        return kronoxApiService.bookResource(endpoint.url(), refreshToken, resource)
+            .callToApiResponse()
     }
 
     override suspend fun confirmResource(
@@ -58,7 +80,8 @@ class KronoxService @Inject constructor(private val retrofit: Retrofit): KronoxS
         refreshToken: String?,
         resource: NetworkRequest.ConfirmKronoxResource
     ): ApiResponse<Void> {
-        return kronoxApiService.confirmResource(endpoint.url(), refreshToken, resource).callToApiResponse()
+        return kronoxApiService.confirmResource(endpoint.url(), refreshToken, resource)
+            .callToApiResponse()
     }
 
     override suspend fun unBookResource(
@@ -79,10 +102,14 @@ class KronoxService @Inject constructor(private val retrofit: Retrofit): KronoxS
         endpoint: Endpoint.RegisterAllEvents,
         refreshToken: String?
     ): ApiResponse<List<NetworkResponse.Registration>> {
-        return kronoxApiService.registerForAllEvents(endpoint.url(), refreshToken).callToApiResponse()
+        return kronoxApiService.registerForAllEvents(endpoint.url(), refreshToken)
+            .callToApiResponse()
     }
 
-    private fun createRequestWithToken(refreshToken: String?, requestBuilder: Request.Builder): Request {
+    private fun createRequestWithToken(
+        refreshToken: String?,
+        requestBuilder: Request.Builder
+    ): Request {
         refreshToken?.let { token ->
             requestBuilder.header("X-auth-token", token)
         }

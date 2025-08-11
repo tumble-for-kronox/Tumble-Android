@@ -7,13 +7,18 @@ import androidx.compose.material.icons.rounded.Bookmark
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.tumble.kronoxtoapp.presentation.navigation.Routes
-import androidx.compose.material3.NavigationBarItem
 import com.tumble.kronoxtoapp.R
+import com.tumble.kronoxtoapp.presentation.navigation.Routes
 
-enum class BottomNavItem(val route: String, val icon: ImageVector, val title: String, val translationId : Int) {
+enum class BottomNavItem(
+    val route: String,
+    val icon: ImageVector,
+    val title: String,
+    val translationId: Int
+) {
     HOME(Routes.home, Icons.Rounded.Home, "Home", R.string.home),
     BOOKMARKS(Routes.bookmarks, Icons.Rounded.Bookmark, "Bookmarks", R.string.bookmark),
     SEARCH(Routes.search, Icons.Rounded.Search, "Search", R.string.search),

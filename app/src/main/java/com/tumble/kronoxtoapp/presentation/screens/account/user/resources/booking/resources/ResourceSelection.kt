@@ -74,12 +74,16 @@ fun ResourceSelection(
             is ResourceBookingState.Loading -> {
                 CustomProgressIndicator()
             }
+
             is ResourceBookingState.Error -> {
-                val errorMessage = (viewModel.resourceBookingState as ResourceBookingState.Error).message
+                val errorMessage =
+                    (viewModel.resourceBookingState as ResourceBookingState.Error).message
                 Info(errorMessage)
             }
+
             is ResourceBookingState.Loaded -> {
-                val resource = (viewModel.resourceBookingState as ResourceBookingState.Loaded).resource
+                val resource =
+                    (viewModel.resourceBookingState as ResourceBookingState.Loaded).resource
                 val timeslots = resource.timeSlots
                 ResourceAvailabilities(
                     selectedPickerDate = selectedPickerDate,
@@ -104,7 +108,11 @@ private fun ResourceAvailabilities(
     timeSlots: List<NetworkResponse.TimeSlot>?
 ) {
     val scope = rememberCoroutineScope()
-    val selectedTimeIndex = remember { mutableIntStateOf(resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)) }
+    val selectedTimeIndex = remember {
+        mutableIntStateOf(
+            resource.availabilities.getFirstTimeSlotWithAvailability(resource.timeSlots!!.size)
+        )
+    }
     val availabilityValues = remember {
         mutableStateOf(resource.availabilities.getAvailabilityValues(timeslotId = selectedTimeIndex.intValue))
     }

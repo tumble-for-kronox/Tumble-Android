@@ -1,19 +1,14 @@
 package com.tumble.kronoxtoapp.presentation.screens.search
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -31,16 +26,17 @@ import com.tumble.kronoxtoapp.presentation.screens.general.FlowStack
 fun SearchInfo(
     schools: List<School>,
     selectedSchool: MutableState<School?>
-){
-    Column (modifier = Modifier
-        .padding(16.dp)
-        .fillMaxWidth(),
+) {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.Start
     ) {
 
         val textAlpha by animateFloatAsState(
-            targetValue = if(selectedSchool.value == null) 1f else 0f
+            targetValue = if (selectedSchool.value == null) 1f else 0f
         )
         Text(
             text = stringResource(id = R.string.choose_university),
@@ -49,6 +45,8 @@ fun SearchInfo(
             fontWeight = FontWeight.SemiBold
         )
         Spacer(modifier = Modifier.height(32.dp))
-        FlowStack<School>(items = schools, viewGenerator = { SchoolPill(school = it, selectedSchool = selectedSchool)})
+        FlowStack<School>(
+            items = schools,
+            viewGenerator = { SchoolPill(school = it, selectedSchool = selectedSchool) })
     }
 }

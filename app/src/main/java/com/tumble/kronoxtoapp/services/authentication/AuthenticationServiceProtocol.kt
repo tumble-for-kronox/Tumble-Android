@@ -13,7 +13,8 @@ interface AuthenticationServiceProtocol {
     @POST("/api/users/login")
     suspend fun loginUser(
         @Query("schoolId") schoolId: String,
-        @Body user: NetworkRequest.KronoxUserLogin): Response<NetworkResponse.KronoxUser>
+        @Body user: NetworkRequest.KronoxUserLogin
+    ): Response<NetworkResponse.KronoxUser>
 
     @GET("/api/users")
     suspend fun autoLoginUser(

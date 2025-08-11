@@ -4,27 +4,29 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
+import com.tumble.kronoxtoapp.domain.models.presentation.School
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
+import com.tumble.kronoxtoapp.services.notifications.NotificationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.services.kronox.Endpoint
-import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
-import com.tumble.kronoxtoapp.services.notifications.NotificationService
-import com.tumble.kronoxtoapp.services.DataStoreService
-import com.tumble.kronoxtoapp.services.kronox.ApiResponse
-import com.tumble.kronoxtoapp.services.kronox.KronoxService
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.domain.models.presentation.School
-import com.tumble.kronoxtoapp.services.SchoolService
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class AccountDataState {
     data object Idle : AccountDataState()
     data object Loading : AccountDataState()
-    data class EventsLoaded(val events: NetworkResponse.KronoxCompleteUserEvent) : AccountDataState()
+    data class EventsLoaded(val events: NetworkResponse.KronoxCompleteUserEvent) :
+        AccountDataState()
+
     data class BookingsLoaded(val bookings: NetworkResponse.KronoxUserBookings) : AccountDataState()
     data class Error(val message: String) : AccountDataState()
 }
@@ -56,7 +58,7 @@ class AccountViewModel @Inject constructor(
 
     val authState = authenticationService.authState
 
-    fun getSchoolName(): School?{
+    fun getSchoolName(): School? {
         return schoolService.getSchoolById(dataStoreService.authSchoolId.value)
     }
 
@@ -73,16 +75,19 @@ class AccountViewModel @Inject constructor(
                     return@launch
                 }
 
-                when (val response = kronoxManager.getKronoxCompleteUserEvent(endpoint, refreshToken, null)) {
+                when (val response =
+                    kronoxManager.getKronoxCompleteUserEvent(endpoint, refreshToken, null)) {
                     is ApiResponse.Success -> {
                         _eventsState.value = AccountDataState.EventsLoaded(response.data)
                     }
+
                     is ApiResponse.Error -> {
                         _eventsState.value = AccountDataState.Error(response.errorMessage)
                     }
                 }
             } catch (e: Exception) {
-                _eventsState.value = AccountDataState.Error(e.localizedMessage ?: "Failed to load events")
+                _eventsState.value =
+                    AccountDataState.Error(e.localizedMessage ?: "Failed to load events")
             }
         }
     }
@@ -100,37 +105,42 @@ class AccountViewModel @Inject constructor(
                     return@launch
                 }
 
-                when (val response = kronoxManager.getKronoxUserBookings(endpoint, refreshToken, null)) {
+                when (val response =
+                    kronoxManager.getKronoxUserBookings(endpoint, refreshToken, null)) {
                     is ApiResponse.Success -> {
                         val bookings = NetworkResponse.KronoxUserBookings(bookings = response.data)
                         _bookingsState.value = AccountDataState.BookingsLoaded(bookings)
                         scheduleBookingNotifications(response.data)
                     }
+
                     is ApiResponse.Error -> {
                         _bookingsState.value = AccountDataState.Error(response.errorMessage)
                     }
                 }
             } catch (e: Exception) {
-                _bookingsState.value = AccountDataState.Error(e.localizedMessage ?: "Failed to load bookings")
+                _bookingsState.value =
+                    AccountDataState.Error(e.localizedMessage ?: "Failed to load bookings")
             }
         }
     }
 
-    fun unbookResource(bookingId: String){
-        val endpoint = Endpoint.UnBookResource(dataStoreService.authSchoolId.value.toString(), bookingId)
+    fun unbookResource(bookingId: String) {
+        val endpoint =
+            Endpoint.UnBookResource(dataStoreService.authSchoolId.value.toString(), bookingId)
         val refreshToken = authenticationService.getRefreshToken() ?: return
 
         // This logic is completely cursed and should be fixed in the backend
         viewModelScope.launch {
-            when(val response = kronoxManager.unBookResource(endpoint, refreshToken)) {
+            when (val response = kronoxManager.unBookResource(endpoint, refreshToken)) {
                 is ApiResponse.Error -> {
-                    if(response.errorMessage == "Empty response body"){
+                    if (response.errorMessage == "Empty response body") {
                         Log.e("AccountViewModel", "Success")
-                    } else{
+                    } else {
                         Log.e("AccountViewModel", "Error")
                         Log.e("AccountViewModel", response.errorMessage)
                     }
                 }
+
                 else -> {
                     Log.e("AccountViewModel", "We should not be here")
 
@@ -139,22 +149,23 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun confirmResource(resourceId: String, bookingId: String){
+    fun confirmResource(resourceId: String, bookingId: String) {
         val endpoint = Endpoint.ConfirmResource(dataStoreService.authSchoolId.value.toString())
         val resource = NetworkRequest.ConfirmKronoxResource(resourceId, bookingId)
         val refreshToken = authenticationService.getRefreshToken() ?: return
 
         // This logic is completely cursed and should be fixed in the backend
         viewModelScope.launch {
-            when(val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)){
+            when (val response = kronoxManager.confirmResource(endpoint, refreshToken, resource)) {
                 is ApiResponse.Error -> {
-                    if(response.errorMessage == "Empty response body"){
+                    if (response.errorMessage == "Empty response body") {
                         Log.d("confirm", "Success")
-                    }else{
+                    } else {
                         Log.e("confirm", "Error")
                         Log.e("confirm", response.errorMessage)
                     }
                 }
+
                 else -> {
                     Log.e("confirm", "Error")
                 }

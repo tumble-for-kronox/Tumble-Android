@@ -21,29 +21,30 @@ data class FlowStackOptions(
 )
 
 @Composable
-fun <T: Any> FlowStack(
+fun <T : Any> FlowStack(
     items: List<T>,
     options: FlowStackOptions = FlowStackOptions(),
     viewGenerator: @Composable (T) -> Unit
-){
-    BoxWithConstraints{
+) {
+    BoxWithConstraints {
         Layout(
             content = {
-                items.forEach{ item ->
-                    Box(modifier = Modifier
-                        .background(Color.Unspecified, RoundedCornerShape(20.dp))
-                        .padding(
-                            horizontal = options.horizontalPadding,
-                            vertical = options.verticalPadding
-                        )
-                        .layoutId(item)
+                items.forEach { item ->
+                    Box(
+                        modifier = Modifier
+                            .background(Color.Unspecified, RoundedCornerShape(20.dp))
+                            .padding(
+                                horizontal = options.horizontalPadding,
+                                vertical = options.verticalPadding
+                            )
+                            .layoutId(item)
 
-                    ){
+                    ) {
                         viewGenerator(item)
                     }
                 }
             }
-        ){ measurables, constraints ->
+        ) { measurables, constraints ->
             var width = 0
             var height = 0
             var rowWidth = 0
@@ -51,7 +52,7 @@ fun <T: Any> FlowStack(
 
             val placeables = measurables.map { measurable ->
                 val placeable = measurable.measure(constraints)
-                if (rowWidth + placeable.width > constraints.maxWidth){
+                if (rowWidth + placeable.width > constraints.maxWidth) {
                     width = maxOf(width, rowWidth)
                     height += rowHeight
                     rowWidth = 0
@@ -64,11 +65,11 @@ fun <T: Any> FlowStack(
             width = maxOf(width, rowWidth)
             height += rowHeight
 
-            layout(width,height){
+            layout(width, height) {
                 var xPos = 0
                 var yPos = 0
-                placeables.forEach{ placeable ->
-                    if (xPos + placeable.width > width){
+                placeables.forEach { placeable ->
+                    if (xPos + placeable.width > width) {
                         xPos = 0
                         yPos += rowHeight
                     }

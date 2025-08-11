@@ -1,9 +1,9 @@
 package com.tumble.kronoxtoapp.other.extensions.models
 
 import android.util.Log
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import retrofit2.Call
 import retrofit2.awaitResponse
-import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 
 
 suspend fun <T> Call<T>.callToApiResponse(): ApiResponse<T> {

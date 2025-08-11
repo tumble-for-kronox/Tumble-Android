@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBarDefaults.colors
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -40,7 +40,7 @@ fun SearchField(
     searchBarText: MutableState<String>,
     searching: MutableState<Boolean>,
     selectedSchool: MutableState<School?>
-){
+) {
     val searchBarText by remember {
         mutableStateOf(searchBarText)
     }
@@ -55,12 +55,13 @@ fun SearchField(
         targetValue = if (enabled) 0.dp else 2.5.dp,
     )
 
-    fun searchAction(){
+    fun searchAction() {
         search?.invoke()
         val activity = context as? Activity
         activity?.hideKeyboard()
     }
-    fun searchFieldAction(){
+
+    fun searchFieldAction() {
         clearSearch?.invoke()
         searchBarText.value = ""
         val activity = context as? Activity
@@ -73,8 +74,9 @@ fun SearchField(
         unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
         cursorColor = MaterialTheme.colorScheme.primary
     )
-    DockedSearchBar(query = searchBarText.value,
-        onQueryChange = { searchBarText.value = it},
+    DockedSearchBar(
+        query = searchBarText.value,
+        onQueryChange = { searchBarText.value = it },
         onSearch = { searchAction() },
         active = false,
         enabled = enabled,
@@ -83,17 +85,19 @@ fun SearchField(
                 text = title,
                 color = MaterialTheme.colorScheme.onSurface.copy(.25f),
                 fontWeight = FontWeight.Normal
-            )},
-        onActiveChange = {},
-        trailingIcon = { if (searching.value) {
-            InBarButtons(
-                searchAction = { searchAction() },
-                searchFieldAction = { searchFieldAction() }
             )
-        }
+        },
+        onActiveChange = {},
+        trailingIcon = {
+            if (searching.value) {
+                InBarButtons(
+                    searchAction = { searchAction() },
+                    searchFieldAction = { searchFieldAction() }
+                )
+            }
         },
         modifier = Modifier
-            .onFocusChanged { searching.value = if (it.isFocused) true else enabled}
+            .onFocusChanged { searching.value = if (it.isFocused) true else enabled }
             .blur(blur.value)
             .fillMaxWidth(),
         colors = colors(
@@ -104,18 +108,23 @@ fun SearchField(
 }
 
 @Composable
-fun InBarButtons(searchAction: () -> Unit, searchFieldAction: () -> Unit){
-    Row{  IconButton(onClick = { searchAction() },) {
-        Icon(imageVector = Icons.Default.Search,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp))
-    }
-        IconButton(onClick = { searchFieldAction() },) {
-            Icon(imageVector = Icons.Default.Close,
+fun InBarButtons(searchAction: () -> Unit, searchFieldAction: () -> Unit) {
+    Row {
+        IconButton(onClick = { searchAction() }) {
+            Icon(
+                imageVector = Icons.Default.Search,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp))
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        IconButton(onClick = { searchFieldAction() }) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }

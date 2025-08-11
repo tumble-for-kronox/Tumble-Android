@@ -1,7 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.events
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,21 +10,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.filled.PersonAddAlt1
 import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.filled.PersonSearch
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.SectionDivider
@@ -35,6 +30,7 @@ import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountEventsState
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountEventsViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -77,10 +73,12 @@ fun EventBookings(
                 is AccountEventsState.Loading -> {
                     CustomProgressIndicator()
                 }
+
                 is AccountEventsState.Error -> {
                     val errorMessage = (viewModel.state as AccountEventsState.Error).message
                     Info(errorMessage)
                 }
+
                 is AccountEventsState.Loaded -> {
                     val events = (viewModel.state as AccountEventsState.Loaded).events
                     SectionDivider(

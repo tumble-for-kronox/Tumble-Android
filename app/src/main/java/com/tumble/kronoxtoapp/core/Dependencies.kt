@@ -3,6 +3,14 @@ package com.tumble.kronoxtoapp.core
 import android.content.Context
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.SecureStorageService
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationServiceProtocol
+import com.tumble.kronoxtoapp.services.kronox.KronoxServiceProtocol
+import com.tumble.kronoxtoapp.services.notifications.NotificationService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,14 +20,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import com.tumble.kronoxtoapp.services.SchoolService
-import com.tumble.kronoxtoapp.services.authentication.AuthenticationServiceProtocol
-import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
-import com.tumble.kronoxtoapp.services.notifications.NotificationService
-import com.tumble.kronoxtoapp.services.DataStoreService
-import com.tumble.kronoxtoapp.services.RealmService
-import com.tumble.kronoxtoapp.services.SecureStorageService
-import com.tumble.kronoxtoapp.services.kronox.KronoxServiceProtocol
 import javax.inject.Singleton
 
 @Module
@@ -37,7 +37,10 @@ object KronoxModule {
 object NotificationModule {
     @Provides
     @Singleton
-    fun provideNotificationManager(@ApplicationContext context: Context, realmService: RealmService): NotificationService {
+    fun provideNotificationManager(
+        @ApplicationContext context: Context,
+        realmService: RealmService
+    ): NotificationService {
         return NotificationService(context, realmService)
     }
 }
@@ -58,13 +61,17 @@ object AuthModule {
         secureStorageService: SecureStorageService,
         dataStoreService: DataStoreService
     ): AuthenticationService {
-        return AuthenticationService(authenticationServiceProtocol, secureStorageService, dataStoreService)
+        return AuthenticationService(
+            authenticationServiceProtocol,
+            secureStorageService,
+            dataStoreService
+        )
     }
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SecureStorageModel{
+object SecureStorageModel {
     @Provides
     @Singleton
     fun provideSecureStorageManager(@ApplicationContext context: Context): SecureStorageService {
@@ -84,7 +91,7 @@ object DataStoreModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SchoolModule{
+object SchoolModule {
     @Provides
     @Singleton
     fun provideSchoolManager(@ApplicationContext context: Context): SchoolService {
@@ -121,7 +128,8 @@ object RetrofitModule {
         val moshi = Moshi.Builder()
             .add(KotlinJsonAdapterFactory())
             .build()
-        val baseUrl = "${NetworkSettings.shared.scheme}://${NetworkSettings.shared.tumbleUrl}:${NetworkSettings.shared.port}"
+        val baseUrl =
+            "${NetworkSettings.shared.scheme}://${NetworkSettings.shared.tumbleUrl}:${NetworkSettings.shared.port}"
         val okHttpClient = provideOkHttpClient()
         return Retrofit.Builder()
             .client(okHttpClient)

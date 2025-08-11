@@ -34,7 +34,7 @@ import com.tumble.kronoxtoapp.other.extensions.presentation.noRippleClickable
 fun SchoolPill(
     school: School,
     selectedSchool: MutableState<School?>
-){
+) {
     val isSelected = selectedSchool.value == school
     val fontSize by animateFloatAsState(
         targetValue = if (isSelected) 18f else 16f,
@@ -45,7 +45,7 @@ fun SchoolPill(
         targetValue = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface,
         animationSpec = tween(durationMillis = 300)
     )
-    Surface (
+    Surface(
         shape = RoundedCornerShape(12.dp),
         modifier = Modifier
             .padding(2.dp)
@@ -60,13 +60,13 @@ fun SchoolPill(
             },
         color = buttonColor,
     ) {
-        Row (
+        Row(
             modifier = Modifier
                 .padding(8.dp)
                 .padding(start = 3.dp)
                 .padding(vertical = 2.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Image(
                 painter = painterResource(id = icon),
                 contentDescription = null,

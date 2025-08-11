@@ -14,7 +14,7 @@ val logoNameToLogoMap: Map<String, Int> = mapOf(
     "mdu_logo" to R.drawable.mdu_logo
 )
 
-data class School (
+data class School(
     val id: Int,
     val kronoxUrl: String,
     val name: String,
@@ -23,7 +23,7 @@ data class School (
     val color: String,
     val schoolUrl: String,
     val domain: String,
-){
+) {
     val logo: Int
         get() = logoNameToLogoMap[logoName]!!
 }

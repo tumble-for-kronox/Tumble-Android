@@ -14,12 +14,21 @@ data class DateComponents(
     fun toDate(): Date? {
         val calendar = Calendar.getInstance()
         if (year != null) calendar[Calendar.YEAR] = year
-        if (month != null) calendar[Calendar.MONTH] = month - 1 // Calendar.MONTH is 0-based in Java/Kotlin
+        if (month != null) calendar[Calendar.MONTH] =
+            month - 1 // Calendar.MONTH is 0-based in Java/Kotlin
         if (day != null) calendar[Calendar.DAY_OF_MONTH] = day
         if (hour != null) calendar[Calendar.HOUR_OF_DAY] = hour
         if (minute != null) calendar[Calendar.MINUTE] = minute
         if (second != null) calendar[Calendar.SECOND] = second
-        return if (listOfNotNull(year, month, day, hour, minute, second).isEmpty()) null else calendar.time
+        return if (listOfNotNull(
+                year,
+                month,
+                day,
+                hour,
+                minute,
+                second
+            ).isEmpty()
+        ) null else calendar.time
     }
 
     companion object {

@@ -10,7 +10,8 @@ object Routes {
     const val bookmarks = "bookmarks"
     const val bookmarksDetails = "bookmarks_details?eventId={event_id}"
     const val search = "search"
-    const val searchDetails = "search?scheduleId={schedule_id}&schoolId={school_id}&scheduleTitle={schedule_title}"
+    const val searchDetails =
+        "search?scheduleId={schedule_id}&schoolId={school_id}&scheduleTitle={schedule_title}"
     const val account = "account"
     const val accountLogin = "account/login"
     const val accountSettings = "account/settings"
@@ -22,7 +23,8 @@ object Routes {
 
     // Protected routes
     const val accountResources = "account/resources"
-    const val accountResourceDetails = "account/resourceDetails?resourceId={resource_id}&isoDateString={iso_date_string}"
+    const val accountResourceDetails =
+        "account/resourceDetails?resourceId={resource_id}&isoDateString={iso_date_string}"
     const val accountEvents = "account/events"
     const val accountEventDetails = "account/events/{id}"
 

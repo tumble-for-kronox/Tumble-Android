@@ -22,16 +22,18 @@ import com.tumble.kronoxtoapp.presentation.components.buttons.VerboseEventButton
 fun SearchPreviewList(
     schedule: NetworkResponse.Schedule,
     colorsForPreview: MutableMap<String, String>
-){
+) {
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.padding(top = 2.5.dp).fillMaxHeight()
+        modifier = Modifier
+            .padding(top = 2.5.dp)
+            .fillMaxHeight()
     ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
         }
-        schedule.flatten().ordered().forEach{day ->
+        schedule.flatten().ordered().forEach { day ->
             if (day.events.isNotEmpty()) {
                 item {
                     Column(verticalArrangement = Arrangement.spacedBy(15.dp)) {
@@ -44,7 +46,7 @@ fun SearchPreviewList(
                 }
             }
         }
-        item{
+        item {
             Spacer(modifier = Modifier.height(20.dp))
         }
     }

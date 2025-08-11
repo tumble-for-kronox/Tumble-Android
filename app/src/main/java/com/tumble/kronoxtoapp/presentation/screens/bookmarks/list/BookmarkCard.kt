@@ -12,7 +12,7 @@ fun BookmarkCard(
     onTapCard: (Event) -> Unit,
     event: Event,
     isLast: Boolean
-){
+) {
     Box(Modifier.noRippleClickable { onTapCard(event) }) {
         VerboseEventButtonLabel(event = event)
     }

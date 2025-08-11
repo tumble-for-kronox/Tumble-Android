@@ -20,16 +20,28 @@ fun BookmarkCalendarMonthView(
     todaysDate: LocalDate,
     selectedDate: LocalDate,
     page: Int
-){
+) {
 
     val date = LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1)
 
     val localDate = date.plusMonths(page.toLong())
 
-    val onClick =  {localDat: LocalDate -> updateSelectedDate(localDat)}
-    val getBackgroundColor = @Composable { passedLocalDate: LocalDate -> getBackgroundColor(todaysDate = todaysDate, selectedDate = selectedDate, date = passedLocalDate)}
-    val getOnBackgroundColor = @Composable { passedLocalDate: LocalDate -> getOnBackgroundColor(todaysDate = todaysDate, selectedDate = selectedDate, date = passedLocalDate)}
-    var currentDate = localDate.minusDays((localDate.dayOfWeek.value-1).toLong())
+    val onClick = { localDat: LocalDate -> updateSelectedDate(localDat) }
+    val getBackgroundColor = @Composable { passedLocalDate: LocalDate ->
+        getBackgroundColor(
+            todaysDate = todaysDate,
+            selectedDate = selectedDate,
+            date = passedLocalDate
+        )
+    }
+    val getOnBackgroundColor = @Composable { passedLocalDate: LocalDate ->
+        getOnBackgroundColor(
+            todaysDate = todaysDate,
+            selectedDate = selectedDate,
+            date = passedLocalDate
+        )
+    }
+    var currentDate = localDate.minusDays((localDate.dayOfWeek.value - 1).toLong())
 
     Column {
         repeat(6) {
@@ -46,10 +58,10 @@ fun BookmarkCalendarMonthView(
 
 @Composable
 fun getBackgroundColor(todaysDate: LocalDate, selectedDate: LocalDate, date: LocalDate): Color {
-    if (date == selectedDate){
+    if (date == selectedDate) {
         return MaterialTheme.colorScheme.primary
     }
-    if (date == todaysDate){
+    if (date == todaysDate) {
         return MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
     }
     return MaterialTheme.colorScheme.background
@@ -57,10 +69,10 @@ fun getBackgroundColor(todaysDate: LocalDate, selectedDate: LocalDate, date: Loc
 
 @Composable
 fun getOnBackgroundColor(todaysDate: LocalDate, selectedDate: LocalDate, date: LocalDate): Color {
-    if (date == selectedDate){
+    if (date == selectedDate) {
         return MaterialTheme.colorScheme.onPrimary
     }
-    if (date == todaysDate){
+    if (date == todaysDate) {
         return MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
     }
     return MaterialTheme.colorScheme.onBackground

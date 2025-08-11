@@ -53,7 +53,10 @@ class AuthenticationService @Inject constructor(
 
             if (response.isSuccessful) {
                 response.body()?.let {
-                    storeTokens(it.refreshToken, "{\"sessionToken\":\"${it.sessionDetails.sessionToken}\",\"sessionLocation\":\"${it.sessionDetails.sessionLocation}\"}")
+                    storeTokens(
+                        it.refreshToken,
+                        "{\"sessionToken\":\"${it.sessionDetails.sessionToken}\",\"sessionLocation\":\"${it.sessionDetails.sessionLocation}\"}"
+                    )
                     val tumbleUser = TumbleUser(username = it.username, name = it.name)
                     _authState.value = AuthState.Authenticated(tumbleUser)
                     Result.success(tumbleUser)
@@ -83,12 +86,15 @@ class AuthenticationService @Inject constructor(
 
     private suspend fun performAutoLogin(): TumbleUser {
         val authSchoolId = dataStoreService.authSchoolId.value.toString()
-        val refreshToken = secureStorageService.read(TokenType.REFRESH_TOKEN.name, secureStorageAccount)
-            ?: throw AuthError.TokenError
-        val sessionDetails = secureStorageService.read(TokenType.SESSION_DETAILS.name, secureStorageAccount)
-            ?: throw AuthError.TokenError
+        val refreshToken =
+            secureStorageService.read(TokenType.REFRESH_TOKEN.name, secureStorageAccount)
+                ?: throw AuthError.TokenError
+        val sessionDetails =
+            secureStorageService.read(TokenType.SESSION_DETAILS.name, secureStorageAccount)
+                ?: throw AuthError.TokenError
 
-        val response = authenticationServiceProtocol.autoLoginUser(authSchoolId, refreshToken, sessionDetails)
+        val response =
+            authenticationServiceProtocol.autoLoginUser(authSchoolId, refreshToken, sessionDetails)
 
         if (response.isSuccessful) {
             storeHeaderTokens(response.headers())
@@ -111,17 +117,29 @@ class AuthenticationService @Inject constructor(
     private fun storeHeaderTokens(headers: okhttp3.Headers?) {
         headers?.let {
             it["X-session-token"]?.let { sessionDetails ->
-                secureStorageService.save(TokenType.SESSION_DETAILS.name, secureStorageAccount, sessionDetails)
+                secureStorageService.save(
+                    TokenType.SESSION_DETAILS.name,
+                    secureStorageAccount,
+                    sessionDetails
+                )
             }
             it["X-auth-header"]?.let { refreshToken ->
-                secureStorageService.save(TokenType.REFRESH_TOKEN.name, secureStorageAccount, refreshToken)
+                secureStorageService.save(
+                    TokenType.REFRESH_TOKEN.name,
+                    secureStorageAccount,
+                    refreshToken
+                )
             }
         }
     }
 
     private fun storeTokens(refreshToken: String, sessionDetails: String) {
         secureStorageService.save(TokenType.REFRESH_TOKEN.name, secureStorageAccount, refreshToken)
-        secureStorageService.save(TokenType.SESSION_DETAILS.name, secureStorageAccount, sessionDetails)
+        secureStorageService.save(
+            TokenType.SESSION_DETAILS.name,
+            secureStorageAccount,
+            sessionDetails
+        )
     }
 
     private fun clearSecureStorageData() {

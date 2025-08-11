@@ -1,6 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.navigation.navgraphs
 
-import android.util.Log
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,16 +9,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navDeepLink
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
-import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.appearance.AppearanceSettings
-import com.tumble.kronoxtoapp.presentation.screens.settings.bookmarks.BookmarksSettings
-import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffsetSettings
-import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.PreferencesScreen
-import com.tumble.kronoxtoapp.presentation.screens.settings.SettingsScreen
 import com.tumble.kronoxtoapp.presentation.screens.account.Account
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.events.EventBookings
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.resources.ResourceBookings
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.resources.ResourceSelection
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.screens.settings.SettingsScreen
+import com.tumble.kronoxtoapp.presentation.screens.settings.bookmarks.BookmarksSettings
+import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.PreferencesScreen
+import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.appearance.AppearanceSettings
+import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffsetSettings
 import com.tumble.kronoxtoapp.utils.isoDateFormatter
 
 
@@ -44,7 +43,10 @@ fun AccountNavGraph(
     }
 }
 
-private fun NavGraphBuilder.account(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.account(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.account) {
         Account(navController = navController, setTopNavState = setTopNavState)
     }
@@ -57,19 +59,28 @@ private fun NavGraphBuilder.accountLogin(navController: NavHostController) {
     }
 }
 
-private fun NavGraphBuilder.accountSettings(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountSettings(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.accountSettings) {
         SettingsScreen(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountSettingsPreferences(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountSettingsPreferences(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.accountSettingsPreferences) {
         PreferencesScreen(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountSettingsAppearance(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountSettingsAppearance(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.accountSettingsAppearance) {
         AppearanceSettings(navController = navController, setTopNavState = setTopNavState)
     }
@@ -82,25 +93,37 @@ private fun NavGraphBuilder.accountSettingsLanguage(navController: NavHostContro
     }
 }
 
-private fun NavGraphBuilder.accountSettingsNotifications(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountSettingsNotifications(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.accountSettingsNotifications) {
-        NotificationOffsetSettings(navController =  navController, setTopNavState = setTopNavState)
+        NotificationOffsetSettings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountSettingsBookmarks(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountSettingsBookmarks(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.accountSettingsBookmarks) {
         BookmarksSettings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountResources(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountResources(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.accountResources) {
         ResourceBookings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountResourceDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountResourceDetails(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(
         Routes.accountResourceDetails,
         deepLinks = listOf(
@@ -143,13 +166,19 @@ private fun NavGraphBuilder.accountResourceDetails(navController: NavHostControl
     }
 }
 
-private fun NavGraphBuilder.accountEvents(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountEvents(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.accountEvents) {
-        EventBookings(navController =  navController, setTopNavState = setTopNavState)
+        EventBookings(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.accountEventDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.accountEventDetails(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(
         Routes.accountEventDetails,
     ) { backStackEntry ->

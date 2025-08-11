@@ -11,11 +11,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Event
@@ -23,6 +18,11 @@ import com.tumble.kronoxtoapp.other.extensions.models.findEventsByCategory
 import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
 import com.tumble.kronoxtoapp.other.extensions.presentation.toLocalDateTime
 import com.tumble.kronoxtoapp.services.RealmService
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -33,7 +33,7 @@ import javax.inject.Singleton
 class NotificationService @Inject constructor(
     @ApplicationContext private val context: Context,
     private val realmService: RealmService,
-): NotificationServiceProtocol {
+) : NotificationServiceProtocol {
 
     override fun cancelNotification(id: String) {
         WorkManager.getInstance(context).cancelUniqueWork(id)
@@ -44,7 +44,8 @@ class NotificationService @Inject constructor(
     }
 
     override fun isNotificationScheduled(notificationId: String): Boolean {
-        return WorkManager.getInstance(context).getWorkInfosForUniqueWork(notificationId).get().isNotEmpty()
+        return WorkManager.getInstance(context).getWorkInfosForUniqueWork(notificationId).get()
+            .isNotEmpty()
     }
 
     override fun isNotificationScheduledUsingCategory(categoryIdentifier: String): Boolean {
@@ -55,9 +56,9 @@ class NotificationService @Inject constructor(
 
     override fun createNotificationUsingCategory(categoryIdentifier: String, userOffset: Int) {
         val events = realmService.getAllSchedules().findEventsByCategory(categoryIdentifier)
-        
-        for (event in events){
-            if (!isNotificationScheduled(event.eventId)){
+
+        for (event in events) {
+            if (!isNotificationScheduled(event.eventId)) {
                 createNotificationFromEvent(event, userOffset)
             }
         }
@@ -78,23 +79,27 @@ class NotificationService @Inject constructor(
         createNotificationChannel("0", context)
 
         var rooms = ""
-        if (!event.locations.isNullOrEmpty()){
-            for (i in 0 until  (event.locations?.size ?: 1) - 1){
+        if (!event.locations.isNullOrEmpty()) {
+            for (i in 0 until (event.locations?.size ?: 1) - 1) {
                 rooms += event.locations?.get(i)?.locationId + ", "
             }
             rooms += event.locations?.last()?.locationId
         }
         val from = event.from.convertToHoursAndMinutesISOString()
         val to = event.to.convertToHoursAndMinutesISOString()
-        val description = getString(context, R.string.location) + ": "  + rooms
-        var longDescription = event.title + "\n" + getString(context, R.string.location) + ": " + rooms
+        val description = getString(context, R.string.location) + ": " + rooms
+        var longDescription =
+            event.title + "\n" + getString(context, R.string.location) + ": " + rooms
         longDescription += "\n" + getString(context, R.string.timeslot) + ": " + from + " - " + to
 
         var delay = (event.dateComponents?.timeInMillis ?: 0) - Calendar.getInstance().timeInMillis
         delay = (delay / 1000) - (userOffset * 60)
 
         scheduleNotification(
-            (event.course?.englishName ?: (event.course?.swedishName ?: getString(context, R.string.event_notification))),
+            (event.course?.englishName ?: (event.course?.swedishName ?: getString(
+                context,
+                R.string.event_notification
+            ))),
             description,
             longDescription,
             "0",
@@ -106,16 +111,24 @@ class NotificationService @Inject constructor(
     override fun createNotificationFromBooking(booking: NetworkResponse.KronoxUserBookingElement) {
 
         if (booking.confirmationOpen == null) {
-            Log.d("NotificationManager", "Not scheduling notification. Reason: booking is currently active")
+            Log.d(
+                "NotificationManager",
+                "Not scheduling notification. Reason: booking is currently active"
+            )
             return
         }
 
         createNotificationChannel("1", context)
         var description = getString(context, R.string.booking_notification_description_start) + " "
-        description += booking.locationId + " " + getString(context, R.string.booking_notification_description_end)
+        description += booking.locationId + " " + getString(
+            context,
+            R.string.booking_notification_description_end
+        )
 
-        val time = booking.confirmationOpen.toLocalDateTime()?.atZone(ZoneId.systemDefault())?.toInstant()?.toEpochMilli()
-        val delay = ((time?: 0) - Calendar.getInstance().timeInMillis) / 1000
+        val time =
+            booking.confirmationOpen.toLocalDateTime()?.atZone(ZoneId.systemDefault())?.toInstant()
+                ?.toEpochMilli()
+        val delay = ((time ?: 0) - Calendar.getInstance().timeInMillis) / 1000
 
         if (delay > 0) {
             scheduleNotification(
@@ -155,7 +168,14 @@ class NotificationService @Inject constructor(
         }
     }
 
-    private fun scheduleNotification(title: String, description: String, longDescription: String, channelId: String, notificationId: String, delay: Long) {
+    private fun scheduleNotification(
+        title: String,
+        description: String,
+        longDescription: String,
+        channelId: String,
+        notificationId: String,
+        delay: Long
+    ) {
         val notificationData = workDataOf(
             "title" to title,
             "description" to description,
@@ -165,7 +185,7 @@ class NotificationService @Inject constructor(
         )
 
         var tag = "booking-notification"
-        if (channelId == "0"){
+        if (channelId == "0") {
             tag = "event-notification"
         }
 
@@ -192,8 +212,7 @@ class NotificationService @Inject constructor(
             ).apply {
                 description = getString(context, R.string.event_notification_description)
             }
-        }
-        else{
+        } else {
             channel = NotificationChannel(
                 id,
                 getString(context, R.string.booking_notification),
@@ -202,7 +221,8 @@ class NotificationService @Inject constructor(
                 description = getString(context, R.string.booking_notification_description)
             }
         }
-        val notificationManager =  context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 }

@@ -26,13 +26,13 @@ import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
 import java.time.LocalDate
 
 @Composable
-fun CalendarDate (
+fun CalendarDate(
     localDate: LocalDate,
     getBackgroundColor: @Composable (LocalDate) -> Color,
     getOnBackgroundColor: @Composable (LocalDate) -> Color,
     onClick: (LocalDate) -> Unit
 ) {
-     Box(contentAlignment = Alignment.Center) {
+    Box(contentAlignment = Alignment.Center) {
         Background(
             localDate = localDate,
             onClick = onClick,
@@ -51,20 +51,22 @@ fun Background(
     localDate: LocalDate,
     onClick: (LocalDate) -> Unit,
     getColor: @Composable (LocalDate) -> Color,
-){
+) {
 
-    Surface(modifier = Modifier
-        .size(40.dp)
-        .noRippleClickable { onClick(localDate) },
+    Surface(
+        modifier = Modifier
+            .size(40.dp)
+            .noRippleClickable { onClick(localDate) },
         shape = CircleShape,
-        color = getColor(localDate)){}
+        color = getColor(localDate)
+    ) {}
 }
 
 @Composable
 fun EventIndicator(
     calendarEventsByDate: Map<LocalDate, List<Event>>,
     localDate: LocalDate
-){
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -80,7 +82,10 @@ fun EventIndicator(
                     modifier = Modifier
                         .padding(horizontal = 2.dp)
                         .size(6.dp)
-                        .background(color = it.course?.color?.toColor()?: MaterialTheme.colorScheme.primary, CircleShape)
+                        .background(
+                            color = it.course?.color?.toColor()
+                                ?: MaterialTheme.colorScheme.primary, CircleShape
+                        )
                 )
             }
         }

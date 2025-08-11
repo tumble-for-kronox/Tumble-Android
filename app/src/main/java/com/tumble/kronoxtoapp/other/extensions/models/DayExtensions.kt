@@ -18,20 +18,21 @@ fun List<Day>.ordered(): List<Day> {
 }
 
 fun List<Day>.filterEmptyDays(): List<Day> {
-    return this.filter{ it.events?.isNotEmpty() ?: false }
+    return this.filter { it.events?.isNotEmpty() ?: false }
 }
 
 
 fun List<Day>.filterValidDays(): List<Day> {
-    return this.filter{ it.isValidDay() }
+    return this.filter { it.isValidDay() }
 }
 
 
-fun List<Day>.groupByWeek(): Map<Int, List<Day>>{
+fun List<Day>.groupByWeek(): Map<Int, List<Day>> {
     val weeks: MutableMap<Int, MutableList<Day>> = mutableMapOf()
 
-    for (day in this){
-        weeks[day.weekNumber] = weeks.getOrDefault(day.weekNumber, mutableListOf()).apply { add(day) }
+    for (day in this) {
+        weeks[day.weekNumber] =
+            weeks.getOrDefault(day.weekNumber, mutableListOf()).apply { add(day) }
     }
     return weeks
 }
@@ -39,7 +40,8 @@ fun List<Day>.groupByWeek(): Map<Int, List<Day>>{
 
 fun Day.isValidDay(): Boolean {
     val startOfToday = LocalDate.now()
-    val dayDate = LocalDate.parse(this.isoString?.substring(0,10)?.let { preprocessDateString(it) })
+    val dayDate =
+        LocalDate.parse(this.isoString?.substring(0, 10)?.let { preprocessDateString(it) })
     return startOfToday <= dayDate
 }
 

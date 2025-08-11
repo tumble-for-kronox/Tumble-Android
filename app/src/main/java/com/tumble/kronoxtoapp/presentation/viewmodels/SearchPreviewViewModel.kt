@@ -2,24 +2,24 @@ package com.tumble.kronoxtoapp.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import com.tumble.kronoxtoapp.services.kronox.KronoxService
-import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import com.tumble.kronoxtoapp.services.kronox.Endpoint
-import com.tumble.kronoxtoapp.services.RealmService
-import com.tumble.kronoxtoapp.services.SchoolService
-import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.other.extensions.models.assignCourseRandomColors
 import com.tumble.kronoxtoapp.other.extensions.models.hasNoEvents
 import com.tumble.kronoxtoapp.other.extensions.models.hasScheduleWithId
 import com.tumble.kronoxtoapp.other.extensions.models.toRealmSchedule
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 sealed class BookmarkState {
     data object Idle : BookmarkState()
@@ -35,6 +35,7 @@ sealed class SearchPreviewState {
         val colorsForPreview: MutableMap<String, String>,
         val bookmarkState: BookmarkState = BookmarkState.Idle
     ) : SearchPreviewState()
+
     data object Empty : SearchPreviewState()
     data class Error(val errorMessage: String) : SearchPreviewState()
 }
@@ -44,7 +45,7 @@ class SearchPreviewViewModel @Inject constructor(
     private val kronoxManager: KronoxService,
     private val realmService: RealmService,
     private val schoolService: SchoolService
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow<SearchPreviewState>(SearchPreviewState.Loading)
     val state: StateFlow<SearchPreviewState> = _state.asStateFlow()
@@ -65,7 +66,8 @@ class SearchPreviewViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val endpoint = Endpoint.Schedule(scheduleId = programmeId, schoolId = schoolId)
-                val fetchedSchedule: ApiResponse<NetworkResponse.Schedule> = kronoxManager.getSchedule(endpoint)
+                val fetchedSchedule: ApiResponse<NetworkResponse.Schedule> =
+                    kronoxManager.getSchedule(endpoint)
                 val parsedSchedule = parseFetchedSchedules(fetchedSchedule)
 
                 updateUIWithFetchedSchedule(
@@ -83,7 +85,7 @@ class SearchPreviewViewModel @Inject constructor(
     }
 
     private fun parseFetchedSchedules(schedules: ApiResponse<NetworkResponse.Schedule>): NetworkResponse.Schedule {
-        return when(schedules) {
+        return when (schedules) {
             is ApiResponse.Success -> schedules.data
             is ApiResponse.Error -> throw Exception("Failed to fetch schedule")
         }

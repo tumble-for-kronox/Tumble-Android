@@ -3,15 +3,15 @@ package com.tumble.kronoxtoapp.presentation.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
+import com.tumble.kronoxtoapp.domain.models.presentation.School
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.services.DataStoreService
-import com.tumble.kronoxtoapp.services.SchoolService
-import com.tumble.kronoxtoapp.domain.models.presentation.School
-import com.tumble.kronoxtoapp.services.authentication.AuthenticationService
 import javax.inject.Inject
 
 sealed class LoginUiState {
@@ -88,7 +88,8 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = LoginUiState.Loading
 
-            val userRequest = NetworkRequest.KronoxUserLogin(currentForm.username, currentForm.password)
+            val userRequest =
+                NetworkRequest.KronoxUserLogin(currentForm.username, currentForm.password)
             authenticationService.loginUser(userRequest)
                 .onSuccess {
                     _uiState.value = LoginUiState.Idle

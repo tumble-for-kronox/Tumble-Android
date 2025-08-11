@@ -3,20 +3,20 @@ package com.tumble.kronoxtoapp.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.services.RealmService
-import com.tumble.kronoxtoapp.services.kronox.ApiResponse
-import com.tumble.kronoxtoapp.services.kronox.KronoxService
 import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.other.extensions.models.findNextUpcomingEvent
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class HomeState {
@@ -82,9 +82,13 @@ class HomeViewModel @Inject constructor(
                     _newsState.value = NewsState.Loaded(result.data)
                     Log.d("HomeViewModel", "Successfully fetched ${result.data.size} news items")
                 }
+
                 is ApiResponse.Error -> {
                     _newsState.value = NewsState.Error(result.errorMessage)
-                    Log.e("HomeViewModel", "Failed when fetching news items: ${result.errorMessage}")
+                    Log.e(
+                        "HomeViewModel",
+                        "Failed when fetching news items: ${result.errorMessage}"
+                    )
                 }
             }
 

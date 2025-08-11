@@ -20,14 +20,14 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
-import com.tumble.kronoxtoapp.presentation.viewmodels.SearchViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.viewmodels.SearchState
+import com.tumble.kronoxtoapp.presentation.viewmodels.SearchViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -39,26 +39,30 @@ fun Search(
     val pageTitle = stringResource(R.string.search)
     val state by viewModel.state.collectAsState()
 
-    fun searchBoxNotEmpty(): Boolean{
+    fun searchBoxNotEmpty(): Boolean {
         return viewModel.searchBarText.value.trim().isNotEmpty()
     }
 
-     fun search(){
-         viewModel.selectedSchool.value?.let { selectedSchool ->
-             if (searchBoxNotEmpty()){
-                 viewModel.universityImage = selectedSchool.logo
-                 viewModel.search(
-                     viewModel.searchBarText,
-                     selectedSchoolId = selectedSchool.id
-                 )
-             }
-         }
+    fun search() {
+        viewModel.selectedSchool.value?.let { selectedSchool ->
+            if (searchBoxNotEmpty()) {
+                viewModel.universityImage = selectedSchool.logo
+                viewModel.search(
+                    viewModel.searchBarText,
+                    selectedSchoolId = selectedSchool.id
+                )
+            }
+        }
     }
 
     val openProgramme: (String, String) -> Unit = { programmeId, scheduleTitle ->
         viewModel.selectedSchool.value?.id?.let { selectedSchoolId ->
-            navController.navigate(UriBuilder.buildSearchDetailsUri(programmeId,
-                selectedSchoolId.toString(), scheduleTitle).toUri())
+            navController.navigate(
+                UriBuilder.buildSearchDetailsUri(
+                    programmeId,
+                    selectedSchoolId.toString(), scheduleTitle
+                ).toUri()
+            )
         }
     }
 
@@ -68,22 +72,39 @@ fun Search(
         )
     }
 
-    Column(modifier = Modifier
-        .fillMaxSize(),
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         when (state) {
             is SearchState.Initial -> {
-                SearchInfo(schools = viewModel.schools, selectedSchool =  viewModel.selectedSchool)
+                SearchInfo(schools = viewModel.schools, selectedSchool = viewModel.selectedSchool)
             }
-            is SearchState.Loading -> { CustomProgressIndicator(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), color = MaterialTheme.colorScheme.primary) }
-            is SearchState.Error -> { Box(modifier = Modifier.weight(1f)) {
-                Info(title = stringResource(id = R.string.error_something_wrong), image = null)
-            } }
-            is SearchState.Empty -> { Box(modifier = Modifier.weight(1f)) {
-                Info(title = stringResource(id = R.string.error_empty_schedule), image = null)
-            } }
+
+            is SearchState.Loading -> {
+                CustomProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
+            is SearchState.Error -> {
+                Box(modifier = Modifier.weight(1f)) {
+                    Info(title = stringResource(id = R.string.error_something_wrong), image = null)
+                }
+            }
+
+            is SearchState.Empty -> {
+                Box(modifier = Modifier.weight(1f)) {
+                    Info(title = stringResource(id = R.string.error_empty_schedule), image = null)
+                }
+            }
+
             is SearchState.Loaded -> {
                 val results = (state as SearchState.Loaded).results
                 Box(modifier = Modifier.weight(1f)) {
@@ -97,7 +118,12 @@ fun Search(
                 }
             }
         }
-        Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 10.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             SearchField(
                 search = { search() },
                 clearSearch = { viewModel.resetSearchResults() },

@@ -6,17 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountDataState
-import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
 
 @Composable
 fun Resources(

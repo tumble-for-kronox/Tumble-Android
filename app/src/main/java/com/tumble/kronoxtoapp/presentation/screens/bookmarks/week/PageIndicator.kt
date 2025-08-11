@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 fun PageIndicator(
     indicatorScrollState: LazyListState,
     pagerState: PagerState,
-){
+) {
     val routine = rememberCoroutineScope()
     Row(
         modifier = Modifier
@@ -87,19 +87,23 @@ fun PageIndicator(
 }
 
 @Composable
-fun indicatorSize(currentPage: Int, indicatorScrollState: LazyListState, iteration: Int ): State<Dp> {
+fun indicatorSize(
+    currentPage: Int,
+    indicatorScrollState: LazyListState,
+    iteration: Int
+): State<Dp> {
     val firstVisibleIndex by remember { derivedStateOf { indicatorScrollState.firstVisibleItemIndex } }
     val lastVisibleIndex =
         indicatorScrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
             ?: 0
-    val firstVisibleIndexIs0 = if(firstVisibleIndex == 0) 0 else 2
+    val firstVisibleIndexIs0 = if (firstVisibleIndex == 0) 0 else 2
 
     return animateDpAsState(
-        targetValue = if (iteration == currentPage || iteration in firstVisibleIndex + firstVisibleIndexIs0 ..lastVisibleIndex - 2) {
+        targetValue = if (iteration == currentPage || iteration in firstVisibleIndex + firstVisibleIndexIs0..lastVisibleIndex - 2) {
             10.dp
-        } else if (iteration == lastVisibleIndex || iteration == firstVisibleIndex){
+        } else if (iteration == lastVisibleIndex || iteration == firstVisibleIndex) {
             6.dp
-        } else{
+        } else {
             8.dp
         }
     )

@@ -24,13 +24,14 @@ fun dateRow(
 ): LocalDate {
 
     var localLocalDate = localDate
-    Row (horizontalArrangement = Arrangement.SpaceAround,
+    Row(
+        horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 5.dp)
     ) {
         repeat(7) {
-            Column (
+            Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CalendarDate(

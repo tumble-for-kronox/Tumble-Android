@@ -6,13 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.services.DataStoreService
-import com.tumble.kronoxtoapp.services.RealmService
 import com.tumble.kronoxtoapp.domain.enums.ViewType
 import com.tumble.kronoxtoapp.domain.models.presentation.EventDetailsSheetModel
 import com.tumble.kronoxtoapp.domain.models.realm.Day
@@ -24,8 +17,15 @@ import com.tumble.kronoxtoapp.other.extensions.models.flattenAndMerge
 import com.tumble.kronoxtoapp.other.extensions.models.groupByWeek
 import com.tumble.kronoxtoapp.other.extensions.models.isMissingEvents
 import com.tumble.kronoxtoapp.other.extensions.models.ordered
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.RealmService
 import com.tumble.kronoxtoapp.utils.preprocessDateString
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Date
 import javax.inject.Inject
@@ -50,7 +50,7 @@ sealed class BookmarksState {
 class BookmarksViewModel @Inject constructor(
     private val realmService: RealmService,
     private val dataStoreService: DataStoreService,
-): ViewModel(){
+) : ViewModel() {
 
     private val _state = MutableStateFlow<BookmarksState>(BookmarksState.Loading)
     val state: StateFlow<BookmarksState> = _state.asStateFlow()
@@ -66,7 +66,7 @@ class BookmarksViewModel @Inject constructor(
         setupFlows()
     }
 
-    private fun setupFlows(){
+    private fun setupFlows() {
 
         val job = viewModelScope.launch {
             setupRealmListener()
@@ -75,30 +75,30 @@ class BookmarksViewModel @Inject constructor(
         _cancellables.add(job)
     }
 
-    private suspend fun setupRealmListener(){
+    private suspend fun setupRealmListener() {
         val schedules = realmService.getAllLiveSchedules().asFlow()
-        schedules.collect{ newSchedules ->
+        schedules.collect { newSchedules ->
             createDaysAndCalenderEvents(newSchedules.list)
         }
     }
 
-    private fun createDaysAndCalenderEvents(schedules: List<Schedule>){
+    private fun createDaysAndCalenderEvents(schedules: List<Schedule>) {
 
         _state.value = BookmarksState.Loading
         val hiddenScheduleIds = extractHiddenScheduleIds(schedules)
         val visibleSchedules = extractVisibleSchedules(schedules)
 
-        if (schedules.isEmpty()){
+        if (schedules.isEmpty()) {
             _state.value = BookmarksState.Uninitialized
             return
         }
 
-        if (areAllSchedulesHidden(schedules)){
+        if (areAllSchedulesHidden(schedules)) {
             _state.value = BookmarksState.AllHidden
             return
         }
 
-        if (areVisibleSchedulesEmpty(visibleSchedules)){
+        if (areVisibleSchedulesEmpty(visibleSchedules)) {
             _state.value = BookmarksState.AllEmpty
             return
         }
@@ -110,7 +110,7 @@ class BookmarksViewModel @Inject constructor(
 
     }
 
-    fun setViewType(viewType: ViewType){
+    fun setViewType(viewType: ViewType) {
         viewModelScope.launch {
             dataStoreService.setBookmarksViewType(viewType)
         }
@@ -118,7 +118,7 @@ class BookmarksViewModel @Inject constructor(
 
     // Helper Functions
     private fun extractHiddenScheduleIds(schedules: List<Schedule>): List<String> {
-        return schedules.filter{ !it.toggled}.map { it.scheduleId }
+        return schedules.filter { !it.toggled }.map { it.scheduleId }
     }
 
     private fun extractVisibleSchedules(schedules: List<Schedule>): List<Schedule> {
@@ -130,10 +130,13 @@ class BookmarksViewModel @Inject constructor(
     }
 
     private fun areVisibleSchedulesEmpty(visibleSchedules: List<Schedule>): Boolean {
-        return visibleSchedules.all { it.isMissingEvents()}
+        return visibleSchedules.all { it.isMissingEvents() }
     }
 
-    private fun processSchedules(schedules: List<Schedule>, hiddenScheduleIds: List<String>): List<Day> {
+    private fun processSchedules(
+        schedules: List<Schedule>,
+        hiddenScheduleIds: List<String>
+    ): List<Day> {
         return filterHiddenBookmarks(schedules, hiddenScheduleIds)
             .flattenAndMerge()
             .ordered()
@@ -141,20 +144,23 @@ class BookmarksViewModel @Inject constructor(
             .filterValidDays()
     }
 
-    private fun filterHiddenBookmarks(schedules: List<Schedule>, hiddenScheduleIds: List<String>): List<Schedule> {
-        return schedules.filter { it.scheduleId !in hiddenScheduleIds}
+    private fun filterHiddenBookmarks(
+        schedules: List<Schedule>,
+        hiddenScheduleIds: List<String>
+    ): List<Schedule> {
+        return schedules.filter { it.scheduleId !in hiddenScheduleIds }
     }
 
     private fun makeCalendarEvents(days: List<Day>): Map<LocalDate, List<Event>> {
         val dict: MutableMap<LocalDate, List<Event>> = mutableMapOf()
-        for (day in days){
-            val date = LocalDate.parse(day.isoString?.substring(0,10)
+        for (day in days) {
+            val date = LocalDate.parse(day.isoString?.substring(0, 10)
                 ?.let { preprocessDateString(it) })
-            for (event in day.events!!){
+            for (event in day.events!!) {
 
-                if (dict[date] == null){
+                if (dict[date] == null) {
                     dict[date] = mutableListOf(event)
-                }else{
+                } else {
                     dict[date] = dict[date]!! + event
                 }
             }
@@ -162,7 +168,10 @@ class BookmarksViewModel @Inject constructor(
         return dict.toMap()
     }
 
-    private fun makeBookmarkData(days: List<Day>, calendarEvents: Map<LocalDate, List<Event>>): BookmarkData {
+    private fun makeBookmarkData(
+        days: List<Day>,
+        calendarEvents: Map<LocalDate, List<Event>>
+    ): BookmarkData {
         return BookmarkData(
             days = days,
             calendarEventsByDate = calendarEvents,
@@ -171,8 +180,8 @@ class BookmarksViewModel @Inject constructor(
         )
     }
 
-    fun updateSelectedDate(clickedDate: LocalDate){
-        selectedDate = if (selectedDate != clickedDate){
+    fun updateSelectedDate(clickedDate: LocalDate) {
+        selectedDate = if (selectedDate != clickedDate) {
             clickedDate
         } else {
             LocalDate.now()
@@ -194,7 +203,7 @@ class BookmarksViewModel @Inject constructor(
 
         calendar.apply { time = currentDate }
 
-        while (currentDate < endDate){
+        while (currentDate < endDate) {
             result.add(currentDate)
             calendar.add(Calendar.WEEK_OF_YEAR, 1)
             currentDate = calendar.time
@@ -204,6 +213,6 @@ class BookmarksViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        _cancellables.forEach{ it.cancel() }
+        _cancellables.forEach { it.cancel() }
     }
 }

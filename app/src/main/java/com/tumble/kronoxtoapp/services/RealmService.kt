@@ -1,15 +1,15 @@
 package com.tumble.kronoxtoapp.services
 
-import io.realm.kotlin.Realm
-import io.realm.kotlin.RealmConfiguration
-import io.realm.kotlin.ext.query
-import io.realm.kotlin.query.RealmResults
 import com.tumble.kronoxtoapp.domain.models.realm.Course
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Location
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.domain.models.realm.Teacher
+import io.realm.kotlin.Realm
+import io.realm.kotlin.RealmConfiguration
+import io.realm.kotlin.ext.query
+import io.realm.kotlin.query.RealmResults
 import javax.inject.Singleton
 
 @Singleton
@@ -63,15 +63,17 @@ class RealmService {
 
     suspend fun updateSchedule(scheduleId: String, newSchedule: Schedule) {
         realm.write {
-            val schedule: Schedule? = this.query<Schedule>("scheduleId == $0", scheduleId).first().find()
+            val schedule: Schedule? =
+                this.query<Schedule>("scheduleId == $0", scheduleId).first().find()
             schedule?.days = newSchedule.days
             schedule?.cachedAt = newSchedule.cachedAt
         }
     }
 
-    suspend fun updateScheduleVisibility(scheduleId: String, visibility: Boolean){
+    suspend fun updateScheduleVisibility(scheduleId: String, visibility: Boolean) {
         realm.write {
-            val schedule: Schedule? = this.query<Schedule>("scheduleId == $0", scheduleId).first().find()
+            val schedule: Schedule? =
+                this.query<Schedule>("scheduleId == $0", scheduleId).first().find()
             schedule?.toggled = visibility
         }
     }
@@ -99,8 +101,8 @@ class RealmService {
         val courses: RealmResults<Course> = realm.query<Course>().find()
         val courseColors = mutableMapOf<String, String>()
         for (course in courses) {
-            course.courseId?.let {
-                    id -> course.color?.let { color -> courseColors.put(id, color) }
+            course.courseId?.let { id ->
+                course.color?.let { color -> courseColors.put(id, color) }
             }
         }
         return courseColors
@@ -135,7 +137,6 @@ class RealmService {
         }
         return null
     }
-
 
 
     suspend fun deleteSchedule(schedule: Schedule) {

@@ -29,7 +29,9 @@ sealed class ResourceBookingState {
 
 sealed class ResourceSelectionState {
     data object Loading : ResourceSelectionState()
-    data class Loaded(val allResources: List<NetworkResponse.KronoxResourceElement>) : ResourceSelectionState()
+    data class Loaded(val allResources: List<NetworkResponse.KronoxResourceElement>) :
+        ResourceSelectionState()
+
     data class Error(val message: String) : ResourceSelectionState()
 }
 
@@ -38,7 +40,7 @@ class ResourceSelectionViewModel @Inject constructor(
     private val authenticationService: AuthenticationService,
     private val dataStoreService: DataStoreService,
     private val kronoxService: KronoxService
-): ViewModel() {
+) : ViewModel() {
 
     var resourceBookingState by mutableStateOf<ResourceBookingState>(ResourceBookingState.Loading)
     var resourceSelectionState by mutableStateOf<ResourceSelectionState>(ResourceSelectionState.Loading)
@@ -81,57 +83,75 @@ class ResourceSelectionViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val dateString = isoDateFormatter.format(selectedPickerDate)
-                val endpoint = Endpoint.AllResources(dataStoreService.authSchoolId.value.toString(), dateString)
+                val endpoint = Endpoint.AllResources(
+                    dataStoreService.authSchoolId.value.toString(),
+                    dateString
+                )
                 val refreshToken = authenticationService.getRefreshToken()
-                val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>>
-                    = kronoxService.getAllResources(endpoint, refreshToken, null)
+                val response: ApiResponse<List<NetworkResponse.KronoxResourceElement>> =
+                    kronoxService.getAllResources(endpoint, refreshToken, null)
 
-                when(response){
+                when (response) {
                     is ApiResponse.Success -> {
                         Log.d("ResourceSelectionViewModel", "Success")
                         val allResources = response.data
                         val resource = allResources.find { it.id == resourceId }
-                        with (Dispatchers.Main) {
-                            resourceBookingState = resource?.let { ResourceBookingState.Loaded(it) } ?: ResourceBookingState.Error("Unknown error occurred")
+                        with(Dispatchers.Main) {
+                            resourceBookingState = resource?.let { ResourceBookingState.Loaded(it) }
+                                ?: ResourceBookingState.Error("Unknown error occurred")
                         }
                     }
+
                     is ApiResponse.Error -> {
                         Log.e("ResourceSelectionViewModel", "Error")
                         Log.e("ResourceSelectionViewModel", response.errorMessage)
-                        with (Dispatchers.Main) {
+                        with(Dispatchers.Main) {
                             resourceBookingState = ResourceBookingState.Error(response.errorMessage)
                         }
                     }
                 }
-            } catch (e:Exception) {
+            } catch (e: Exception) {
                 Log.e("ResourceSelectionViewModel", "Error")
-                with (Dispatchers.Main) {
-                    resourceBookingState = e.localizedMessage?.let { ResourceBookingState.Error(it) } ?: ResourceBookingState.Error("Unknown error occurred")
+                with(Dispatchers.Main) {
+                    resourceBookingState =
+                        e.localizedMessage?.let { ResourceBookingState.Error(it) }
+                            ?: ResourceBookingState.Error("Unknown error occurred")
                 }
             }
         }
     }
 
-    suspend fun bookResource(resourceId: String, date: Date, availabilityValue: NetworkResponse.AvailabilityValue): Boolean{
+    suspend fun bookResource(
+        resourceId: String,
+        date: Date,
+        availabilityValue: NetworkResponse.AvailabilityValue
+    ): Boolean {
         val endpoint = Endpoint.BookResource(dataStoreService.authSchoolId.value.toString())
-        val resource = NetworkRequest.BookKronoxResource(resourceId, isoDateFormatterDate.format(date), availabilityValue)
+        val resource = NetworkRequest.BookKronoxResource(
+            resourceId,
+            isoDateFormatterDate.format(date),
+            availabilityValue
+        )
         val refreshToken = authenticationService.getRefreshToken() ?: return false
 
 
-        val response: ApiResponse<NetworkResponse.KronoxUserBookingElement> = kronoxService.bookResource(endpoint, refreshToken, resource)
-        when(response){
-            is ApiResponse.Success ->{
+        val response: ApiResponse<NetworkResponse.KronoxUserBookingElement> =
+            kronoxService.bookResource(endpoint, refreshToken, resource)
+        when (response) {
+            is ApiResponse.Success -> {
                 Log.e("ResourceSelectionViewModel", "Success")
                 return true
             }
+
             is ApiResponse.Error -> {
-                if(response.errorMessage == "Empty response body") {
+                if (response.errorMessage == "Empty response body") {
                     Log.e("ResourceSelectionViewModel", "Success")
-                } else{
+                } else {
                     Log.e("ResourceSelectionViewModel", "Error: ${response.errorMessage}")
                 }
                 return response.errorMessage == "Empty response body"
             }
+
             else -> {
                 Log.e("ResourceSelectionViewModel", "Error")
                 return false

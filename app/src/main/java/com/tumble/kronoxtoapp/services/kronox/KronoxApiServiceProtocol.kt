@@ -1,5 +1,9 @@
 package com.tumble.kronoxtoapp.services.kronox
 
+import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
+import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -7,10 +11,6 @@ import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.PUT
 import retrofit2.http.Url
-import com.tumble.kronoxtoapp.domain.models.network.NetworkRequest
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.KronoxUserBookingElement
-import com.tumble.kronoxtoapp.domain.models.network.NewsItems
 
 interface KronoxApiServiceProtocol {
 
@@ -29,16 +29,22 @@ interface KronoxApiServiceProtocol {
 
 
     @PUT
-    fun registerForEvent(@Url endpoint: String,
-                         @Header("X-auth-token") refreshToken: String?): Call<Void>
+    fun registerForEvent(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?
+    ): Call<Void>
 
     @PUT
-    fun registerForAllEvents(@Url endpoint: String,
-                         @Header("X-auth-token") refreshToken: String?): Call<List<NetworkResponse.Registration>>
+    fun registerForAllEvents(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?
+    ): Call<List<NetworkResponse.Registration>>
 
     @PUT
-    fun unRegisterForEvent(@Url endpoint: String,
-                           @Header("X-auth-token") refreshToken: String?): Call<Void>
+    fun unRegisterForEvent(
+        @Url endpoint: String,
+        @Header("X-auth-token") refreshToken: String?
+    ): Call<Void>
 
     @PUT
     fun bookResource(

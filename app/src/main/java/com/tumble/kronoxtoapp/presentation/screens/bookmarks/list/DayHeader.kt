@@ -19,13 +19,14 @@ import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 
 @Composable
-fun DayHeader(day: Day){
-    Row (
+fun DayHeader(day: Day) {
+    Row(
         modifier = Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
-    ){
-        Text(text = day.name?: "",
+    ) {
+        Text(
+            text = day.name ?: "",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
@@ -33,17 +34,21 @@ fun DayHeader(day: Day){
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        Text(text = day.date?: "",
+        Text(
+            text = day.date ?: "",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onBackground
         )
-        
+
         Spacer(modifier = Modifier.width(8.dp))
 
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.onBackground, shape = RoundedCornerShape(20.dp))
+                .background(
+                    MaterialTheme.colorScheme.onBackground,
+                    shape = RoundedCornerShape(20.dp)
+                )
                 .height(1.dp)
                 .weight(1f)
         )

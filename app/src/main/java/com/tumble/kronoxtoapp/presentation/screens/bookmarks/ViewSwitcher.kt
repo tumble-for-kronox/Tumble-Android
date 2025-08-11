@@ -60,7 +60,10 @@ fun ViewSwitcher(
                 .offset(x = pillOffset.value)
                 .width(pillSize.dp)
                 .height(30.dp)
-                .background(color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(30.dp))
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(30.dp)
+                )
         )
         Row {
             ViewType.entries.forEach { type ->

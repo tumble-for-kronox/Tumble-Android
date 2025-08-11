@@ -3,34 +3,34 @@ package com.tumble.kronoxtoapp.presentation.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
-import io.realm.kotlin.ext.isValid
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.services.kronox.KronoxService
-import com.tumble.kronoxtoapp.services.DataStoreService
-import com.tumble.kronoxtoapp.services.RealmService
-import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.withContext
-import com.tumble.kronoxtoapp.services.kronox.Endpoint
-import com.tumble.kronoxtoapp.services.CombinedData
-import com.tumble.kronoxtoapp.services.kronox.ApiResponse
 import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.domain.models.util.parseIsoToInstant
 import com.tumble.kronoxtoapp.other.extensions.models.toRealmSchedule
+import com.tumble.kronoxtoapp.services.CombinedData
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.RealmService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
+import dagger.hilt.android.lifecycle.HiltViewModel
+import io.realm.kotlin.ext.isValid
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Instant
+import javax.inject.Inject
 
 @HiltViewModel
 class ParentViewModel @Inject constructor(
     private val realmService: RealmService,
     private val kronoxRepository: KronoxService,
     private val dataStoreService: DataStoreService,
-): ViewModel() {
+) : ViewModel() {
 
     private val _combinedData = MutableStateFlow(CombinedData(-1))
     private val _appearance = MutableStateFlow<AppearanceType>(AppearanceType.AUTOMATIC)
@@ -69,7 +69,10 @@ class ParentViewModel @Inject constructor(
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
                             isUpdatingBookMarks = false
-                            Log.e("updateRealmSchedules", "Failed to update schedules: ${e.localizedMessage}")
+                            Log.e(
+                                "updateRealmSchedules",
+                                "Failed to update schedules: ${e.localizedMessage}"
+                            )
                         }
                     }
                 }
@@ -98,7 +101,10 @@ class ParentViewModel @Inject constructor(
                 fetchAndUpdateSchedule(scheduleId)
                 updatedSchedules++
             } catch (e: Exception) {
-                Log.e("updateBookmarks", "Failed to update schedule $scheduleId: ${e.localizedMessage}")
+                Log.e(
+                    "updateBookmarks",
+                    "Failed to update schedule $scheduleId: ${e.localizedMessage}"
+                )
             }
         }
 
@@ -118,22 +124,29 @@ class ParentViewModel @Inject constructor(
         }
 
         try {
-            val endpoint = Endpoint.Schedule(scheduleId = schedule.scheduleId, schoolId = schedule.schoolId)
-            val fetchedScheduleResponse: ApiResponse<NetworkResponse.Schedule> = kronoxRepository.getSchedule(endpoint)
+            val endpoint =
+                Endpoint.Schedule(scheduleId = schedule.scheduleId, schoolId = schedule.schoolId)
+            val fetchedScheduleResponse: ApiResponse<NetworkResponse.Schedule> =
+                kronoxRepository.getSchedule(endpoint)
 
             when (fetchedScheduleResponse) {
                 is ApiResponse.Success -> {
-                    Log.i("fetchAndUpdateSchedule", "Fetched new schedule with id $scheduleId. Will attempt to update")
+                    Log.i(
+                        "fetchAndUpdateSchedule",
+                        "Fetched new schedule with id $scheduleId. Will attempt to update"
+                    )
                     updateSchedule(
                         schedule = fetchedScheduleResponse.data,
                         schoolId = schedule.schoolId,
                         existingSchedule = schedule
                     )
                 }
+
                 is ApiResponse.Error -> {
                     throw Exception("Network error: ${fetchedScheduleResponse.errorMessage}")
                 }
-                else -> { }
+
+                else -> {}
             }
         } catch (e: Exception) {
             if (!schedule.isValid()) {
@@ -143,6 +156,7 @@ class ParentViewModel @Inject constructor(
             }
         }
     }
+
     private fun updateSchedule(
         schedule: NetworkResponse.Schedule,
         schoolId: String,
@@ -168,13 +182,15 @@ class ParentViewModel @Inject constructor(
 
         try {
             val endpoint = Endpoint.SearchProgramme(searchQuery = scheduleId, schoolId)
-            val searchResult: ApiResponse<NetworkResponse.Search> = kronoxRepository.getProgramme(endpoint)
+            val searchResult: ApiResponse<NetworkResponse.Search> =
+                kronoxRepository.getProgramme(endpoint)
 
-            when(searchResult){
+            when (searchResult) {
                 is ApiResponse.Success -> {
                     val searchResults = searchResult.data.items
                     return searchResults.first().subtitle
                 }
+
                 is ApiResponse.Error -> {
                     return ""
                 }

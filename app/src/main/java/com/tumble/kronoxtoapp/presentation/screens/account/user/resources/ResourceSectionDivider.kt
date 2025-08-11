@@ -13,13 +13,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.R
 
-enum class ResourceType{
+enum class ResourceType {
     EVENT, RESOURCE
 }
 
@@ -40,29 +39,37 @@ fun ResourceSectionDivider(
     resourceType: ResourceType? = null,
     destination: (() -> Unit)? = null,
     content: @Composable () -> Unit
-){
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 10.dp, horizontal = 17.dp)
     ) {
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 10.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             Text(
                 text = title,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onBackground
             )
-            if(destination != null){
-                when(resourceType){
-                    ResourceType.EVENT -> ResourceNavigationItem(title = stringResource(R.string.see_all), destination)
-                    ResourceType.RESOURCE -> ResourceNavigationItem(title = stringResource(R.string.book_more), destination)
+            if (destination != null) {
+                when (resourceType) {
+                    ResourceType.EVENT -> ResourceNavigationItem(
+                        title = stringResource(R.string.see_all),
+                        destination
+                    )
+
+                    ResourceType.RESOURCE -> ResourceNavigationItem(
+                        title = stringResource(R.string.book_more),
+                        destination
+                    )
+
                     null -> {}
                 }
             }

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun UserAvatar(name: String, collapsedHeader: Boolean){
+fun UserAvatar(name: String, collapsedHeader: Boolean) {
     val abbreviation = name.abbreviate()
     Text(
         text = abbreviation,
@@ -24,7 +24,7 @@ fun UserAvatar(name: String, collapsedHeader: Boolean){
         color = MaterialTheme.colorScheme.onPrimary,
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .animateContentSize ()
+            .animateContentSize()
             .padding(16.dp)
             .clip(CircleShape)
             .background(MaterialTheme.colorScheme.primary)

@@ -9,6 +9,10 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.tumble.kronoxtoapp.domain.enums.ViewType
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
+import com.tumble.kronoxtoapp.domain.models.util.formatInstantToIso
+import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffset
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,10 +20,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
-import com.tumble.kronoxtoapp.domain.enums.ViewType
-import com.tumble.kronoxtoapp.domain.models.util.formatInstantToIso
-import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffset
 import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -79,9 +79,15 @@ class DataStoreService @Inject constructor(
             .map { preferences ->
                 _authSchoolId.value = preferences[PreferencesKeys.AUTH_SCHOOL_ID] ?: -1
                 _userOnBoarded.value = preferences[PreferencesKeys.USER_ON_BOARDED] ?: false
-                _viewType.value = ViewType.valueOf(preferences[PreferencesKeys.VIEW_TYPE] ?: ViewType.LIST.name)
-                _appearance.value = AppearanceType.valueOf(preferences[PreferencesKeys.APPEARANCE] ?: AppearanceType.AUTOMATIC.name)
-                _notificationOffset.value = NotificationOffset.allCases.first {it.value == (preferences[PreferencesKeys.NOTIFICATION_OFFSET]?: NotificationOffset.Thirty.value) }
+                _viewType.value =
+                    ViewType.valueOf(preferences[PreferencesKeys.VIEW_TYPE] ?: ViewType.LIST.name)
+                _appearance.value = AppearanceType.valueOf(
+                    preferences[PreferencesKeys.APPEARANCE] ?: AppearanceType.AUTOMATIC.name
+                )
+                _notificationOffset.value = NotificationOffset.allCases.first {
+                    it.value == (preferences[PreferencesKeys.NOTIFICATION_OFFSET]
+                        ?: NotificationOffset.Thirty.value)
+                }
 
                 // Only update lastUpdated if there's a stored value, otherwise keep current time
                 preferences[PreferencesKeys.LAST_UPDATED]?.let { storedValue ->

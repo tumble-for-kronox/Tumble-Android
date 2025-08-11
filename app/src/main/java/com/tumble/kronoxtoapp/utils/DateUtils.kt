@@ -8,11 +8,12 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
-import java.util.*
+import java.util.Locale
 
 object DateUtils {
 
-    private val isoDateFormatterNoTimeZone = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
+    private val isoDateFormatterNoTimeZone =
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault())
 
     private val commonIsoFormatters = listOf(
         DateTimeFormatter.ISO_INSTANT,
@@ -82,7 +83,8 @@ object DateUtils {
     private fun extractLiteralTimeFromIso(isoString: String): LocalDateTime? {
         return try {
             // Parse the string to extract the literal date/time before timezone conversion
-            val dateTimePart = isoString.substringBefore('+').substringBefore('Z').substringBefore('-', "")
+            val dateTimePart =
+                isoString.substringBefore('+').substringBefore('Z').substringBefore('-', "")
 
             for (formatter in commonIsoFormatters) {
                 try {

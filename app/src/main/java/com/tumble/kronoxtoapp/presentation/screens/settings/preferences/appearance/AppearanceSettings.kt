@@ -3,20 +3,20 @@ package com.tumble.kronoxtoapp.presentation.screens.settings.preferences.appeara
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
-import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
+import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.screens.settings.buttons.SettingsRadioButton
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsList
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsListGroup
-import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
 
 @Composable
 fun AppearanceSettings(

@@ -1,12 +1,12 @@
 package com.tumble.kronoxtoapp.other.extensions.models
 
-import io.realm.kotlin.ext.copyFromRealm
-import io.realm.kotlin.ext.toRealmList
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Schedule
 import com.tumble.kronoxtoapp.other.extensions.presentation.toLocalDateTime
 import com.tumble.kronoxtoapp.utils.preprocessDateString
+import io.realm.kotlin.ext.copyFromRealm
+import io.realm.kotlin.ext.toRealmList
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
@@ -67,12 +67,12 @@ fun List<Schedule>.flattenAndMerge(): List<Day> {
     this.forEach { days += it.days?.toList() ?: emptyList() }
     val dayDictionary: MutableMap<String, Day> = mutableMapOf()
 
-    for (day in days){
+    for (day in days) {
         val existingDay = dayDictionary[day.isoString]
-        if (existingDay != null){
+        if (existingDay != null) {
             day.events?.let { existingDay.events?.addAll(it) }
             day.isoString?.let { dayDictionary.put(it, existingDay) }
-        }else{
+        } else {
             val newDay = Day()
             newDay.name = day.name
             newDay.date = day.date
@@ -85,23 +85,23 @@ fun List<Schedule>.flattenAndMerge(): List<Day> {
     return dayDictionary.values.toList()
 }
 
-fun Schedule.isMissingEvents(): Boolean{
-    if (this.days == null){
+fun Schedule.isMissingEvents(): Boolean {
+    if (this.days == null) {
         return true
     }
-    for (day in this.days!!){
-        for (event in day.events!!){
-            if (event.title.isNotEmpty()){
+    for (day in this.days!!) {
+        for (event in day.events!!) {
+            if (event.title.isNotEmpty()) {
                 return false
             }
         }
-   }
+    }
     return true
 }
 
-fun List<Schedule>.findEventsByCategory(categoryIdentifier: String): List<Event>{
-    return this.asSequence().flatMap { it.days?: listOf() }
-        .flatMap { it.events?: listOf() }
+fun List<Schedule>.findEventsByCategory(categoryIdentifier: String): List<Event> {
+    return this.asSequence().flatMap { it.days ?: listOf() }
+        .flatMap { it.events ?: listOf() }
         .filter { it.dateComponents?.before(Calendar.getInstance()) == false }
         .filter { it.course?.courseId == categoryIdentifier }
         .toList()

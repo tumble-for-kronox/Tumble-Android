@@ -29,13 +29,13 @@ class AccountEventsViewModel @Inject constructor(
     private val authenticationService: AuthenticationService,
     private val dataStoreService: DataStoreService,
     private val kronoxService: KronoxService
-): ViewModel() {
+) : ViewModel() {
 
     var state by mutableStateOf<AccountEventsState>(AccountEventsState.Loading)
 
-    fun getAllEvents(){
+    fun getAllEvents() {
         viewModelScope.launch {
-            with (Dispatchers.Main) {
+            with(Dispatchers.Main) {
                 state = AccountEventsState.Loading
             }
             try {
@@ -43,22 +43,27 @@ class AccountEventsViewModel @Inject constructor(
                 val refreshToken = authenticationService.getRefreshToken() ?: return@launch
 
                 val response: ApiResponse<NetworkResponse.KronoxCompleteUserEvent> =
-                    kronoxService.getKronoxCompleteUserEvent(endpoint, refreshToken, sessionDetails = null)
+                    kronoxService.getKronoxCompleteUserEvent(
+                        endpoint,
+                        refreshToken,
+                        sessionDetails = null
+                    )
 
-                when(response){
+                when (response) {
                     is ApiResponse.Success -> {
-                        with (Dispatchers.Main) {
+                        with(Dispatchers.Main) {
                             state = AccountEventsState.Loaded(response.data)
                         }
                     }
+
                     is ApiResponse.Error -> {
-                        with (Dispatchers.Main) {
+                        with(Dispatchers.Main) {
                             state = AccountEventsState.Error(response.errorMessage)
                         }
                     }
                 }
-            } catch (e:Exception) {
-                with (Dispatchers.Main) {
+            } catch (e: Exception) {
+                with(Dispatchers.Main) {
                     state = AccountEventsState.Error(e.localizedMessage ?: "Unknown error occurred")
                 }
             }
@@ -86,20 +91,22 @@ class AccountEventsViewModel @Inject constructor(
         }
     }
 
-    private fun unregisterForEvent(eventId: String){
+    private fun unregisterForEvent(eventId: String) {
         viewModelScope.launch {
 
-            val endpoint = Endpoint.UnregisterEvent(eventId, dataStoreService.authSchoolId.value.toString())
+            val endpoint =
+                Endpoint.UnregisterEvent(eventId, dataStoreService.authSchoolId.value.toString())
             val refreshToken = authenticationService.getRefreshToken() ?: return@launch
-            when(val response = kronoxService.unRegisterForEvent(endpoint, refreshToken)){
+            when (val response = kronoxService.unRegisterForEvent(endpoint, refreshToken)) {
                 is ApiResponse.Error -> {
-                    if(response.errorMessage == "Empty response body"){
+                    if (response.errorMessage == "Empty response body") {
                         Log.d("AccountEventsViewModel", "Success")
-                    }else{
+                    } else {
                         Log.e("AccountEventsViewModel", "Error")
                         Log.e("AccountEventsViewModel", response.errorMessage)
                     }
                 }
+
                 else -> {
                     Log.e("AccountEventsViewModel", "Should not be here")
                 }
@@ -112,6 +119,7 @@ class AccountEventsViewModel @Inject constructor(
             EventType.REGISTER -> {
                 registerForEvent(eventId)
             }
+
             EventType.UNREGISTER -> {
                 unregisterForEvent(eventId)
             }

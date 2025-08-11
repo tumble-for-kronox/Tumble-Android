@@ -24,13 +24,19 @@ fun SearchNavGraph(
     }
 }
 
-private fun NavGraphBuilder.search(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.search(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(Routes.search) {
         Search(navController = navController, setTopNavState = setTopNavState)
     }
 }
 
-private fun NavGraphBuilder.searchDetails(navController: NavHostController, setTopNavState: (AppBarState) -> Unit) {
+private fun NavGraphBuilder.searchDetails(
+    navController: NavHostController,
+    setTopNavState: (AppBarState) -> Unit
+) {
     composable(
         Routes.searchDetails,
         deepLinks = listOf(

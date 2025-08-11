@@ -2,7 +2,11 @@ package com.tumble.kronoxtoapp.core
 
 import com.tumble.kronoxtoapp.BuildConfig
 
-class NetworkSettings private constructor(val port: Int, val scheme: String, val tumbleUrl: String) {
+class NetworkSettings private constructor(
+    val port: Int,
+    val scheme: String,
+    val tumbleUrl: String
+) {
     companion object {
         val shared: NetworkSettings = when (BuildConfig.BUILD_TYPE) {
             "debug" -> Environments.development

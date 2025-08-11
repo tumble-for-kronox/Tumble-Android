@@ -28,14 +28,14 @@ fun SearchResults(
     searchResults: List<NetworkResponse.Programme>,
     onOpenProgramme: (String, String) -> Unit,
     universityImage: Int?
-){
+) {
     Column {
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
-        ){
+        ) {
             Text(
                 text = stringResource(id = R.string.search_results, numberOfSearchResults),
                 fontSize = 17.sp,
@@ -45,17 +45,19 @@ fun SearchResults(
             )
             Spacer(modifier = Modifier.weight(1f))
         }
-        LazyColumn (modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(horizontal = 10.dp),
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(horizontal = 10.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
-        ){
-            items(numberOfSearchResults){ programme ->
+        ) {
+            items(numberOfSearchResults) { programme ->
                 ProgrammeCard(
                     programme = searchResults[programme],
                     universityImage = universityImage,
-                    onOpenProgramme = onOpenProgramme)
+                    onOpenProgramme = onOpenProgramme
+                )
             }
             // Add a spacer item at the bottom
             item {

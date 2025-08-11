@@ -6,9 +6,9 @@ import com.tumble.kronoxtoapp.utils.preprocessDateString
 import java.time.LocalDate
 
 
-fun NetworkResponse.Day.isValidDay(): Boolean{
+fun NetworkResponse.Day.isValidDay(): Boolean {
     val startOfToday = LocalDate.now()
-    val dayDate = LocalDate.parse(this.isoString.substring(0,10))
+    val dayDate = LocalDate.parse(this.isoString.substring(0, 10))
     return startOfToday <= dayDate
 }
 

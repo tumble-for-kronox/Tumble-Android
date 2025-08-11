@@ -13,14 +13,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Event
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -109,7 +109,10 @@ fun ResourceLocationItem(
                     overflow = TextOverflow.Ellipsis
                 )
                 DetailItem(Icons.Default.Event, isoVerboseDateFormatter.format(selectedPickerDate))
-                DetailItem(Icons.Default.AccessTime, "${stringResource(R.string.available_timeslots)}: $availableCounts")
+                DetailItem(
+                    Icons.Default.AccessTime,
+                    "${stringResource(R.string.available_timeslots)}: $availableCounts"
+                )
             }
 
             Surface(
@@ -130,6 +133,7 @@ fun ResourceLocationItem(
     }
 }
 
-fun calcAvailability(availabilities: Map<String, Map<Int, NetworkResponse. AvailabilityValue>>): Int{
-    return availabilities.map {location -> location.value.filter { it.value.availability == NetworkResponse.AvailabilityEnum.AVAILABLE }.size}.sum()
+fun calcAvailability(availabilities: Map<String, Map<Int, NetworkResponse.AvailabilityValue>>): Int {
+    return availabilities.map { location -> location.value.filter { it.value.availability == NetworkResponse.AvailabilityEnum.AVAILABLE }.size }
+        .sum()
 }

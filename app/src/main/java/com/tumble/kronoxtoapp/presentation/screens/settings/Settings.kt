@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowOutward
 import androidx.compose.material.icons.filled.Bookmark
@@ -27,6 +25,8 @@ import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,19 +36,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.BuildConfig
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
 import com.tumble.kronoxtoapp.presentation.navigation.Routes
+import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.screens.settings.buttons.SettingsNavigationButton
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsList
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsListGroup
-import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 
 @Composable
 fun SettingsScreen(
@@ -66,14 +64,15 @@ fun SettingsScreen(
         BuildConfig.VERSION_NAME
     }
 
-    val externalNav = { uri:String ->
+    val externalNav = { uri: String ->
         startActivity(
             context,
             Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse(uri)
             ),
-            null)
+            null
+        )
     }
     LaunchedEffect(key1 = true) {
         resetNavState(

@@ -18,14 +18,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,19 +36,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.tumble.kronoxtoapp.domain.models.TumbleUser
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.presentation.viewmodels.AccountViewModel
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.Resources
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.sheets.EventDetailsSheet
 import com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.sheets.ResourceDetailsSheet
-import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountDataState
-import com.tumble.kronoxtoapp.services.authentication.AuthState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 
 @Composable
@@ -118,7 +111,8 @@ fun UserOverview(
                             fontWeight = FontWeight.Normal,
                             modifier = Modifier.padding(top = 5.dp)
                         )
-                        Text(text = schoolName ?: "",
+                        Text(
+                            text = schoolName ?: "",
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold
                         )

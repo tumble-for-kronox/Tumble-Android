@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun LoginHeader(){
+fun LoginHeader() {
     Column(
         modifier = Modifier
             .padding(bottom = 35.dp, top = 45.dp),
@@ -26,7 +26,7 @@ fun LoginHeader(){
             fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold
         )
-        
+
         Spacer(modifier = Modifier.height(10.dp))
 
         Text(

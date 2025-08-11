@@ -24,12 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.presentation.viewmodels.BookmarksViewModel
-import java.util.Calendar
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Day
+import com.tumble.kronoxtoapp.domain.models.realm.Event
+import java.util.Calendar
 import java.util.Date
 
 @Composable
@@ -38,7 +36,7 @@ fun WeekPage(
     weekStartDates: List<Date>,
     weeks: Map<Int, List<Day>>,
     onEventSelection: (Event) -> Unit
-){
+) {
 
     val weekStart by remember {
         mutableStateOf(weekStartDates[page])
@@ -53,21 +51,29 @@ fun WeekPage(
         )
     val weekOfYear = Calendar.getInstance().apply { time = weekStart }.get(Calendar.WEEK_OF_YEAR)
 
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .fillMaxWidth()
-        .padding(horizontal = 15.dp)
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp)
     ) {
         Spacer(modifier = Modifier.height(15.dp))
-        Row (modifier = Modifier.fillMaxWidth()){
+        Row(modifier = Modifier.fillMaxWidth()) {
             Spacer(modifier = Modifier.weight(1f))
-            Text(String.format("w. %s", weekOfYear), fontSize = 22.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onBackground)
+            Text(
+                String.format("w. %s", weekOfYear),
+                fontSize = 22.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
         }
-        if (weekDays.isEmpty()){
+        if (weekDays.isEmpty()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(top = 42.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 42.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.no_events_for_week),
@@ -83,8 +89,8 @@ fun WeekPage(
                         .aspectRatio(1f)
                 )
             }
-        }else{
-            for (dayOfWeek in 0..6){
+        } else {
+            for (dayOfWeek in 0..6) {
                 val weekDayDate = Calendar.getInstance().apply {
                     time = weekStart
                     add(Calendar.DAY_OF_YEAR, dayOfWeek)

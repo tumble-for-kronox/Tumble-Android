@@ -51,11 +51,11 @@ fun BookmarkWeekView(
 
     val indicatorScrollState = rememberLazyListState()
 
-    var userScrollEnabled by  remember {
+    var userScrollEnabled by remember {
         mutableStateOf(true)
     }
 
-    val updateUserScroll = {new:Boolean ->
+    val updateUserScroll = { new: Boolean ->
         userScrollEnabled = new
     }
 
@@ -74,7 +74,11 @@ fun BookmarkWeekView(
                     modifier = Modifier
                         .fillMaxSize()
                         .pointerInput(Unit) {
-                            handleLeftSwipeOnFirstPage(pointerInputScope = this, pagerState = pagerState, updateUserScroll = updateUserScroll)
+                            handleLeftSwipeOnFirstPage(
+                                pointerInputScope = this,
+                                pagerState = pagerState,
+                                updateUserScroll = updateUserScroll
+                            )
                         }
                 ) { page ->
                     var showContend by remember {
@@ -127,7 +131,11 @@ fun BookmarkWeekView(
     }
 }
 
-suspend fun handleLeftSwipeOnFirstPage(pointerInputScope: PointerInputScope, pagerState: PagerState, updateUserScroll: (Boolean) -> Unit){
+suspend fun handleLeftSwipeOnFirstPage(
+    pointerInputScope: PointerInputScope,
+    pagerState: PagerState,
+    updateUserScroll: (Boolean) -> Unit
+) {
     pointerInputScope.let { it ->
         it.awaitEachGesture {
             awaitFirstDown(pass = PointerEventPass.Initial)

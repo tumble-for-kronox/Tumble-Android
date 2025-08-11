@@ -6,9 +6,21 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,11 +29,9 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.presentation.navigation.UriBuilder
-import com.tumble.kronoxtoapp.presentation.viewmodels.HomeViewModel
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.home.available.HomeAvailable
@@ -29,7 +39,9 @@ import com.tumble.kronoxtoapp.presentation.screens.home.news.News
 import com.tumble.kronoxtoapp.presentation.screens.home.news.NewsSheet
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.viewmodels.HomeState
+import com.tumble.kronoxtoapp.presentation.viewmodels.HomeViewModel
 import com.tumble.kronoxtoapp.presentation.viewmodels.NewsState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -67,6 +79,7 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
+
                 is NewsState.Loading -> {
                     Box(
                         modifier = Modifier
@@ -77,7 +90,8 @@ fun HomeScreen(
                         CircularProgressIndicator(modifier = Modifier.size(24.dp))
                     }
                 }
-                is NewsState.Error -> { }
+
+                is NewsState.Error -> {}
             }
 
             Column(
@@ -94,6 +108,7 @@ fun HomeScreen(
                             onEventSelection = onEventSelection
                         )
                     }
+
                     is HomeState.Loading -> CustomProgressIndicator()
                     is HomeState.NoBookmarks -> HomeNoBookmarks()
                     is HomeState.AllBookmarksHidden -> HomeNotAvailable()

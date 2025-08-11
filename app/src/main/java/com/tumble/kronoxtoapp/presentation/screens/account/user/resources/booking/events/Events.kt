@@ -1,7 +1,5 @@
 package com.tumble.kronoxtoapp.presentation.screens.account.user.resources.booking.events
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,7 +12,6 @@ import androidx.compose.ui.unit.dp
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.AvailableKronoxUserEvent
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse.UpcomingKronoxUserEvent
-import java.util.UUID
 
 @Composable
 fun RegisteredEventsView(
@@ -48,7 +45,6 @@ fun RegisteredEventsView(
         }
     }
 }
-
 
 
 @Composable

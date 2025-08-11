@@ -103,6 +103,7 @@ fun EventDetailsSheet(
         is EventDetailsState.Loading -> {
             CustomProgressIndicator()
         }
+
         is EventDetailsState.Loaded -> {
             val event = (viewModel.eventDetailsState as EventDetailsState.Loaded).event
             val courseColor = (viewModel.eventDetailsState as EventDetailsState.Loaded).color
@@ -126,6 +127,7 @@ fun EventDetailsSheet(
                 }
             )
         }
+
         is EventDetailsState.Error -> {
             val errorMessage = (viewModel.eventDetailsState as EventDetailsState.Error).message
             Info(errorMessage)
@@ -269,7 +271,10 @@ private fun EventInfo(
                                         fontWeight = FontWeight.Medium
                                     )
                                     if (location.maxSeats > 0) {
-                                        Log.d("EventDetailsSheet", "Max seats: ${location.maxSeats}")
+                                        Log.d(
+                                            "EventDetailsSheet",
+                                            "Max seats: ${location.maxSeats}"
+                                        )
                                         Text(
                                             text = "Capacity: ${location.maxSeats} seats",
                                             style = MaterialTheme.typography.bodyMedium,
@@ -327,8 +332,7 @@ private fun EventHeaderCard(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
-        ,
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -502,6 +506,7 @@ private fun NotificationToggleRow(
                         }
                     }
                 }
+
                 NotificationState.NOT_SET -> {
                     Surface(
                         shape = CircleShape,
@@ -520,6 +525,7 @@ private fun NotificationToggleRow(
                         }
                     }
                 }
+
                 NotificationState.LOADING -> {
                     Surface(
                         shape = CircleShape,
@@ -548,8 +554,7 @@ private fun DetailCard(
         modifier = Modifier
             .fillMaxWidth()
             .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
-            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp))
-        ,
+            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface

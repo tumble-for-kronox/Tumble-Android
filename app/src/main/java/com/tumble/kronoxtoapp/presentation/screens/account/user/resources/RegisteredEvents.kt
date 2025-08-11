@@ -9,17 +9,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
 import com.tumble.kronoxtoapp.other.extensions.presentation.formatDate
 import com.tumble.kronoxtoapp.presentation.screens.general.CustomProgressIndicator
 import com.tumble.kronoxtoapp.presentation.viewmodels.AccountDataState
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
@@ -58,7 +57,8 @@ fun RegisteredEvents(
                                     eventEnd = eventEnd,
                                     type = event.type,
                                     title = event.title,
-                                    date = event.eventStart.formatDate() ?: stringResource(R.string.no_date),
+                                    date = event.eventStart.formatDate()
+                                        ?: stringResource(R.string.no_date),
                                     onClick = { onClickEvent(event) }
                                 )
                             }

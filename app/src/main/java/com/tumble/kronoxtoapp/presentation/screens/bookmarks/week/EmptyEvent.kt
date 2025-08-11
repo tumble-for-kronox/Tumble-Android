@@ -26,11 +26,11 @@ import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.R
 
 @Composable
-fun EmptyEvent(){
-    Column (
+fun EmptyEvent() {
+    Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
-    ){
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -38,12 +38,13 @@ fun EmptyEvent(){
                 .height(50.dp)
                 .shadow(2.dp, RoundedCornerShape(12.dp), clip = false)
                 .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(12.dp)),
-        ){
+        ) {
             Spacer(modifier = Modifier.width(15.dp))
-            Box(modifier = Modifier
-                .size(7.dp)
-                .background(MaterialTheme.colorScheme.onSurface, CircleShape)
-                .padding(start = 15.dp),
+            Box(
+                modifier = Modifier
+                    .size(7.dp)
+                    .background(MaterialTheme.colorScheme.onSurface, CircleShape)
+                    .padding(start = 15.dp),
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(

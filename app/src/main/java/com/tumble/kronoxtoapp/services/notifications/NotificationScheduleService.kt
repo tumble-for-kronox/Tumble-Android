@@ -53,7 +53,8 @@ class NotificationScheduleService(
             return Result.failure()
         }
 
-        NotificationManagerCompat.from(applicationContext).notify(notificationId.hashCode(), notification)
+        NotificationManagerCompat.from(applicationContext)
+            .notify(notificationId.hashCode(), notification)
         return Result.success()
     }
 }

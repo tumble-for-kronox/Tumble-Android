@@ -8,10 +8,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
-import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
-import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsList
 import com.tumble.kronoxtoapp.presentation.screens.general.Info
 import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsList
+import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
 
 @Composable
 fun BookmarksSettings(
@@ -39,7 +39,7 @@ fun BookmarksSettings(
 
     if (schedules.value.isNotEmpty()) {
         SettingsList {
-            schedules.value.forEach{ schedule ->
+            schedules.value.forEach { schedule ->
                 BookmarkSettingsRow(
                     schedule = schedule,
                     onDelete = {

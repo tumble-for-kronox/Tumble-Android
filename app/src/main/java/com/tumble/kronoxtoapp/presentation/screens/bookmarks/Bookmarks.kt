@@ -48,25 +48,30 @@ fun Bookmarks(
         )
     }
 
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.Start) {
             when (state) {
-                is BookmarksState.Loading ->  { CustomProgressIndicator() }
+                is BookmarksState.Loading -> {
+                    CustomProgressIndicator()
+                }
+
                 is BookmarksState.Uninitialized -> {
                     Info(
                         title = stringResource(id = R.string.no_bookmarks),
                         image = null
                     )
                 }
+
                 is BookmarksState.AllHidden -> {
                     Info(
                         title = stringResource(id = R.string.bookmarks_hidden),
                         image = null
                     )
                 }
+
                 is BookmarksState.Loaded -> {
                     val bookmarkData = (state as BookmarksState.Loaded).bookmarkData
                     BookmarkViewController(

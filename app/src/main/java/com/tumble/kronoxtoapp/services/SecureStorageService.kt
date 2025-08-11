@@ -14,7 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SecureStorageService(context: Context) {
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("tumble_secure_prefs", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences("tumble_secure_prefs", Context.MODE_PRIVATE)
     private val keyAlias = "TumbleSecureStorageKey"
 
     init {
@@ -26,7 +27,8 @@ class SecureStorageService(context: Context) {
         keyStore.load(null)
 
         if (!keyStore.containsAlias(keyAlias)) {
-            val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+            val keyGenerator =
+                KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
             val keyGenParameterSpec = KeyGenParameterSpec.Builder(
                 keyAlias,
                 KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT

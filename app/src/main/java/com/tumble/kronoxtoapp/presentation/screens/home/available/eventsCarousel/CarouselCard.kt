@@ -1,9 +1,14 @@
 package com.tumble.kronoxtoapp.presentation.screens.home.available.eventsCarousel
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -13,8 +18,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.tumble.kronoxtoapp.domain.models.realm.Event
-import com.tumble.kronoxtoapp.presentation.components.buttons.VerboseEventButtonLabel
 import com.tumble.kronoxtoapp.other.extensions.presentation.wiggle
+import com.tumble.kronoxtoapp.presentation.components.buttons.VerboseEventButtonLabel
 import com.tumble.kronoxtoapp.presentation.models.WeekEventCardModel
 
 @Composable
@@ -45,7 +50,12 @@ fun CarouselCard(
                 }
                 .let {
                     if (index != eventsForToday.size - 1)
-                        it.shadow(if ((index - swipedCards) <= 2) 2.dp else 0.dp, RoundedCornerShape(15.dp), true, Color.Black.copy(alpha = 0.1f))
+                        it.shadow(
+                            if ((index - swipedCards) <= 2) 2.dp else 0.dp,
+                            RoundedCornerShape(15.dp),
+                            true,
+                            Color.Black.copy(alpha = 0.1f)
+                        )
                     else it
                 }
         ) {

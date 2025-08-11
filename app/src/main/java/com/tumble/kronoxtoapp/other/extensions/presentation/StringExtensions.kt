@@ -1,13 +1,14 @@
 package com.tumble.kronoxtoapp.other.extensions.presentation
 
-import java.text.SimpleDateFormat
-import java.util.*
 import androidx.compose.ui.graphics.Color
 import com.tumble.kronoxtoapp.utils.isoDateFormatterNoTimeZone
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
+import java.util.Calendar
+import java.util.Locale
 
 fun String.formatDate(): String? {
     val targetFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -18,14 +19,14 @@ fun String.formatDate(): String? {
 
 fun String.convertToHoursAndMinutesISOString(): String? {
 
-    val date = isoDateFormatterNoTimeZone.parse(this)?: return null
+    val date = isoDateFormatterNoTimeZone.parse(this) ?: return null
 
     val calendar = Calendar.getInstance().apply {
         time = date
     }
     val hour = calendar.get(Calendar.HOUR_OF_DAY)
     val minute = calendar.get(Calendar.MINUTE)
-    return String.format( Locale.getDefault(),"%02d:%02d", hour, minute)
+    return String.format(Locale.getDefault(), "%02d:%02d", hour, minute)
 }
 
 fun String.toColor(): Color {

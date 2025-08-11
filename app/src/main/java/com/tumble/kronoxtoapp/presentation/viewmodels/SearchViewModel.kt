@@ -7,20 +7,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
+import com.tumble.kronoxtoapp.domain.models.presentation.School
+import com.tumble.kronoxtoapp.services.SchoolService
+import com.tumble.kronoxtoapp.services.kronox.ApiResponse
+import com.tumble.kronoxtoapp.services.kronox.Endpoint
+import com.tumble.kronoxtoapp.services.kronox.KronoxService
+import com.tumble.kronoxtoapp.services.kronox.url
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.services.kronox.Endpoint
-import com.tumble.kronoxtoapp.services.kronox.url
-import com.tumble.kronoxtoapp.services.SchoolService
-import com.tumble.kronoxtoapp.services.kronox.ApiResponse
-import com.tumble.kronoxtoapp.services.kronox.KronoxService
-import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
-import com.tumble.kronoxtoapp.domain.models.presentation.School
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class SearchState {
@@ -35,7 +35,7 @@ sealed class SearchState {
 class SearchViewModel @Inject constructor(
     private val kronoxManager: KronoxService,
     private val schoolService: SchoolService,
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow<SearchState>(SearchState.Initial)
     val state: StateFlow<SearchState> = _state.asStateFlow()
@@ -50,7 +50,7 @@ class SearchViewModel @Inject constructor(
 
     val schools: List<School> by lazy { schoolService.getSchools() }
 
-    fun search(query: MutableState<String>, selectedSchoolId: Int){
+    fun search(query: MutableState<String>, selectedSchoolId: Int) {
         _state.value = SearchState.Loading
         currentSearchJob?.cancel()
         currentSearchJob = viewModelScope.launch {
@@ -58,11 +58,14 @@ class SearchViewModel @Inject constructor(
             try {
                 val endpoint = Endpoint.SearchProgramme(query.value, selectedSchoolId.toString())
                 Log.d("search", endpoint.url())
-                val searchResult: ApiResponse<NetworkResponse.Search> = kronoxManager.getProgramme(endpoint)
+                val searchResult: ApiResponse<NetworkResponse.Search> =
+                    kronoxManager.getProgramme(endpoint)
                 parseSearchResults(searchResult)
-            } catch (e: Exception){
-                _state.value = SearchState.Error(errorMessage = e.localizedMessage ?: "An unknown error occured")
-                if (e is CancellationException){
+            } catch (e: Exception) {
+                _state.value = SearchState.Error(
+                    errorMessage = e.localizedMessage ?: "An unknown error occured"
+                )
+                if (e is CancellationException) {
                     Log.e("error", e.localizedMessage ?: "Unknown error")
                     return@launch
                 }
@@ -70,13 +73,13 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-     fun resetSearchResults(){
+    fun resetSearchResults() {
         currentSearchJob?.cancel()
         _state.value = SearchState.Initial
     }
 
-    private fun parseSearchResults(result: ApiResponse<NetworkResponse.Search>){
-        when(result){
+    private fun parseSearchResults(result: ApiResponse<NetworkResponse.Search>) {
+        when (result) {
             is ApiResponse.Success -> {
                 val results = result.data.items
                 if (result.data.items.isEmpty()) {
@@ -85,6 +88,7 @@ class SearchViewModel @Inject constructor(
                 }
                 _state.value = SearchState.Loaded(results = results)
             }
+
             is ApiResponse.Error -> {
                 val errorMessage = (result).errorMessage
                 _state.value = SearchState.Error(errorMessage)

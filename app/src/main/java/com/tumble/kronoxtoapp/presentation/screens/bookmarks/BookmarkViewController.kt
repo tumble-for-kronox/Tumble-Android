@@ -27,26 +27,27 @@ fun BookmarkViewController(
     viewType: State<ViewType>,
     setViewType: (ViewType) -> Unit,
     onEventSelection: (Event) -> Unit,
-){
+) {
     val pagerState = rememberPagerState(
         initialPage = viewType.value.ordinal,
         initialPageOffsetFraction = 0f,
         pageCount = { 3 }
     )
 
-    Box{
+    Box {
         HorizontalPager(
             state = pagerState,
             beyondViewportPageCount = 3,
             verticalAlignment = Alignment.Top,
         ) { page ->
-            when ( page) {
+            when (page) {
                 ViewType.LIST.ordinal -> {
                     BookmarkListView(
                         onEventSelection = onEventSelection,
                         days = bookmarkData.days
                     )
                 }
+
                 ViewType.WEEK.ordinal -> {
                     BookmarkWeekView(
                         onEventSelection = onEventSelection,
@@ -54,6 +55,7 @@ fun BookmarkViewController(
                         weeks = bookmarkData.weeks,
                     )
                 }
+
                 ViewType.CALENDAR.ordinal -> {
                     BookmarkCalendarView(
                         onEventSelection = onEventSelection,
@@ -73,7 +75,7 @@ fun BookmarkViewController(
         }
     }
 
-    LaunchedEffect(key1 = pagerState.currentPage){
+    LaunchedEffect(key1 = pagerState.currentPage) {
         setViewType(ViewType.entries[pagerState.currentPage])
     }
 }

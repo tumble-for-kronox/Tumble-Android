@@ -1,11 +1,11 @@
 package com.tumble.kronoxtoapp.domain.models.realm
 
 import com.tumble.kronoxtoapp.utils.DateUtils
+import com.tumble.kronoxtoapp.utils.isoDateFormatterNoTimeZone
 import io.realm.kotlin.types.RealmList
 import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
-import com.tumble.kronoxtoapp.utils.isoDateFormatterNoTimeZone
 import java.util.Calendar
 
 open class Event(

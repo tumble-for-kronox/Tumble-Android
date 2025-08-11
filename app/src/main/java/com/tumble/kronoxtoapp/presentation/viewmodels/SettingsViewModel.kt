@@ -2,25 +2,25 @@ package com.tumble.kronoxtoapp.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
+import com.tumble.kronoxtoapp.domain.models.realm.Schedule
+import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffset
+import com.tumble.kronoxtoapp.services.CombinedData
+import com.tumble.kronoxtoapp.services.DataStoreService
+import com.tumble.kronoxtoapp.services.RealmService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import com.tumble.kronoxtoapp.services.CombinedData
-import com.tumble.kronoxtoapp.services.DataStoreService
-import com.tumble.kronoxtoapp.services.RealmService
-import com.tumble.kronoxtoapp.domain.enums.types.AppearanceType
-import com.tumble.kronoxtoapp.domain.models.realm.Schedule
-import com.tumble.kronoxtoapp.presentation.screens.settings.preferences.notifications.NotificationOffset
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     val dataStoreService: DataStoreService,
     val realmService: RealmService,
-): ViewModel()  {
+) : ViewModel() {
     private val _appearance = MutableStateFlow(AppearanceType.AUTOMATIC)
     val appearance: StateFlow<AppearanceType> = _appearance
 
@@ -36,24 +36,27 @@ class SettingsViewModel @Inject constructor(
         setUpDataPublishers()
     }
 
-    private fun setUpDataPublishers(){
-
+    private fun setUpDataPublishers() {
         val job1 = viewModelScope.launch {
             combine(
                 dataStoreService.authSchoolId,
                 dataStoreService.appearance,
                 dataStoreService.notificationOffset
-            ){schoolId, appearance, notificationOffset ->
-                CombinedData(authSchoolId = schoolId, appearance = appearance, notificationOffset = notificationOffset)
-            }.collect { combinedDat ->
-                _appearance.value = combinedDat.appearance!!
-                _notificationOffset.value = combinedDat.notificationOffset!!
+            ) { schoolId, appearance, notificationOffset ->
+                CombinedData(
+                    authSchoolId = schoolId,
+                    appearance = appearance,
+                    notificationOffset = notificationOffset
+                )
+            }.collect { combinedData ->
+                _appearance.value = combinedData.appearance!!
+                _notificationOffset.value = combinedData.notificationOffset!!
             }
         }
 
         val job2 = viewModelScope.launch {
             val schedules = realmService.getAllLiveSchedules().asFlow()
-            schedules.collect{ newSchedules ->
+            schedules.collect { newSchedules ->
                 _bookmarks.value = newSchedules.list
             }
         }
@@ -67,7 +70,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun updateBookmarkVisibility(visibility: Boolean, schedule: Schedule){
+    fun updateBookmarkVisibility(visibility: Boolean, schedule: Schedule) {
         viewModelScope.launch {
             realmService.updateScheduleVisibility(schedule.scheduleId, visibility)
         }

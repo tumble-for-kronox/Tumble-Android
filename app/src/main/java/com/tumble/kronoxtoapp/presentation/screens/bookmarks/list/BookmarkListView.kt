@@ -17,17 +17,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.launch
 import com.tumble.kronoxtoapp.domain.models.realm.Day
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.other.extensions.models.sorted
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BookmarkListView(
     days: List<Day>,
     onEventSelection: (Event) -> Unit
-){
+) {
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -74,23 +74,24 @@ fun BookmarkListView(
 
 @Composable
 fun DayItem(
-    day: Day, onEventSelection: (Event) -> Unit){
+    day: Day, onEventSelection: (Event) -> Unit
+) {
     Column(
         modifier = Modifier.padding(15.dp)
     ) {
         DayHeader(day)
-        EventList(events = day.events?.toList()?: listOf(), onEventSelection )
+        EventList(events = day.events?.toList() ?: listOf(), onEventSelection)
     }
 }
 
 @Composable
-fun EventList(events: List<Event>, onEventSelection: (Event) -> Unit){
-    Column (
+fun EventList(events: List<Event>, onEventSelection: (Event) -> Unit) {
+    Column(
         modifier = Modifier.padding(top = 15.dp),
         verticalArrangement = Arrangement.spacedBy(15.dp)
     ) {
         val sortedEvents = events.sorted()
-        sortedEvents.forEach{event ->
+        sortedEvents.forEach { event ->
             BookmarkCard(
                 onTapCard = { onEventSelection(it) },
                 event = event,

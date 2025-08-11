@@ -8,11 +8,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.tumble.kronoxtoapp.R
 import com.tumble.kronoxtoapp.presentation.components.buttons.BackButton
-import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
+import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
 import com.tumble.kronoxtoapp.presentation.screens.settings.buttons.SettingsRadioButton
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsList
 import com.tumble.kronoxtoapp.presentation.screens.settings.list.SettingsListGroup
-import com.tumble.kronoxtoapp.presentation.screens.navigation.AppBarState
+import com.tumble.kronoxtoapp.presentation.viewmodels.SettingsViewModel
 import java.util.UUID
 
 enum class NotificationOffset(val value: Int) {

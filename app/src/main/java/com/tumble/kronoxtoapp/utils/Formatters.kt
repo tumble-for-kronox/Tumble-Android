@@ -1,7 +1,8 @@
 package com.tumble.kronoxtoapp.utils
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Locale
+import java.util.TimeZone
 
 val isoDateFormatter: SimpleDateFormat by lazy {
     val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())
@@ -28,11 +29,15 @@ val month_date: SimpleDateFormat by lazy {
 
 val isoVerboseDateFormatter: SimpleDateFormat by lazy {
     val formatter = SimpleDateFormat("EEEE, MMMM d,yyyy", Locale.getDefault())
-    formatter}
+    formatter
+}
 
 fun preprocessDateString(dateString: String): String {
     return if (dateString.contains(".")) {
-        dateString.substring(0, dateString.indexOf('.') + 4) + dateString.substring(dateString.indexOf('+'))
+        dateString.substring(
+            0,
+            dateString.indexOf('.') + 4
+        ) + dateString.substring(dateString.indexOf('+'))
     } else {
         dateString
     }

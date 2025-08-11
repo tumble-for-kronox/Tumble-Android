@@ -12,5 +12,5 @@ fun sortedEventOrder(event1: Event, event2: Event): Int {
         return 0
     }
 
-    return if (firstDate.before(secondDate))  1 else 0
+    return if (firstDate.before(secondDate)) 1 else 0
 }

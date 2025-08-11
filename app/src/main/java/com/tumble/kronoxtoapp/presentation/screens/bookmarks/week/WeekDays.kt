@@ -31,7 +31,7 @@ fun WeekDays(
     day: Day?,
     weekDayDate: Date,
     onEventSelection: (Event) -> Unit
-){
+) {
     val dateFormatterDay = SimpleDateFormat("EEEE", Locale.getDefault())
     val dateFormatterDayMonth = SimpleDateFormat("d/MM", Locale.getDefault())
 
@@ -41,7 +41,7 @@ fun WeekDays(
             .padding(vertical = 15.dp)
             .fillMaxWidth()
     ) {
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 15.dp),
@@ -49,19 +49,22 @@ fun WeekDays(
         ) {
             Text(
                 text = "${dateFormatterDay.format(weekDayDate)} ${
-                    dateFormatterDayMonth.format(weekDayDate)}"
+                    dateFormatterDayMonth.format(weekDayDate)
+                }"
                     .replaceFirstChar { char -> char.uppercaseChar() },
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Box(modifier = Modifier.height(1.dp)
-                .background(MaterialTheme.colorScheme.onBackground)
-                .weight(1f)
+            Box(
+                modifier = Modifier
+                    .height(1.dp)
+                    .background(MaterialTheme.colorScheme.onBackground)
+                    .weight(1f)
             )
         }
-        if (day != null){
+        if (day != null) {
             day.events!!.sortedWith { a, b -> sortedEventOrder(a, b) }.forEach {
                 Row(modifier = Modifier
                     .fillMaxWidth()
@@ -70,7 +73,7 @@ fun WeekDays(
                     WeekEvent(it)
                 }
             }
-        }else{
+        } else {
             EmptyEvent()
         }
     }

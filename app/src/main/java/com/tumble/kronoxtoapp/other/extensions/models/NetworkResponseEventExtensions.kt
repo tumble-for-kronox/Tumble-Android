@@ -1,21 +1,21 @@
 package com.tumble.kronoxtoapp.other.extensions.models
 
 import androidx.core.text.HtmlCompat
-import io.realm.kotlin.ext.toRealmList
 import com.tumble.kronoxtoapp.domain.models.network.NetworkResponse
 import com.tumble.kronoxtoapp.domain.models.realm.Course
 import com.tumble.kronoxtoapp.domain.models.realm.Event
 import com.tumble.kronoxtoapp.domain.models.realm.Location
 import com.tumble.kronoxtoapp.domain.models.realm.Teacher
+import io.realm.kotlin.ext.toRealmList
 
 fun NetworkResponse.Event.toRealmEvent(courseColorsForPreview: Map<String, String>): Event {
     val course = Course()
     course.courseId = this.course.id
     course.swedishName = this.course.swedishName
     course.englishName = this.course.englishName
-    course.color =  courseColorsForPreview.getOrDefault(this.course.id, "#FFFFFF")
+    course.color = courseColorsForPreview.getOrDefault(this.course.id, "#FFFFFF")
     val locations: MutableList<Location> = mutableListOf()
-    for (responseLocation in this.locations){
+    for (responseLocation in this.locations) {
         val location = Location()
         location.locationId = responseLocation.id
         location.name = responseLocation.name
@@ -26,7 +26,7 @@ fun NetworkResponse.Event.toRealmEvent(courseColorsForPreview: Map<String, Strin
     }
 
     val teachers: MutableList<Teacher> = mutableListOf()
-    for (responseTeacher in this.teachers){
+    for (responseTeacher in this.teachers) {
         val teacher = Teacher()
         teacher.teacherId = responseTeacher.id
         teacher.firstName = responseTeacher.firstName
