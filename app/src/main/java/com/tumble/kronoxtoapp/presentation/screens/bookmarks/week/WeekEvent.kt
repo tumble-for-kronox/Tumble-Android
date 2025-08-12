@@ -27,6 +27,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tumble.kronoxtoapp.domain.models.realm.Event
+import com.tumble.kronoxtoapp.other.extensions.models.displayFromTime
+import com.tumble.kronoxtoapp.other.extensions.models.displayToTime
 import com.tumble.kronoxtoapp.other.extensions.presentation.convertToHoursAndMinutesISOString
 import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 
@@ -34,11 +36,9 @@ import com.tumble.kronoxtoapp.other.extensions.presentation.toColor
 fun WeekEvent(
     event: Event,
 ) {
-    val from = event.from.convertToHoursAndMinutesISOString()
-    val to = event.to.convertToHoursAndMinutesISOString()
     val color = event.course?.color?.toColor()
 
-    if (from != null && to != null && color != null) {
+    if (color != null) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -59,7 +59,7 @@ fun WeekEvent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = from,
+                    text = event.displayFromTime,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
@@ -71,7 +71,7 @@ fun WeekEvent(
                     tint = MaterialTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = to,
+                    text = event.displayToTime,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = MaterialTheme.colorScheme.onSurface
