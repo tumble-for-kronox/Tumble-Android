@@ -148,9 +148,11 @@ fun UserOverview(
         onUnbook = { bookingId ->
             onUnbookResource(bookingId)
             onClearSelectedBooking()
+            resetTopNavState()
         },
         onConfirm = { resourceId, bookingId ->
             onConfirmBooking(resourceId, bookingId)
+            resetTopNavState()
         },
         setTopNavState = setTopNavState
     )
@@ -198,7 +200,10 @@ private fun ResourceBottomSheet(
             ResourceDetailsSheet(
                 booking = it,
                 onDismiss = onDismiss,
-                onUnbook = { onUnbook(it.id) },
+                onUnbook = {
+                    onUnbook(it.id)
+
+               },
                 onConfirm = onConfirm,
                 setTopNavState = setTopNavState
             )

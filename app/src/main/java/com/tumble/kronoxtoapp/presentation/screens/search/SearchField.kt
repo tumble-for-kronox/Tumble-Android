@@ -52,7 +52,7 @@ fun SearchField(
     val context = LocalContext.current
 
     val blur = animateDpAsState(
-        targetValue = if (enabled) 0.dp else 2.5.dp,
+        targetValue = if (enabled) 0.dp else 10.dp,
     )
 
     fun searchAction() {
